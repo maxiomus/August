@@ -1,0 +1,26 @@
+[
+    {
+        "siteid": 3,
+        "Attribute": "Category"
+    },
+    {
+        "siteid": 3,
+        "Attribute": "Description"
+    },
+    {
+        "siteid": 3,
+        "Attribute": "Detail"
+    },
+    {
+        "siteid": 3,
+        "Attribute": "MetaDescription"
+    },
+    {
+        "siteid": 3,
+        "Attribute": "MetaKeyword"
+    },
+    {
+        "siteid": 3,
+        "Attribute": "MetaTitle"
+    }
+]

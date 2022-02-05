@@ -1,0 +1,22 @@
+[
+  {
+    "label": "P.O #",
+    "text": "pono"
+  },  
+  {
+    "label": "Vendor",
+    "text": "vender"
+  },
+  {
+    "label": "Brand",
+    "text": "division"
+    },    
+  {
+    "label": "Style #",
+    "text": "style"
+  },
+  {
+    "label": "Color",
+    "text": "color"
+  }
+]

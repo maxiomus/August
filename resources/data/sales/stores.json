@@ -1,0 +1,31 @@
+{
+  "success": true,
+  "stores": {
+    "categories": [
+      {
+        "label": "S.O #",
+        "field": "orderno"
+      },
+      {
+        "label": "Customer",
+        "field": "customer"
+      },
+      {
+        "label": "Customer PO #",
+        "field": "PO"
+      },
+      {
+        "label": "Store",
+        "field": "shipTo"
+      },
+      {
+        "label": "Division",
+        "field": "division"
+      },
+      {
+        "label": "Type",
+        "field": "type"
+      }           
+    ]    
+  }
+}

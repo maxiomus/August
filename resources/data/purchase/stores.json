@@ -1,0 +1,12 @@
+{
+    "success": true,
+    "stores": {              
+      "categories": [
+        { "label": "P.O #", "field": "pono" },
+        { "label": "Division", "field": "division" },
+        { "label": "Vendor", "field": "vendor" },
+        { "label": "Customer", "field": "customer" },
+        { "label": "S.O #", "field": "SoNo" }
+      ]  
+    }
+  }

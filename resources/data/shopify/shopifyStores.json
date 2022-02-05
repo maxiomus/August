@@ -1,0 +1,32 @@
+[
+    {
+      "label": "Shopify",
+      "name": "shopify", 
+      "value": "99"
+    },
+    {
+      "label": "Objectrare",
+      "name": "OR", 
+      "value": "3"
+    },
+    {
+      "label": "Endlesss Rose",
+      "name": "ER", 
+      "value": "10"
+    },
+    {
+      "label": "English Factory",
+      "name": "EF", 
+      "value": "11"
+    },
+    {
+      "label": "Grey Lab",
+      "name": "GL", 
+      "value": "12"
+    },
+    {
+      "label": "Free The Rose",
+      "name": "FR", 
+      "value": "13"
+    }
+]
