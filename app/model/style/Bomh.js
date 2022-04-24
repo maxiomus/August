@@ -39,9 +39,9 @@ Ext.define('August.model.style.Bomh', {
         { name: 'setDefault', allowNull: true },
         { name: 'duty', type: 'number', allowNull: true },
         { name: 'createUser', type: 'string', convert: tr },
-        { name: 'createTime', type: 'date', dateFormat: 'c' },
+        { name: 'createTime', type: 'date', dateFormat: 'C' },
         { name: 'updateUser', type: 'string', allowNull: true, convert: tr },
-        { name: 'updateTime', type: 'date', dateFormat: 'c' },
+        { name: 'updateTime', type: 'date', dateFormat: 'C' },
         { name: 'processType', type: 'string', convert: tr },
         { name: 'EffStartDate', type: 'date', defaultValue: '2000-01-01 00:00:00', dateFormat: 'c' },
         { name: 'EffEndDate', type: 'date', defaultValue: '2099-12-31 12:59:59', dateFormat: 'c' },
@@ -62,7 +62,8 @@ Ext.define('August.model.style.Bomh', {
                 return (data.colorCompTotal * 100 + data.processtotal * 100) / 100;
             },
             persist: false
-        },
+        }
+        /*
         {
             name: 'productId',
             reference: {
@@ -74,6 +75,7 @@ Ext.define('August.model.style.Bomh', {
                 inverse: 'bomhs'
             }
         }
+        */
     ],
 
     //idProperty: 'bomhId',

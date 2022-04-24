@@ -209,7 +209,7 @@ Ext.define('August.view.production.Task',{
                 sortable: false,
                 hidden: false,
                 width: 110,
-                format: 'm-d-Y',
+                format: 'Y-m-d',
                 editor: {
                     xtype: 'datefield',
                     format: 'Y-m-d'
@@ -221,7 +221,7 @@ Ext.define('August.view.production.Task',{
                 menuDisabled: true,
                 sortable: false,
                 hidden: true,
-                format: 'm-d-Y',
+                format: 'Y-m-d',
                 editor: {
                     xtype: 'datefield',
                     format: 'Y-m-d'
@@ -233,7 +233,7 @@ Ext.define('August.view.production.Task',{
                 menuDisabled: true,
                 sortable: false,
                 hidden: true,
-                format: 'm-d-Y',
+                format: 'Y-m-d',
                 editor: {
                     xtype: 'datefield',
                     format: 'Y-m-d'
@@ -245,7 +245,7 @@ Ext.define('August.view.production.Task',{
                 menuDisabled: true,
                 sortable: false,
                 hidden: false,
-                format: 'm-d-Y',
+                format: 'Y-m-d',
                 width: 110,
                 editor: {
                     xtype: 'datefield',
@@ -258,7 +258,7 @@ Ext.define('August.view.production.Task',{
                 menuDisabled: true,
                 sortable: false,
                 hidden: false,
-                format: 'm-d-Y',
+                format: 'Y-m-d',
                 width: 110,
                 editor: {
                     xtype: 'datefield',

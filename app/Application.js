@@ -13,11 +13,11 @@ Ext.define('August.Application', {
     ],
 
     views: [
-        'main.Main', 'authenticate.Login'
+        'main.Main', 'authenticate.Login', 'pages.Error404Window'
     ],
 
     stores: [
-        'NavigationTree', 'Settings', 'Components', 'CompColors', 'Styles', 'StyleColors', 'Colors'
+        'NavigationTree', 'Settings', 'Components', 'CompColors', 'Styles', 'StyleColors', 'Colors', 'Bomnos', 'Customers'
     ],
 
     defaultToken: 'dashboard',
@@ -30,8 +30,10 @@ Ext.define('August.Application', {
     },
 
     config: {
-        appReady: false,
-        loggedInUser: null
+        //appReady: false,
+        accessToken: null,
+        loggedInUser: null,
+        prevNode: null
     },
 
     init: function() {
@@ -52,56 +54,60 @@ Ext.define('August.Application', {
 
     launch: function() {
         var me = this;
-                        
-        var isTokenExpires = new Date() > new Date(localStorage.getItem('expires'));
 
-        var token = !isTokenExpires ? localStorage.getItem('access_token') : null;        
+        Ext.route.Router.suspend();        
 
-        console.log('Application.js - launch - this: ', me, token, localStorage.getItem('expires'), new Date(), isTokenExpires);
+        if(new Date() < new Date(localStorage.getItem('expires'))) {
+            August.app.accessToken = localStorage.getItem('access_token');
+        }
+        else {
+            localStorage.clear();            
+        }        
+
+        console.log('Application.js - launch - this: ', me, localStorage.getItem('expires'));
         // logic check if your is already authenticated.
+
         /*
-        *
-        */
-        
-        // user logged in or not
-        if(token){
-            /*
-            Ext.Ajax.request({
-                url: '/WebApp/api/Sessions/' + userId,
-                //url: '/security/checkLogin.ashx',
-                scope: this,
-                success: function(response, options) {
-                    // decode response
-                    var result = Ext.decode(response.responseText);
-                    console.log('checkLogin', response);
-                    // check if success flag is true
-                    if(result.success) {
-                        // has session...add to application stack
-                        //Vega.LoggedInUser = Ext.create('August.model.authenticate.Account', result.data );
-                        //Ext.util.Cookies.set('loggedInUser', result.data);
-                        //Ext.getStore('Settings').load();
-    
-                        me.onUser(
-                            //August.account = Ext.create('August.model.authenticate.Account', result.data)                            
-                            August.loggedInUser = result.data
-                        );
-    
-                        August.util.SessionMonitor.start();
-                    }
-                    // couldn't login...show error
-                    else {
-                        console.log('User not found!', me.loggedInUser, August.loggedInUser);                        
-                    }
-                },
-                failure: function(response, options) {
-                    //console.log(response);
-                    Ext.Msg.alert(response.statusText, response.status + ' - ' + response.responseText );
-                },
-                callback: function(response, opotions) {
-                    //console.log('checkLogin - callback', response);
+        Ext.Ajax.request({
+            url: '/WebApp/api/Sessions/' + userId,
+            //url: '/security/checkLogin.ashx',
+            scope: this,
+            success: function(response, options) {
+                // decode response
+                var result = Ext.decode(response.responseText);
+                console.log('checkLogin', response);
+                // check if success flag is true
+                if(result.success) {
+                    // has session...add to application stack
+                    //Vega.LoggedInUser = Ext.create('August.model.authenticate.Account', result.data );
+                    //Ext.util.Cookies.set('loggedInUser', result.data);
+                    //Ext.getStore('Settings').load();
+
+                    me.onUser(
+                        //August.account = Ext.create('August.model.authenticate.Account', result.data)                            
+                        August.loggedInUser = result.data
+                    );
+
+                    August.util.SessionMonitor.start();
                 }
-            });
-            */
+                // couldn't login...show error
+                else {
+                    console.log('User not found!', me.loggedInUser, August.loggedInUser);                        
+                }
+            },
+            failure: function(response, options) {
+                //console.log(response);
+                Ext.Msg.alert(response.statusText, response.status + ' - ' + response.responseText );
+            },
+            callback: function(response, opotions) {
+                //console.log('checkLogin - callback', response);
+            }
+        });
+        */
+
+        // user logged in or not
+        if(August.app.accessToken != null){
+            
             me.onUser(
                 //August.account = Ext.create('August.model.authenticate.Account', result.data)                            
                 August.loggedInUser = { 
@@ -115,7 +121,9 @@ Ext.define('August.Application', {
         }
         else {
 
-            me.onUser();
+            me.onUser(
+                August.loggedInUser = null
+            );
         }                       
         /*
         me.onUser(
@@ -132,14 +140,21 @@ Ext.define('August.Application', {
 
     onUser: function(user){
 
-        August.app.setAppReady(true);
-        this.fireEvent('appready', this, user);
-        //Ext.getBody().unmask();
+        //August.app.setAppReady(true);
+        //this.fireEvent('appready', this);
+        if(user){
+            Ext.route.Router.resume();        
+        }
+        else{
+            Ext.route.Router.resume(true);
+            this.redirectTo('login');
+        }
+        
     },
 
     onBeforeRequest: function(conn, options){
         options.headers = options.headers || {};
-        options.headers['Authorization'] = 'Bearer ' + localStorage.getItem('access_token');
+        options.headers['Authorization'] = 'Bearer ' + August.app.getAccessToken();
     },
 
     onAppUpdate: function () {

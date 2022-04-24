@@ -72,7 +72,10 @@ Ext.define("August.view.production.style.Product", {
                     stateful:true,
                     stateId: "product-grid",
                     //stateEvents: ["columnmove", "columnresize", "groupchange", "bodyresize"],
-
+                    style: {
+                        borderTop: '1px solid #cfcfcf',
+                        borderBottom: '1px solid #cfcfcf'
+                    },
                     //publishes: ["selectedSamples"],
 
                     bind: {
@@ -163,7 +166,7 @@ Ext.define("August.view.production.style.Product", {
                     j.saveDocumentAs({
                         type: 'xlsx',
                         title: 'Product Style List',
-                        fileName: 'Style Product' + Ext.Date.format(new Date(), 'Y-m-d') + '.xlsx'
+                        fileName: 'Style Product' + Ext.Date.format(new Date(), 'Y-m-d')
                     });
                 }
             }]

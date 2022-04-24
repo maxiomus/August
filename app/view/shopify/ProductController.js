@@ -30,6 +30,10 @@ Ext.define('August.view.shopify.ProductController', {
             topbar = me.getView().down("toolbar"),
             combo = topbar.down("combo[name=sites]");
 
+        store.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        })
+
         Ext.apply(store.getProxy().extraParams, {            
             store: combo.getValue()
         });
@@ -336,14 +340,14 @@ Ext.define('August.view.shopify.ProductController', {
         var me = this,
             layout = me.view.lookupReference("multiview"),
             topbar = layout.lookupReference("topbar"),
-            searchcombo = topbar.lookupReference('searchcombo'),
-            searchgrid = topbar.down('searchgrid'),
+            //searchcombo = topbar.lookupReference('searchcombo'),
+            //searchtext = topbar.down('searchtextlist'),
             grid = layout.lookupReference("shopify-product-grid");
 
-        searchcombo.setValue('');
-        searchcombo.getTrigger('clear').hide();
-        searchgrid.setValue('');
-        searchgrid.getTrigger('clear').hide();
+        //searchcombo.setValue('');
+        //searchcombo.getTrigger('clear').hide();
+        //searchtext.setValue('');
+        //searchtext.getTrigger('clear').hide();
 
         // Clear Sort...
         grid.getStore().sorters.clear();

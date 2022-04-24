@@ -313,7 +313,7 @@ Ext.define("August.view.production.WIP", {
                         grid.saveDocumentAs({
                             type: 'excel',
                             title: 'Production W.I.P',
-                            fileName: 'wip as of ' + Ext.Date.format(new Date(), 'Y-m-d') + '.xlsx'
+                            fileName: 'wip as of ' + Ext.Date.format(new Date(), 'Y-m-d')
                         });
                     }
                 }]
@@ -458,7 +458,7 @@ Ext.define("August.view.production.WIP", {
             {
                 text: 'Photo', dataIndex: '', width:88, locked: false, hidden: false, draggable: false, ignoreExport: true,
                 renderer: function (value, p, record) {
-                    var tpl = '<span class="file"><img style="vertical-align: middle;width:64px;margin:0 2px 0 0;" src="http://n41-27:9090/StyleImages/200xImages/{0}_{1}_front.jpg?w=64&h=64" alt="{0}_{1}" /></span>';
+                    var tpl = '<span class="file"><img style="vertical-align: middle;width:64px;margin:0 2px 0 0;" src="http://209.37.126.195:9090/StyleImages/200xImages/{0}_{1}_front.jpg?w=64&h=64" alt="{0}_{1}" /></span>';
 
                     //var xf = Ext.util.Format;
                     if (!Ext.isEmpty(record)) {
@@ -586,7 +586,7 @@ Ext.define("August.view.production.WIP", {
                 }
             },
             //{   text: 'CUT/PO', dataIndex: 'cut_po', width: 88, locked: false  },
-            {   xtype: 'datecolumn', text: 'PO Issued', dataIndex: 'orderDate', format: 'm-d-Y', width: 120, locked: false,
+            {   xtype: 'datecolumn', text: 'PO Issued', dataIndex: 'orderDate', format: 'Y-m-d', width: 120, locked: false,
                 exportStyle: {
                     format: 'Short Date',
                     alignment: {
@@ -597,7 +597,7 @@ Ext.define("August.view.production.WIP", {
                     type: 'date'
                 }
             },
-            {   xtype: 'datecolumn', text: 'PO Started', dataIndex: 'startDate', format: 'm-d-Y', width: 120, locked: false,
+            {   xtype: 'datecolumn', text: 'PO Started', dataIndex: 'startDate', format: 'Y-m-d', width: 120, locked: false,
                 exportStyle: {
                     format: 'Short Date',
                     alignment: {
@@ -609,7 +609,7 @@ Ext.define("August.view.production.WIP", {
                 }
             },
             {
-                xtype: 'datecolumn', text: 'EX-FACTORY', dataIndex: '', width:120, locked: false, format: 'm-d-Y',
+                xtype: 'datecolumn', text: 'EX-FACTORY', dataIndex: '', width:120, locked: false, format: 'Y-m-d',
                 exportStyle: {
                     format: 'Short Date',
                     alignment: {
@@ -621,7 +621,7 @@ Ext.define("August.view.production.WIP", {
                 }
             }, 
             {
-                xtype: 'datecolumn', text: 'ETD', dataIndex: '', width:120, locked: false, format: 'm-d-Y',
+                xtype: 'datecolumn', text: 'ETD', dataIndex: '', width:120, locked: false, format: 'Y-m-d',
                 exportStyle: {
                     format: 'Short Date',
                     alignment: {
@@ -633,7 +633,7 @@ Ext.define("August.view.production.WIP", {
                 }
             },
             {
-                xtype: 'datecolumn', text: 'ETA', dataIndex: 'etaDate', width:120, locked: false, format: 'm-d-Y',
+                xtype: 'datecolumn', text: 'ETA', dataIndex: 'etaDate', width:120, locked: false, format: 'Y-m-d',
                 exportStyle: {
                     format: 'Short Date',
                     alignment: {
@@ -645,7 +645,7 @@ Ext.define("August.view.production.WIP", {
                 }
             },
             {
-                xtype: 'datecolumn', text: 'CXL', dataIndex: 'cancelDate', width:120, locked: false, format: 'm-d-Y',
+                xtype: 'datecolumn', text: 'CXL', dataIndex: 'cancelDate', width:120, locked: false, format: 'Y-m-d',
                 exportStyle: {
                     format: 'Short Date',
                     alignment: {

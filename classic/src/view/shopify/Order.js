@@ -26,9 +26,9 @@ Ext.define('August.view.shopify.Order', {
         actdelete: 'onActDeleteClick',
         actrefresh: 'onActRefreshClick',
         clearall: 'onClearFilters',
-        rowdblclick: 'onActEditClick',
+        gridrowdblclick: 'onActEditClick',
         itemdblclick: "onActEditClick",
-        itemcontextmenu: "onItemContextMenu"
+        griditemcontextmenu: "onItemContextMenu"
     },
 
     initComponent: function(){
@@ -58,7 +58,7 @@ Ext.define('August.view.shopify.Order', {
                         borderBottom: '1px solid #cfcfcf'
                     },
 
-                    bind: {
+                    bind: {                        
                         store: '{shopifyorders}'
                     },
 
@@ -79,9 +79,13 @@ Ext.define('August.view.shopify.Order', {
                         ptype: "gridfilters"
                     },{
                         ptype: 'gridexporter'
-                    },{
+                    }
+                    /*
+                    {
                         ptype: 'bufferedrenderer'
-                    }],
+                    }
+                    */
+                    ],
                     
                     viewConfig: {
                         loadMask: true,
@@ -184,9 +188,15 @@ Ext.define('August.view.shopify.Order', {
 
         var mnuItems = [f.actEdit, f.actDelete, f.actRefresh,
             {
+                text: 'Create S.O',
+                iconCls: 'x-fa fa-plus-circle',
+                handler: 'onCreateSoClick',
+                scope: this.controller
+            },
+            {
                 text: "Print",
                 iconCls: "x-fa fa-print",
-                action: "printlabel",
+                action: "print",
                 //handler: 'onOpenLabeltagClick',
                 scope: this.controller
             }];
@@ -244,7 +254,7 @@ Ext.define('August.view.shopify.Order', {
             xtype: 'datecolumn',
             text: "Date",
             dataIndex: "created_at",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
                 type: "date"
             }
@@ -314,7 +324,7 @@ Ext.define('August.view.shopify.Order', {
             xtype: 'datecolumn',
             text: "Updated",
             dataIndex: "updated_at",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
                 type: "date"
             }
@@ -419,7 +429,8 @@ Ext.define('August.view.shopify.Order', {
             store.setPageSize(e.getValue());
             store.load({
                 callback: function(recs, op, success){
-                    vm.set('shopifyLink', op.getLinkHeader());
+                    //console.log(recs, op);
+                    vm.set('shopifyLink', op.getResponse().responseJson.LinkHeader);
                 }
             });
             //console.log("combo select", f)

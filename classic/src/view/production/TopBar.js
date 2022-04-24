@@ -15,7 +15,7 @@ Ext.define('August.view.production.TopBar',{
     },
 
     listeners: {
-        clearall: 'onClearFilters'
+        //clearall: 'onClearFilters'
     },
 
     initComponent: function(c){

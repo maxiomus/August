@@ -98,7 +98,7 @@ Ext.define('August.view.sales.OrderFormController', {
         //console.log(rec)
     },
 
-    onItemContextMenu:function(h, j, k, g, l){
+    onItemContextMenu: function(h, j, k, g, l){
         l.stopEvent();
 
         var i = h.getSelectionModel();
@@ -107,6 +107,86 @@ Ext.define('August.view.sales.OrderFormController', {
         }
 
         this.view.contextmenu.showAt(l.getXY());
+    },
+    
+    onCustomerChanged: function(c, nv, ov) {
+        //console.log('Customer changed', nv, ov, c.getSelection());
+        var me = this,
+            vm = me.getViewModel(),
+            storeCombo = c.nextSibling('combo'),
+            select = c.getSelection(),
+            cmp = me.getView().down('component[name="customerAddress"]');
+
+        if(select != null){
+            August.model.Customer.load(nv, {
+                success: function(rec, op){                        
+                    vm.set('theCustomer', rec);          
+                    storeCombo.getStore().load();
+                },
+                callback: function(rec, op){
+                    //console.log('Customer - callback', rec);
+                    storeCombo.setDisabled(select == null);                
+                }
+            });   
+        }
+        else {
+
+            cmp.setData(null);
+        }
+
+        c.getStore().load();
+    },
+
+    onCustomerSelected: function(combo, record){
+        //console.log('onCustomerSelected', record);                           
+                        
+    },
+
+    onShipToBeforeLoad: function(s){
+        var me = this,
+            combo = me.getView().down('combo[name="customer"]'),
+            vm = me.getViewModel();
+        
+        Ext.apply(s.getProxy().extraParams, {                        
+            type: combo.getValue()
+        });
+        
+    },
+
+    onShipToChanged: function(c, nv, ov){
+        //console.log('onShipToChanged', nv, ov);
+        var me = this,
+            vm = me.getViewModel(),
+            custCb = c.previousSibling('combo'),
+            cmp = me.getView().down('component[name="storeAddress"]');
+
+        August.model.Store.getProxy().setUrl('/WebApp/api/Stores/' + custCb.getValue());
+        
+        if(nv != null) {
+            August.model.Store.load(nv, {
+                success: function(rec, op){
+                    vm.set('theStore', rec);                
+                }
+            });
+        }     
+        else {
+            cmp.setData(null);
+        }  
+        
+        c.setDisabled(nv == null); 
+        
+    },
+
+    onTriggerClear: function(combo){
+        console.log('onTrigger', combo.getValue());
+        var me = this,
+            storeCb = combo.nextSibling('combo'),
+            cmp = this.getView().down('component[name="customerAddress"]');
+
+        //cmp.setData(null);
+        
+        storeCb.setValue('');
+        combo.getStore().load();        
     },
 
     showWindow: function(comp, record){

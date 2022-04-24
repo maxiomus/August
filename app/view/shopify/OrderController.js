@@ -22,16 +22,20 @@ Ext.define('August.view.shopify.OrderController', {
 
     onBeforeStoreLoad: function(store){
         var me = this,            
-
             topbar = me.getView().down("toolbar"),
             combo = topbar.down("combo[name=stores]");
+
+        
+        store.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });
 
         Ext.apply(store.getProxy().extraParams, {            
             store: combo.getValue()
         });
     },
 
-    onStoreChange: function(combo, nValue, oValue){
+    onStoreChange: function(combo, nValue, oValue) {
         var me = this,
             vm = me.getViewModel(),
             store = vm.getStore('shopifyorders'),
@@ -53,6 +57,89 @@ Ext.define('August.view.shopify.OrderController', {
             }
         });
     },    
+
+    /**
+     * 
+     * @param {*} menu 
+     * @param {*} event
+    **/
+    onCreateSoClick: function(m, e){
+        var me = this,    
+            topbar = me.getView().down("toolbar"),
+            combo = topbar.down("combo[name=stores]"),
+            //vm = me.getViewModel(),
+            mv = me.lookupReference('multiview'),
+            grid = mv.lookupReference('shopify-order-grid'),            
+            rec = grid.getSelection()[0],                                          
+            store = grid.getStore();                
+
+        var processMask = new Ext.LoadMask({
+            msg: 'Saving... Please wait',
+            target: me.getView()
+        });                        
+        
+        Ext.Ajax.request({
+            url: '/WebApp/api/SalesOrders/' + combo.getValue(), 
+            method: 'POST',        
+            //useDefaultXhrHeader: false,
+            //cors: true,
+            headers: {
+                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+            },
+
+            jsonData: rec.getData(true),
+
+            params: {
+                //store: comboSelected.get('name')
+            }
+                                  
+        }).then(function(response){
+            var result = Ext.decode(response.responseText, false);
+            console.log('callback', store);
+
+            if(result =! null) {
+                processMask.hide('', function() {
+                    Ext.Msg.alert('Status', 'Changes saved successfully.', function(){
+                        console.log(result);
+                    });
+                });  
+            }
+            else {
+
+            }                      
+        }).otherwise(function(reason){
+            processMask.hide('', function() {
+                console.log(reason);
+                //Ext.Msg.alert(reason.statusText + ' - ' + reason.status, reason.responseJson.Message);
+            });
+            
+            if(batch.hasException) {
+                for (var i = 0; i < batch.exceptions.length; i++) {
+                    switch (batch.exceptions[i].action) {
+                        case "destroy" :
+                            msg = msg + batch.exceptions[i].records.length + " Delete, ";
+                            break;
+                        case "update" :
+                            msg = msg + batch.exceptions[i].records.length + " Update, ";
+                            break;
+                        case "create" :
+                            msg = msg + batch.exceptions[i].records.length + " Create, ";
+                            break;
+                    }
+                }
+
+                Ext.Msg.alert("Status", msg + " operation failed!");
+            }
+            else
+            {
+                Ext.Msg.alert('Status', 'Changes failed.');
+            }
+                    
+        });
+        
+        //me.win.close();
+        processMask.show();
+    },
 
     onActEditClick: function(b, c){
         //console.log(b, c);
@@ -201,14 +288,7 @@ Ext.define('August.view.shopify.OrderController', {
             }
         });
     },
-
-    onContextMenuEditClick: function(d, c){
-
-    },
-
-    onContextMenuBookmarkClick: function(d, c){
-        this.addBookmark(d, this.getView());
-    },
+    
 
     onClearFilters: function(b){
         var me = this,
@@ -255,20 +335,34 @@ Ext.define('August.view.shopify.OrderController', {
         k[1] = "default";
         k[2] = rec.get("id");
 
-        console.log('grid - onSelect', rec);
+        //console.log('grid - onSelect', rec);
+
         this.redirectTo(k.join("/"));
     },
 
+    /**
+     * 
+     * @param {*} h tableview
+     * @param {*} j record
+     * @param {*} k element
+     * @param {*} g row index
+     * @param {*} l event
+     */
     onItemContextMenu:function(h, j, k, g, l){
-        l.stopEvent();
+        var me = this,
+            mv = me.lookupReference('multiview'),
+            grid = mv.lookupReference('shopify-order-grid'),
+            sm = h.getSelectionModel();
 
-        var sm = h.getSelectionModel();
+        l.stopEvent();                
 
         if(!sm.isSelected(g)){
             sm.select(g);
         }
+                
+        me.view.contextmenu.items.items[3].setDisabled(!Ext.isEmpty(grid.getSelection()[0].get('note')));
 
-        this.view.contextmenu.showAt(l.getXY());
+        me.view.contextmenu.showAt(l.getXY());
     }
 
 });

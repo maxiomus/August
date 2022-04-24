@@ -8,7 +8,7 @@ Ext.define('August.model.PI', {
 
     fields: [
         { name: 'ref', type: 'string', convert: tr },
-        { name: 'logdate', type: 'date', dateFormat: 'c' },
+        { name: 'logdate', type: 'date', dateFormat: 'C' },
         { name: 'style', type: 'string', convert: tr },
         { name: 'color', type: 'string', convert: tr },
         { name: 'wareHouse', type: 'string', convert: tr },
@@ -24,7 +24,7 @@ Ext.define('August.model.PI', {
         { name: 'unit10', type: 'number' },
         { name: 'totalUnit', type: 'number' },
         { name: 'userName', type: 'string', convert: tr },
-        { name: 'userTime', type: 'date', dateFormat: 'c' },
+        { name: 'userTime', type: 'date', dateFormat: 'C' },
         { name: 'cutno', type: 'int' },
         { name: 'damageReason', type: 'string', convert: tr },
         { name: 'inventoryId', type: 'int' },
@@ -48,7 +48,7 @@ Ext.define('August.model.PI', {
         { name: 'poclUsed', type: 'string', convert: tr },
         { name: 'poclStyle', type: 'string', convert: tr },
         { name: 'poclColor', type: 'string', convert: tr },
-        { name: 'updateDate', type: 'date', dateFormat: 'c' },
+        { name: 'updateDate', type: 'date', dateFormat: 'C' },
         { name: 'alter_pack', type: 'string', convert: tr },
         { name: 'pr_line', type: 'int' },
         { name: 'pr_orderno', type: 'int' },

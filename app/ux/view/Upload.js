@@ -23,7 +23,7 @@ Ext.define('Ext.ux.view.Upload', {
     enableTextSelection: false,
 
     initComponent: function(c){
-        var me = this;
+        var me = this;        
 
         me.callParent(arguments);
 
@@ -51,6 +51,7 @@ Ext.define('Ext.ux.view.Upload', {
                     }
                 },
                 change: function(field, path, eOpts) {
+                    
                     if (Ext.isIE) {
                         return;
                     }
@@ -89,18 +90,13 @@ Ext.define('Ext.ux.view.Upload', {
                 text: 'Refresh',
                 iconCls: 'x-fa fa-sync',
                 handler: function(item, e){
-                    me.getStore().reload();
+                    me.fireEvent('menuefreshclick', item, me);                    
                 }
             },{
                 text: "Remove",
                 iconCls: "x-fa fa-remove",
                 handler: function(item, e){
-                    Ext.each(me.getSelection(), function(rec, idx, self){
-                        rec.drop();
-                        if(rec.phantom){
-                            me.fileUpload.removeFileFromQueue(rec.id * -1 - 1)
-                        }
-                    });
+                    me.fireEvent('menuremoveclick', item, me);                    
                 }
             }]
         });
@@ -129,8 +125,8 @@ Ext.define('Ext.ux.view.Upload', {
 
     onRender: function(ctn, idx){
         var me = this;
-
-        me.callParent(arguments);
+                
+        me.callParent(arguments);    
 
         me.dropZone.getEl().on({
             drop: { fn: me.drop, scope: this },
@@ -216,7 +212,7 @@ Ext.define('Ext.ux.view.Upload', {
     },
 
     onItemRemove: function(records, index, item, view, eOpts){
-
+        
     },
 
     onItemContextMenu: function(rec, item, index, e){

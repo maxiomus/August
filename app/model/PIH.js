@@ -7,12 +7,12 @@ Ext.define('August.model.PIH', {
     
     fields: [
         { name: 'pino', type: 'int' },
-        { name: 'pidate', type: 'date', dateFormat: 'c' },
+        { name: 'pidate', type: 'date', dateFormat: 'C' },
         { name: 'memo', type: 'string' },
         { name: 'createUser', type: 'string', convert: tr },
-        { name: 'createTime', type: 'date', dateFormat: 'c' },
+        { name: 'createTime', type: 'date', dateFormat: 'C' },
         { name: 'updateUser', type: 'string' },
-        { name: 'updateTime', type: 'date', dateFormat: 'c' },
+        { name: 'updateTime', type: 'date', dateFormat: 'C' },
         { name: 'warehouse', type: 'string', convert: tr },
         { name: 'alter_pack', type: 'string' },
         { name: 'tagNumber', type: 'string' },

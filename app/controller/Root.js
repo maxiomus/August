@@ -94,10 +94,10 @@
             args = Ext.Array.slice(arguments),
             node = args[0],
             action = args[args.length - 1];
-
-        console.log('onBeforeLogin', August.loggedInUser)
+        
         if(August.loggedInUser){
             action.stop();
+
             this.redirectTo('dashboard');
         }
         else{
@@ -162,11 +162,12 @@
             existingItem = mainCard.child('component[routeId=' + hashTag + ']');
 
             mainVM.set('currentUser', August.loggedInUser);
-        
+                
         // method for security...
         me.secureNavigate(treelist, hashTag);
 
         var view = (node && node.get('read')) ? node.get('view') : null;
+        
         // Kill any previously routed window
         /*
         if (lastView && lastView.isWindow) {
@@ -240,7 +241,7 @@
             // we don't add it to the card layout.
             if (existingItem) {
                 // We don't have a newView, so activate the existing view.
-                if (existingItem !== lastView) {
+                if (existingItem !== lastView) {                    
                     mainLayout.setActiveItem(existingItem);
                 }
                 newView = existingItem;
@@ -248,14 +249,11 @@
             else {
                 // newView is set (did not exist already), so add it and make it the activeItem.
                 //console.log('Got View?', newView)
-                //Ext.suspendLayouts(false);
-                console.log('setActiveItem', newView);
+                //Ext.suspendLayouts(false);                
                 mainLayout.setActiveItem(mainCard.add(newView));
                 //Ext.resumeLayouts(true);
             }
-        }
-
-        console.log('setCurrentView', view, args, hashTag, node);
+        }        
 
         if (newView.isFocusable(true)) {
             newView.focus();
@@ -268,77 +266,82 @@
             //settings = null,
             store = null;
         
-        if(cvm != null) {                        
-            store = cvm.getStore(hashTag.replace('-', '')+'s');
-            //console.log('not null', mainVM.getData().currentView, store);
+        if(cvm != null) {                                    
+            store = cvm.getStore(hashTag.replace('-', '')+'s');            
         }
 
         if(store != null && !store.isLoaded()){
-            store.on('load', action.resume, action, {single:true});
+            store.on('load', action.resume, action, {single:true});            
         }
         else{
             action.resume();
-        }
-        
+        }                
+
         treelist.suspendEvents(true);
         treelist.setSelection(node);
         treelist.resumeEvents(true);
 
-        Ext.getBody().unmask();
+        Ext.getBody().unmask();        
     },
 
     onBeforeRoute: function(){
         var me = this,
             args = Ext.Array.slice(arguments),
             action = args[args.length - 1];
-        
-        if(August.app.getAppReady()) {
-            if(August.loggedInUser){
-                //var setting = Ext.getStore('Settings');
+                
+        if(August.loggedInUser){
+            //var setting = Ext.getStore('Settings');
 
-                if(!August.app.getMainView()){
-                    August.app.setMainView('August.view.main.Main');
-                }                
-                /*
-                if(!setting.isLoaded()){
-                    setting.on('load',
-                        Ext.bind(me.onBeforeRoute, me, args),
-                        me,
-                        {
-                            single: true
-                        }
-                    );
-                }
-                else {
-                    
-                    if(Ext.isEmpty(August.sp)){
-                        August.sp = Ext.create('August.util.RemoteStateProvider', {
-                            accountId: August.user.data.AccountId,
-                            url: '/api/State',
-                            stateCallBack: function(){
-                                me.setCurrentView(args, action);
-                            }
-                        });
-                        Ext.state.Manager.setProvider(August.sp);
+            if(!August.app.getMainView()){
+                August.app.setMainView('August.view.main.Main');
+            }                
+            /*
+            if(!setting.isLoaded()){
+                setting.on('load',
+                    Ext.bind(me.onBeforeRoute, me, args),
+                    me,
+                    {
+                        single: true
                     }
-                    else {
-                        me.setCurrentView(args, action);
-                    }                                                        
-                }                
-                */
-                me.setCurrentView(args, action);
+                );
             }
             else {
-                //Set previous location...
-                if(Ext.util.History.getToken() !== 'login'){
-                    //console.log(Ext.util.History.getToken())
-                    //August.app.setPrevNode(Ext.util.History.getToken());
+                
+                if(Ext.isEmpty(August.sp)){
+                    August.sp = Ext.create('August.util.RemoteStateProvider', {
+                        accountId: August.user.data.AccountId,
+                        url: '/api/State',
+                        stateCallBack: function(){
+                            me.setCurrentView(args, action);
+                        }
+                    });
+                    Ext.state.Manager.setProvider(August.sp);
                 }
-                action.stop();
-                //console.log('Not ready', Ext.Object.toQueryString({previous: node}));
-                //console.log('Not ready', node.replace(/\//g, '+'));
-                me.redirectTo('login');
+                else {
+                    me.setCurrentView(args, action);
+                }                                                        
+            }                
+            */
+            if(args[0] != 'login'){
+                me.setCurrentView(args, action);
+            }            
+        }
+        else {
+            //Set previous location...
+            if(Ext.util.History.getToken() !== 'login'){
+                //console.log(Ext.util.History.getToken())
+                August.app.setPrevNode(Ext.util.History.getToken());
             }
+
+            action.stop();
+            //console.log('Not ready', Ext.Object.toQueryString({previous: node}));
+            //console.log('Not ready', node.replace(/\//g, '+'));
+            me.redirectTo('login');
+        }
+
+        /*
+        if(August.app.getAppReady()) {
+            
         }
         else {
             // Changed on 11/24/2021 => August.app.on(
@@ -350,7 +353,8 @@
                     single: true
                 }
             );
-        }        
+        } 
+        */       
     },
 
     onRouteSrch: function(node, viewmode, prop, val){
@@ -574,6 +578,7 @@
          if(args.length > 0){
 
          }*/
+        
         var me = this,
         //refs = me.getReferences(),
             mainView = August.app.getMainView(),
@@ -585,10 +590,10 @@
             store = vm.getStore(node.replace('-','')+'s'),
             fieldname = store.first().getIdProperty(),
             rec = store.findRecord(fieldname, id.toString(), 0, false, false, true),
-            item, innerTab, prefix = node + '-',
+            item, innerTab, 
+            prefix = node + '-',
             xf = Ext.util.Format;
-
-        console.log('Route - openTab', node, id, sub, vm.getStore(node+'s'), fieldname, rec);
+        
         console.log(store, store.isLoaded(), store.isLoading())
         switch(node) {
             case 'dal':
@@ -839,9 +844,11 @@
                 break;
             case 'line':
                 store = vm.getStore('linesheets');
-                fieldname = store.first().getIdProperty();
+                
+                //fieldname = store.first().getIdProperty();
+                fieldname = 'lineseq';
                 rec = store.findRecord(fieldname, id.toString(), 0, false, false, true);
-
+                
                 innerTab = {
                     inTab: true,
                     node: node,
@@ -855,12 +862,12 @@
                     viewModel: {
                         type: 'linesheet',
                         data: {
-                            title: rec.data.title + ' - ' + Ext.Date.format(new Date(rec.data.season.slice(4,6)+'/1/'+rec.data.season.slice(0,4)), 'F, Y')
+                            title: rec.data.linetitle + ' - ' + Ext.Date.format(new Date(), 'F, Y')
                         },
                         links: {
                             theLineSheet: {
-                                type: 'sample.Linesheet',
-                                id: rec.data.lineId
+                                type: 'style.LineSheet',
+                                id: rec.data.lineseq
                             }
                         }
                     }
@@ -896,14 +903,11 @@
             //title = (!id ? 'New' : 'Edit'),
             alias;
 
-        switch(node){
-            case 'request':
-            case 'review':
-            case 'pending':
+        switch(node){            
             case 'purchase-order':
                 title += ' Purchase Order';
                 alias = 'purchase-orderForm';
-            break;
+                break;
             case 'sales-order':
                 title += ' Sales Order';
                 alias = 'sales-orderForm';
@@ -912,6 +916,10 @@
             case 'product':
                 title += ' Style';
                 alias = 'style-edit-form';
+                break;
+            case 'payment-receive':
+                title += ' Payment Receive';
+                alias = 'payment-receiveForm';
                 break;
             case 'physical':
                 title += ' P.I';
@@ -986,17 +994,20 @@
                 this.processSales(fvm, node, op, id);
                 break;
             case 'product':
-                var tabs = form.lookupReference('editsampletabs'),
+                var tabs = form.lookupReference('editproducttabs'),
                     photos = form.lookupReference('photos'),
                     attach = form.lookupReference('attachment'),
                     request = form.lookupReference('reqs');
 
                 photos.setTitle('Style Photos');
 
-                tabs.remove(attach);
-                tabs.remove(request);
+                //tabs.remove(attach);
+                tabs.remove(request);            
             case 'sample':
-                this.processSamples(fvm, node, op, id);
+                this.processProducts(fvm, node, op, id);
+                break;     
+            case 'payment-receive':       
+                this.processPayments(fvm, node, op, id);
                 break;
             case 'physical':
                 this.processPIs(fvm, node, op, id);
@@ -1053,24 +1064,20 @@
         }
 
         var binding = null;
+
         if(id){
+            August.model.purchase.Order.getProxy().setHeaders({
+                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+            });
+
             vm.linkTo('thePO', {
                 type: 'purchase.Order',
                 //reference: 'August.model.purchase.Order',
                 id: parseInt(id,10)
-            });
+            });                                    
 
-            console.log('processPurchases', vm);
+            //console.log('processPurchases', vm);
             
-            binding = vm.bind('{thePO}', function(rec){
-
-                vm.getView().setLoading(false);
-                binding.destroy();
-            });
-
-            if(binding){
-                vm.getView().setLoading(false);
-            }
         }
         else {
             if(vm.get('thePO') != null){
@@ -1088,7 +1095,12 @@
             });
         }
 
-        binding = vm.bind('{thePO}', function(rec){
+        var vendors = vm.getStore('vendors');
+        var shiptos = vm.getStore('shiptos');
+        binding = vm.bind('{thePO}', function(rec){                                                
+            
+            vendors.load();
+            shiptos.load();
 
             vm.getView().setLoading(false);
             binding.destroy();
@@ -1096,11 +1108,13 @@
 
         if(binding){
             vm.getView().setLoading(false);
-        }
+        }        
     },
 
     processSales: function(vm, node, op, id){
         var session = vm.getSession();        
+
+        console.log('processSales', vm);
 
         var cRec = vm.get('theOrder');
         if(!Ext.isEmpty(session.data['sales.Order']) && !session.data['sales.Order'].hasOwnProperty(id)){
@@ -1110,24 +1124,17 @@
         }
 
         var binding = null;
+        
         if(id){
+            August.model.sales.Order.getProxy().setHeaders({
+                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+            });
+
             vm.linkTo('theOrder', {
                 type: 'sales.Order',
                 //reference: 'August.model.sales.Order',
                 id: parseInt(id,10)
-            });
-
-            console.log('processSales', vm);
-            //var piStore = vm.linkData.theOrder;
-            binding = vm.bind('{theOrder}', function(rec){
-
-                vm.getView().setLoading(false);
-                binding.destroy();
-            });
-
-            if(binding){
-                vm.getView().setLoading(false);
-            }
+            });                                    
         }
         else {
             if(vm.get('theOrder') != null){
@@ -1138,15 +1145,25 @@
                 type: 'sales.Order',
                 create: {
                     startDate: new Date().toDateString(),
-                    status: 'Closed',
+                    status: 'Open',
                     //warehouse: '00',
                     userName: August.loggedInUser.userId
                 }
             });
         }
 
+        //var customers = vm.getStore('customers');
+        //var stores = vm.getStore('stores');
+
         binding = vm.bind('{theOrder}', function(rec){
 
+            /*
+            customers.load({
+                callback: function(recs, op){
+                    stores.load();
+                }
+            });       
+            */
             vm.getView().setLoading(false);
             binding.destroy();
         });
@@ -1348,25 +1365,28 @@
         }
     },
 
-    processSamples: function(vm, node, op, id){
+    processProducts: function(vm, node, op, id){
         var session = vm.getSession();
             //boms = vm.getView().lookupReference('boms'),
             //store = boms.getViewModel().getStore('boms'),
             //bomStore = vm.getStore('boms'),
             //center = boms.lookupReference('center');
-
+        
         if(!Ext.isEmpty(session.data['style.Product']) && !session.data['style.Product'].hasOwnProperty(id)){
-            //console.log('before clear', session.data['sample.Product'].hasOwnProperty(id), id,session.data['sample.Product'].hasOwnProperty(id) != id);
+            //console.log('before clear', session.data['style.Product'].hasOwnProperty(id), id, session.data['style.Product'].hasOwnProperty(id) != id);
             session.data['style.Product'] = null;
             session.data['style.Bomh'] = null;
             session.data['style.Bolh'] = null;
             session.data['style.Bom'] = null;
             session.data['style.Bol'] = null;
             session.data['style.File'] = null;
-            session.data['style.Smph'] = null;
-            //console.log('after clear', session.data, session.data["sample.Product"])
+            session.data['style.ProductPhoto'] = null;
+            //console.log('after clear', session.data, session.data["style.Product"])
         }
 
+        console.log('processProducts', vm);            
+
+        var binding = null;
         if(id){
             /*
             August.model.Product.load(parseInt(id,10), {
@@ -1377,10 +1397,13 @@
                     var bomIdx = 0;
                 }
             });
-            */
-            var binding = null;
+            */            
 
             if(op == 'edit'){
+
+                August.model.style.Product.getProxy().setHeaders({
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                });
 
                 vm.linkTo('theProduct', {
                     type: 'style.Product',
@@ -1550,18 +1573,7 @@
 
                     }
                 });
-            }
-
-            console.log('processSamples', vm);
-
-            binding = vm.bind('{theProduct}', function(rec){
-                vm.getView().setLoading(false);
-                binding.destroy();
-            });
-
-            if(binding){
-                vm.getView().setLoading(false);
-            }
+            }            
         }
         else {
             /*
@@ -1592,6 +1604,73 @@
                 }
             });
            // console.log('edit', vm.get('theProduct'), vm.linkData.theProduct)
+        }
+
+        binding = vm.bind('{theProduct}', function(rec){
+            vm.getView().setLoading(false);
+            binding.destroy();
+        });
+
+        if(binding){
+            vm.getView().setLoading(false);
+        }
+    },
+
+    processPayments: function(vm, node, op, id){
+        var session = vm.getSession();        
+
+        var cRec = vm.get('thePayment');
+        if(!Ext.isEmpty(session.data['payment.Header']) && !session.data['payment.Header'].hasOwnProperty('paymentNo')){
+            //console.log(session.data)
+            session.data['payment.Header'] = null;
+            session.data['payment.Detail'] = null;            
+        }
+
+        var binding = null;
+        
+        if(id){
+            August.model.payment.Header.getProxy().setHeaders({
+                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+            });            
+                
+            vm.linkTo('thePayment', {
+                type: 'payment.Header',
+                //reference: 'August.model.sales.Order',
+                id: parseInt(id,10)
+            });                                    
+        }
+        else {
+            if(vm.get('thePayment') != null){
+                vm.set('thePayment', null);
+            }
+
+            vm.linkTo('thePayment', {
+                type: 'payment.Header',
+                create: {
+                    paymentDate: new Date(),                    
+                    paymentCode: 'CREDIT CARD',
+                    transtype: 'Payment',
+                    qb_pmt_batch_date: new Date(),
+                    userName: August.loggedInUser.userId,
+                    userTime: new Date(),
+                    createuser: August.loggedInUser.userId,
+                    createusertime: new Date()
+                }
+            });
+        }
+
+        //var customers = vm.getStore('customers');
+        //var stores = vm.getStore('stores');
+        
+        binding = vm.bind('{thePayment}', function(rec){
+
+            console.log('processPayment - Binding', vm);
+            vm.getView().setLoading(false);
+            binding.destroy();
+        });
+
+        if(binding){
+            vm.getView().setLoading(false);
         }
     },
 

@@ -28,5 +28,26 @@
       "label": "Free The Rose",
       "name": "FR", 
       "value": "13"
+    },
+    {
+      "label": "Verishop",
+      "name": "VS", 
+      "value": "16"
+    },
+    {
+      "label": "Lord & Taylor",
+      "name": "LT", 
+      "value": "100"
+    },
+    {
+      "label": "HBC",
+      "name": "HB", 
+      "value": "101"
+    },
+    {
+      "label": "BELK",
+      "name": "BK", 
+      "value": "102"
     }
+    
 ]

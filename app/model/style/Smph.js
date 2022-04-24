@@ -33,8 +33,8 @@ Ext.define('August.model.style.Smph', {
         { name: 'F_OWNER', type: 'string', allowNull: true },
         { name: 'F_USERID', type: 'string' },
         { name: 'F_MOD_USER_ID', type: 'string', allowNull: true },
-        { name: 'F_CREATED_ON', type: 'date', dateFormat: 'c'},
-        { name: 'F_UPDATED_ON', type: 'date', dateFormat: 'c'},
+        { name: 'F_CREATED_ON', type: 'date', dateFormat: 'C'},
+        { name: 'F_UPDATED_ON', type: 'date', dateFormat: 'C'},
         { name: 'RORDER', type: 'int'},
         { name: 'F_PATH', type: 'string', persist: false,
             calculate: function(d){
@@ -45,7 +45,8 @@ Ext.define('August.model.style.Smph', {
 
                 return b;
             }
-        },
+        }
+        /*
         {
             name: 'productId',
             reference: {
@@ -57,6 +58,7 @@ Ext.define('August.model.style.Smph', {
                 inverse: 'smphs'
             }
         }
+        */
     ],
 
     idProperty: 'ID',

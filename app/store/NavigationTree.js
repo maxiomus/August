@@ -49,6 +49,31 @@ Ext.define('August.store.NavigationTree', {
                 }]
             },
             {
+                text: 'Customer',
+                expanded: false,
+                selectable: false,
+                iconCls: 'x-far fa-address-card',
+                routeId: 'customer',
+                id: 'customer',
+                children: [                
+                {
+                    text: 'Main',
+                    view: 'customer.Main',
+                    leaf: true,
+                    read: true,
+                    iconCls: 'x-far fa-address-book',
+                    routeId: 'customer-main'
+                },{
+                    text: 'Payments',
+                    view: 'customer.payment.Receive',
+                    leaf: true,
+                    read: true,
+                    granted: ['account', 'administrators'],
+                    iconCls: 'x-fas fa-file-invoice-dollar',
+                    routeId: 'payment-receive'
+                }]
+            },
+            {
                 text: 'Sales',
                 expanded: false,
                 selectable: false,
@@ -236,6 +261,14 @@ Ext.define('August.store.NavigationTree', {
                     read: true,
                     iconCls: 'x-fa fa-cube',
                     routeId: 'product'
+                },
+                {
+                    text: 'Line Sheet',
+                    view: 'production.Line',
+                    leaf: true,
+                    read: true,
+                    iconCls: 'x-fa fa-tags',
+                    routeId: 'line'
                 },
                 {
                     text: 'Purchase Orders',

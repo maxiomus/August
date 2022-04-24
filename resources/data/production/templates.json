@@ -1,0 +1,32 @@
+[
+  {
+    "label": "Landscape 8",
+    "field": "1",
+    "value": 8
+  },  
+  {
+    "label": "Landscape 4",
+    "field": "2",
+    "value": 4
+  },
+  {
+    "label": "Landscape 2",
+    "field": "3",
+    "value": 2
+  },
+  {
+    "label": "Portrait 4",
+    "field": "4",
+    "value": 4
+    },    
+  {
+    "label": "Portrait 3",
+    "field": "5",
+    "value": 3
+  },
+  {
+    "label": "Portrait 2",
+    "field": "6",
+    "value": 2
+  }
+]

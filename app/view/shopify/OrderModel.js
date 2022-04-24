@@ -14,12 +14,12 @@ Ext.define('August.view.shopify.OrderModel', {
             storeId: 'shopifyorders',
             autoLoad: false,
 
-            //session: true,
+            session: true,
             //remoteFilter: true,
             //remoteSort: true,            
 
-            leadingBufferZone: 300,
-            pageSize: 15,
+            //leadingBufferZone: 300,
+            pageSize: 100,
 
             proxy: {
                 type: 'rest',

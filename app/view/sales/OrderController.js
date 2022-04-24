@@ -7,8 +7,20 @@ Ext.define('August.view.sales.OrderController', {
 
     alias: 'controller.sales-order',
 
+    listen: {
+        component: {
+            'window': {
+                close: function(w){
+                    this.mv.unmask();
+                }
+            }
+        }
+    },
+
     init: function(){
         var me = this;
+
+        me.mv = August.app.getMainView();
 
         Ext.Ajax.request({
             url: 'resources/data/sales/stores.json',
@@ -43,6 +55,8 @@ Ext.define('August.view.sales.OrderController', {
             }
         });
     },
+
+        
 
     onAfterGridRender: function(p){
 
@@ -88,6 +102,176 @@ Ext.define('August.view.sales.OrderController', {
         });
     },
 
+    onOpenPOTemplateClick: function(b, e){
+        var me = this,
+            multiview = me.getView().lookupReference('multiview'),
+            topbar = multiview.lookupReference("topbar"),
+            //searchlist = topbar.down('searchtextlist'),
+            grid = multiview.lookupReference('sales-order-grid'),
+            rec = grid.getSelectionModel().selected.items[0];        
+
+            //console.log(rec);
+        me.showWindow(rec, 'windows-po-generate', function(type){
+
+            var win = me.win,
+                wvm = win.getViewModel(),
+                //btnSave = win.getDockedItems('toolbar[dock="bottom"] > button[action="save"]')[0];
+                combo = win.down('combo[name="category"]'),
+                field = win.down('searchtextlist'),
+                grid = win.lookupReference('orderItemsGrid'),        
+                template = win.lookupReference('poTemplateGrid'),   
+                btnSave = win.down('button[action="save"]');        
+                                    
+            /*            
+            wvm.getStore('shopifytemplates').on('datachanged', function(store){
+                btnTemplate.setDisabled(store.getCount() == 0);
+                
+                console.log('templates - store datachanged', store.first());
+            });
+            */
+            //win.on('templateclick', me.onSaveWebPublish, me);            
+
+            //btnSave.setDisabled(template.getStore().getCount() == 0);
+
+            win.on('resetclick', function(b,c) {
+                var store = grid.getStore();                    
+
+                var selected = template.getSelectionModel().selected;
+                template.getStore().each(function(rec, index){
+                    rec.drop();
+                });
+                                
+                store.load();
+
+            }, me);
+
+            win.on('saveclick', function(btn, type){
+                                
+                var vm = win.getViewModel(),
+                    session = vm.getSession(),
+                    batch = session.getSaveBatch(),
+                    changes = session.getChanges();
+                    grid = win.lookupReference('poTemplateGrid'),
+                    store = grid.getStore();
+                                                    
+                console.log(vm, session, changes);
+                
+                var processMask = new Ext.LoadMask({
+                    msg: 'Saving... Please wait',
+                    target: win
+                });
+
+                store.sync({                    
+                    success: function(batch, opts) {                                                                                               
+                        processMask.hide('', function() {
+                            Ext.Msg.alert('Status', 'Changes saved successfully.', function(){
+                                
+                            });
+                        });                
+                    },
+                    failure: function(batch, opts) {
+                        console.log('failure', batch.exceptions[0].error.response);
+                        var resp = batch.exceptions[0].error.response;
+                        processMask.hide('', function() {
+                            Ext.Msg.alert(resp.statusText + ' - ' + resp.status, resp.responseJson.Message);
+                        });
+                    },
+                    callback: function (batch, opts) {
+                        console.log('callback', batch, opts);
+                        
+                    }
+                });
+
+                //me.win.close();
+                processMask.show();                
+                
+                /*
+                if(batch !== undefined){
+                    var processMask = new Ext.LoadMask({
+                        msg: 'Saving... Please wait',
+                        target: me.view
+                    });
+
+                    batch.on({
+                        operationcomplete: function(batch, op){
+                            console.log(op, op.getResultSet(),op.getResponse());
+                            var objResp = op.getResponse();
+                            if(!Ext.isEmpty(objResp)){
+                                //var response = JSON.parse(objResp.responseText);
+                            }
+                        },
+                        complete: function(batch, op){
+                            console.log(op, op.getResponse());
+                            var objResp = op.getResponse();
+                            if(!Ext.isEmpty(objResp)){
+                                //var response = JSON.parse(objResp.responseText);
+                            }
+
+                            processMask.hide('', function() {
+                                Ext.Msg.alert('Status', 'Changes saved successfully.');
+                            });
+
+                        },
+                        exception: function(batch, op){
+                            processMask.hide('', function(){
+                                //Ext.Msg.alert('Error', 'Error occurred');
+                                var objResp = op.error.response;
+                                console.log(objResp)
+                                if(!Ext.isEmpty(objResp)){
+                                    //var response = JSON.parse(objResp.responseText);
+                                    Ext.Msg.alert(objResp.statusText, objResp.responseText);
+                                }
+
+                            });
+                        }
+                    });
+
+                    processMask.show('', function(){
+
+                    });
+
+                    batch.start();
+                }
+                else {
+                    Ext.Msg.alert('No Changes', 'There are no changes to the session.');
+                }
+                */
+
+            }, me);
+        });
+    },
+
+
+    showWindow: function(rec, xtype, callback){
+        var me = this,
+            view = me.getView(),
+            multiview = view.lookupReference('multiview');
+
+        me.isEdit = !!rec;
+
+        me.win = view.add({
+            xtype: xtype,
+
+            viewModel: {
+                data: {
+                    selected: rec
+                }
+            },
+            // Create a child session that will spawn from the current session of this view
+            session: true,
+
+            renderTo: Ext.getBody()
+        });
+
+        me.win.show('', function(){
+            me.mv.mask();
+        });
+
+        if(typeof callback === "function"){
+            callback(xtype);
+        }
+    },
+    
     onContextMenuEditClick: function(d, c){
 
     },
@@ -131,14 +315,6 @@ Ext.define('August.view.sales.OrderController', {
     },
 
     onFilterItemChange: function(combo, j, g, l){
-         var topbar = combo.up("topbar"),
-         k = topbar.down("searchgrid");
-         k.paramName = combo.getValue();
-
-         k.setValue('');
-    },
-
-    onFilterItemChange: function(combo, j, g, l){
         var topbar = combo.up("topbar"),
            m = topbar.down("searchgrid"),
            n = topbar.down("searchnumber"),            
@@ -163,10 +339,10 @@ Ext.define('August.view.sales.OrderController', {
                break;
            default:
                m.paramName = j;
-               m.show();               
+               m.show();         
                n.setValue('');
-               n.hide();
-       }         
+               n.hide();               
+       }                
    },
 
     onItemContextMenu:function(h, j, k, g, l){

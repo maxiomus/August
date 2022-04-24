@@ -15,7 +15,6 @@ Ext.define('August.view.main.MainController', {
         var me = this;
         
         localStorage.clear();
-
         August.app.destroy();
         window.location.reload(true);
         /*

@@ -501,7 +501,7 @@ Ext.define('August.view.production.style.edit.FormController', {
                     action: 'close',
                     text: 'Close',
                     //glyph: 88,
-                    iconCls: 'x-fa fa-times-circle',
+                    iconCls: 'x-far fa-times-circle',
                     handler: function(btn){
                         me.win.close();
                     }
@@ -600,7 +600,7 @@ Ext.define('August.view.production.style.edit.FormController', {
         });
     },
 
-    onSaveCostClick: function(){
+    onSaveCostClick: function(){onMenuRefreshClick
         // Save the changes pending in the win's child session back to the
         // parent session.
         var me = this,
@@ -1263,7 +1263,7 @@ Ext.define('August.view.production.style.edit.FormController', {
             view = me.getView(),
             vm = me.getViewModel(),
         //mv = August.app.getMainView(),
-            smp = vm.get('theSample');
+            smp = vm.get('theProduct');
 
         if(smp){
             var style = smp.data.style.trim(),
@@ -1534,69 +1534,272 @@ Ext.define('August.view.production.style.edit.FormController', {
         */
     },
 
-    onPhotoDropped: function(view, recs){
-        var me = this,
-            form = me.getView(),
-            sData = me.getViewModel().get('theSample').data,
-            mv = form.previousSibling('multiview'),
-            grid = mv.refs.grid,
-            sample = grid.getStore().getById(sData.id),
-            total = view.getStore().getCount(),
-            routeId = form.ownerCt.routeId;
+    onMenuRefreshClick: function(item, c){
+        //console.log('onMenuRefreshClick', item, c);
+        var me = this,       
+            session = me.getSession(),     
+            changes = session.getChanges();        
 
-        //console.log(routeId, grid.getStore(), sData.id)
-        var idx = 1,
-            sub = total - recs.length;
+        if(changes != null){
+            //changes=Ext.JSON.encodeValue(changes, '<br>');
+            //Ext.Msg.alert('proxy', '<pre>' + changes + '</pre>');
+            //var a = changes['style.ProductPhoto'].C;
+            //a.splice(0, a.length);
+            //changes['style.ProductPhoto'] = null;
+            if(session.data.hasOwnProperty('style.ProductPhoto')){
+                session.data['style.ProductPhoto'] = null;
+            }
+            
+            if(session.data.hasOwnProperty('File')){
+                session.data['File'] = null;
+            }
+            
+        }
+                
+        console.log('refresh', c, changes, session);
+        c.store.load();        
+    },
 
-        recs.forEach(function(rec){
+    onMenuRemoveClick: function(item, c){
+        
+        var me = this,                   
+            store = c.getStore(),
+            session = me.getSession(),     
+            changes = session.getChanges(),
+            data = [];
 
-            rec.set('FID', '3');
-            rec.set('F_APPLICATION', routeId == 'product' ? 'PROD': 'DAL');
-            rec.set('F_LINK', 'DLIB/BLU-PHOTOS/');
-            rec.set('F_BFLAG', true);
-            rec.set('F_STYLE', sample.data.style.trim());
-            rec.set('F_DESC5', sample.data.user2);
-            rec.set('F_DESC6', sample.data.prints.split('(#)')[0]);
-            rec.set('F_DESC3', sample.data.prints.split('(#)')[1]);
-            rec.set('F_EXT', '.' + rec.data.name.split('.').pop());
-            rec.set('F_NAME', sample.data.style.trim() + (!Ext.isEmpty(sample.data.user2) ? '_' + sample.data.user2.trim() : '') + (!Ext.isEmpty(sample.data.prints) ? '_' +  sample.data.prints.split('(#)')[0] : '') + rec.data.F_EXT);
-            rec.set('F_TYPE', rec.data.type);
-            rec.set('F_SIZE', rec.data.size);
-            rec.set('F_OWNER', sample.id);
-            rec.set('F_LOCATION', rec.data.name + '_' + rec.data.size);
-            rec.set('F_CATEGORY', 'Photos');
-            rec.set('F_USERID', August.user.data.Userid);
-            rec.set('F_CREATED_ON', new Date());
-            idx = idx + 1;
-            //rec.set('F_NAME', routeId == 'product' ? sample.data.style.trim() + '_' + sample.data.color.trim() + (!Ext.isEmpty(rec.get('F_MFLAG')) ? '_' + rec.get('F_MFLAG').toLowerCase() : '') + rec.data.F_EXT : sample.data.style.trim() + (!Ext.isEmpty(sample.data.user2) ? '_' + sample.data.user2.trim() : '') + (!Ext.isEmpty(sample.data.prints) ? '_' +  sample.data.prints.split('(#)')[0] : '') + '_' + rec.data.RORDER + rec.data.F_EXT);
-            //rec.set('RORDER', routeId == 'product' ? (sub + idx > 2 ? null : sub + idx) : null);
-            //rec.set('F_LINK', routeId == 'product' ? (sub + idx > 2 ? 'DLIB/BLU-PHOTOS/' : 'N41IMG/200xImages/') : 'DLIB/BLU-PHOTOS/');
-            //rec.set('F_BFLAG', routeId == 'product' ? (sub + idx > 2 ? true : false) : true);
-            //rec.set('F_MFLAG', sub + idx > 2 ? null : (sub + idx == 1 ? 'FRONT' : 'BACK'));
+        Ext.each(c.getSelection(), function(rec, idx, self){
+                                               
+            if(rec.phatom){
+                c.fileUpload.removeFileFromQueue(rec.id * -1 - 1);
+            }            
+
+            data.push(rec.getData(true));
+            
+            rec.drop();     
+            session.evict(rec);                               
+
+            //console.log('onMenuRemoveClick', rec.getData(true));
         });
 
+        var url = '/WebApp/api/',
+            modelName = '';
+
+        if(session.data.hasOwnProperty('style.ProductPhoto')){
+            session.data['style.ProductPhoto'] = null;
+            modelName = 'ProductPhotos';
+        }
+        
+        if(session.data.hasOwnProperty('File')){
+            session.data['File'] = null;
+            modelName = 'Files/Product';
+        }
+
+        Ext.Ajax.request({
+            url: url + modelName,
+            method: 'DELETE',            
+
+            headers: {
+                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+            },
+
+            jsonData: data,
+
+            params: {
+                //store: comboSelected.get('name')
+            },
+
+            success: function(response){
+                
+                Ext.Msg.alert('Status', 'Item has removed successfully.', function(){
+                    console.log('success', response);
+                    
+                    if(changes != null){
+                        //changes = null;                        
+                        if(session.data.hasOwnProperty('style.ProductPhoto')){
+                            session.data['style.ProductPhoto'] = null;
+                        }
+                        
+                        if(session.data.hasOwnProperty('File')){
+                            session.data['File'] = null;
+                        }
+                    }
+
+                    store.rejectChanges();
+                    c.getStore().load();
+                    console.log('changes', changes) 
+                });  
+            },
+            failure: function(response){
+                Ext.Msg.alert('Status ' + response.status, response.statusText, function(){
+                    console.log('failure', response);    
+                }); 
+            }
+        });
     },
 
     onFileDropped: function(view, recs){
+        var me = this,
+            //form = me.getView(),
+            store = view.getStore(),
+            vm = me.getViewModel(),
+            session = vm.getSession(),
+            changes = session.getChanges();
+            //sData = me.getViewModel().get('theProduct').data,
+            //mv = form.previousSibling('multiview'),
+            //grid = mv.refs.grid,
+            //sample = grid.getStore().getById(sData.id),
+            //total = view.getStore().getCount(),
+            //routeId = form.ownerCt.routeId;
+        
+        //var idx = 1,
+        //    sub = total - recs.length;        
 
+        var theProduct = vm.get('theProduct'),
+            field = me.getView().lookupReference('attachment').down('viewupload').fileUpload
+
+        field.name = field.name + '-' + theProduct.id;
+        //console.log('onPhotoDropped', store, theProduct, recs, field);
+
+        var data = [],
+            total = store.getCount(),            
+            count = store.getNewRecords().length;
+                
+        Ext.each(recs, function(rec, idx, self) {
+            rec.set('order', (total - count) + idx + 1);
+            var postfix = ((total - count) + idx + 1).toString().padStart(3, '0')            
+
+            rec.set('tag', theProduct.get('style') + '_' + theProduct.get('color').replace('/', '-') + "_" + postfix);
+            
+            data.push(rec.data);                               
+                     
+            //console.log('onPhoto', store.getNewRecords(), vm.getSession());
+        });                
+
+        if(field && field.getFilesQueue().length > 0){
+
+            field.send({
+                url: '/WebApp/api/Files/Product/Upload',
+                success: function(response, opts){
+                    
+                    if(changes != null){
+                        //changes = null;                        
+                        session.data['File'] = null;
+                    }
+
+                    store.rejectChanges();  
+                    store.load();
+                    //console.log('sucess', response, store.getNewRecords(), me.getSession().getChanges());
+
+                },
+                failure: function(response, opts) {
+                    console.log('failure', response);
+                    Ext.Msg.alert('Failure', response);
+                }
+            },{
+                attachment: JSON.stringify(data)
+            });
+        }
+        
+    },
+
+    onPhotoDropped: function(view, recs){
+        var me = this,
+            //form = me.getView(),
+            store = view.getStore(),            
+            vm = me.getViewModel(),
+            session = vm.getSession(),
+            changes = session.getChanges();
+            //sData = me.getViewModel().get('theProduct').data,
+            //mv = form.previousSibling('multiview'),
+            //grid = mv.refs.grid,
+            //sample = grid.getStore().getById(sData.id),
+            //total = view.getStore().getCount(),
+            //routeId = form.ownerCt.routeId;
+        
+        //var idx = 1,
+        //    sub = total - recs.length;        
+
+        var theProduct = vm.get('theProduct'),
+            field = me.getView().lookupReference('photos').down('viewupload').fileUpload
+
+        field.name = field.name + '-' + theProduct.id;
+        console.log('onFileDropped', view, store, theProduct, recs, field);
+
+        var data = [],
+            total = store.getCount(),            
+            count = store.getNewRecords().length;
+                
+        Ext.each(recs, function(rec, idx, self) {
+            rec.set('order', (total - count) + idx + 1);
+            var postfix = ((total - count) + idx + 1).toString().padStart(3, '0')
+            if(total === 0){
+                if(idx === 0){
+                    postfix = "front";
+                }
+                else if(idx === 1){
+                    postfix = "back";
+                }
+            }
+            else if(total === 1){
+                if(idx === 0){
+                    postfix = "back";
+                }
+            }
+            else {
+
+            }
+
+            rec.set('tag', theProduct.get('style') + '_' + theProduct.get('color').replace('/', '-') + "_" + postfix);
+            
+            data.push(rec.data);                               
+                     
+            //console.log('onPhoto', store.getNewRecords(), vm.getSession());            
+        });                        
+
+        if(field && field.getFilesQueue().length > 0){
+            
+            field.send({
+                url: '/WebApp/api/ProductPhotos/Upload',
+
+                success: function(response, opts){                    
+
+                    if(changes != null){
+                        //changes = null;                        
+                        session.data['style.ProductPhoto'] = null;
+                    }
+
+                    store.rejectChanges();                    
+                    store.load();                    
+                    //console.log('sucess', response, store.getNewRecords(), me.getSession().getChanges());
+
+                },
+                failure: function(response, opts) {
+                    console.log('failure', response);
+                    Ext.Msg.alert('Failure', response);
+                }
+            },{
+                Photos: JSON.stringify(data)
+            });
+        }
     },
 
     onAttachItemDblClick: function(view, rec, item, index){
         var me = this,
             form = me.getView(),
             viewer = form.up('product'),
-            reference = 'product-'+rec.getId().toString(),
+            reference = 'product-'+ rec.get('fileId').toString().replace('.', '-'),
             aw = viewer.lookupReference(reference),
             //title = rec.data.Title,
             //mv = August.app.getMainView(),
-            xf = Ext.util.Format;
+            xf = Ext.util.Format;            
 
-        //prefix = 'nDisplay-';
-
-        var srcPath = xf.format('../services/PDFHandler.ashx?path={0}&name={1}', xf.format('SAMPLE-ATTACHMENTS/{0}/{1}', xf.date(rec.data.created, 'Y/n/j'), rec.data.fileId), rec.data.name);
+        //prefix = 'nDisplay-';        
+        console.log('Attach DBLCLICK', rec, aw);
+        var srcPath = xf.format('/WebApp/services/PDFHandler.ashx?path={0}&name={1}', 'August', rec.data.name);
 
         if(rec.data.hasOwnProperty('path') && !Ext.isEmpty(rec.data.path)){
-            srcPath = rec.data.path;
+            //srcPath = rec.data.path;
         }
 
         if (!aw) {
@@ -1606,12 +1809,13 @@ Ext.define('August.view.production.style.edit.FormController', {
                 iconCls: 'x-fa fa-print',
                 title: rec.data.name,
 
-                width: form.getWidth() * 0.98,
-                height: form.getHeight() * 0.98,
+                width: form.getWidth() * 0.7,
+                height: form.getHeight() * 0.7,
 
                 renderTo: Ext.getBody(),
 
                 modal: true,
+                maximized: true,
                 maximizable: true,
                 //draggable: false,
                 //resizable: false,
@@ -1679,43 +1883,31 @@ Ext.define('August.view.production.style.edit.FormController', {
     },
 
     onPhotoItemDblClick: function(view, rec, item, index){
-
+        
         var me = this,
             form = me.getView(),
-            viewer = form.up('sample') || form.up('product'),
-            reference = viewer.routeId + '-photo-' + rec.getId().toString(),
+            viewer = form.up('product'),
+            title = rec.get('name').substr(0, rec.get('name').length - 4).replace(/_/gi, ' ').toUpperCase(),
+            //reference = viewer.routeId + '-photo-' + photoName.replace(/_/gi, '-'),
+            reference = 'product-'+ rec.get('pid').toString().replace('.', '-'),
             pw = viewer.lookupReference(reference),
-            //mv = August.app.getMainView(),
-            title = rec.data.Title;
+            //mv = August.app.getMainView(),                        
+            xf = Ext.util.Format;        
+        
+        var srcPath = 'http://209.37.126.195' + rec.get('path') + rec.get('name');        
 
-        if(Ext.isEmpty(rec.data.Title)){
-            title = (rec.data.F_OWNER != null ? rec.data.F_OWNER + ' ' : '') + rec.data.F_STYLE;
-        }
-
-        var srcPath = '';
-
-        if(!Ext.isEmpty(rec.data.F_NAME) && !Ext.isEmpty(rec.data.F_TYPE)){
-            srcPath = '../' + rec.data.F_LINK + rec.data.F_PATH + '/' + rec.data.ID + '/' + rec.data.F_NAME;
-            if(rec.data.ID < 0){
-                srcPath = '../' + rec.data.F_LINK + rec.data.F_NAME;
-            }
-        }
-        else {
-            srcPath = '../' + rec.data.F_LINK + rec.data.F_PATH + '/' + rec.data.F_LOCATION + rec.data.F_EXT;
-        }
-
-        if(rec.data.hasOwnProperty('path') && !Ext.isEmpty(rec.data.path)){
-            srcPath = rec.data.path;
+        if(rec.data.hasOwnProperty('path') && rec.data.path.includes("blob:")){
+            srcPath = rec.data.path;            
         }
 
         if (!pw) {
             pw = form.add({
                 xtype: 'window',
                 reference: reference,
-                title: 'No. ' + title,
+                title: title,
 
-                width: form.getWidth() * 0.98,
-                height: form.getHeight() * 0.98,
+                width: form.getWidth() * 0.7,
+                height: form.getHeight() * 0.7,
 
                 renderTo: Ext.getBody(),
 
@@ -1727,6 +1919,7 @@ Ext.define('August.view.production.style.edit.FormController', {
                 //resizable: false,
                 //constrain: true,
                 //closable: true,
+                maximized: true,
                 maximizable: true,
                 //scrollable: true,
 
@@ -1734,7 +1927,7 @@ Ext.define('August.view.production.style.edit.FormController', {
                     padding: '5 0 0 0',
                     items: {
                         xtype: 'tbtext',
-                        html: '<i class="x-fa fa-times-circle-o fa-2x fa-fw red-txt"></i>',
+                        html: '<i class="x-far fa-times-circle-o fa-2x fa-fw red-txt"></i>',
                         style: {
                             cursor: 'pointer'
                         },
@@ -1800,7 +1993,7 @@ Ext.define('August.view.production.style.edit.FormController', {
 
                         if(iframe){
                             var cw = iframe.getEl().dom.contentWindow;
-                            //console.log(iframe, cw.document);
+                            console.log(iframe, cw.document);
                             cw.print();
                         }
                         else{
@@ -1808,8 +2001,9 @@ Ext.define('August.view.production.style.edit.FormController', {
                             //var img = innerPnl.down('image');
 
                             var innerPnl = pw.getComponent('innerPnl');
+                            console.log('innerPnl', innerPnl);
                             innerPnl.print();
-                            //console.log(innerPnl)
+                            
                         }
                     }
                 }, {
@@ -1825,6 +2019,10 @@ Ext.define('August.view.production.style.edit.FormController', {
         pw.show('', function(){
             me.mv.mask();
         });
+    },
+
+    onPhotoSelect: function(view, rec, idx){
+        //console.log('onPhotoSelect', rec);
     },
 
     onItemSelectionChange: function(sm, rec){
@@ -1846,20 +2044,28 @@ Ext.define('August.view.production.style.edit.FormController', {
                     padding: '10 0 10 0',
                     tpl: new Ext.XTemplate(
                         '<div style="font-weight: bold; font-size: 1.2em; color: #888;">ATTACHMENT DETAILS</div>',
-                        '<div><i class="fa fa-file-{type:this.getFileType}-o fa-4x" style="padding-top:14px;padding-bottom: 5px;"></i></div>',
-                        '<div style="font-weight: bold;">{name}</div>',
+                        '<div><i class="far fa-file{type:this.getFileType} fa-4x" style="padding-top:14px;padding-bottom: 5px;"></i></div>',
+                        '<div style="font-weight: bold;">{name:this.getFileName}</div>',
                         '<div>{created:this.getFileDate}</div>',
                         {
+                            getFileName: function(v){
+                                var a = v.split('_'),
+                                name = a[0] + ' ' +a[1] + ' ' + a[2];                                     
+
+                                return Ext.String.ellipsis(name, 30);
+                            }
+                        },
+                        {
                             getFileType: function(v){
-                                var a = ['image', 'pdf', 'excel', 'word', 'powerpoint'];
+                                var a = ['txt', 'pdf', 'excel', 'word', 'csv'];
 
                                 for(var i = 0; i < a.length; i++){
                                     if(v.indexOf(a[i]) != -1) {
-                                        return a[i];
+                                        return '-' + a[i];
                                     }
                                 }
 
-                                return 'code';
+                                return '';
                             },
                             getFileDate: function(v){
                                 if(Ext.isEmpty(v)){
@@ -1875,9 +2081,10 @@ Ext.define('August.view.production.style.edit.FormController', {
                     layout: 'anchor',
 
                     style: {
-                        borderTop: '1px solid #ffffff'
+                        borderTop: '1px solid #ffffff'                        
                     },
 
+                    padding: '4px 0 0 0',
                     defaultType: 'textfield',
 
                     defaults: {
@@ -1913,8 +2120,7 @@ Ext.define('August.view.production.style.edit.FormController', {
             photos = refs.photos,
             detail = photos.getComponent('photo-detail'),
             dvm = detail.getViewModel();
-
-        //console.log(me.getView().ownerCt)
+        
         //view.setSelection(rec);
         if(rec.length > 0){
 
@@ -1930,13 +2136,11 @@ Ext.define('August.view.production.style.edit.FormController', {
                     padding: '10 0 10 0',
                     tpl: new Ext.XTemplate(
                         '<div style="font-weight: bold; font-size: 1.2em; color: #888;">PHOTO DETAILS</div>',
-                        //'<a class="link" href="{linkUrl}">',
-                        '<div class="thumb">',
-                        //'<div><i class="fa fa-file-{type:this.getFileType}-o fa-4x" style="padding-top:14px;padding-bottom: 5px;"></i></div>',
-                            '<img src="{[this.getSrcPath(values, xcount)]}" width="96" title="{F_NAME}" style="border:1px solid #888;" />',
-                            '<div style="font-weight: bold;padding: 5px;">{F_NAME}</div>',
-                        '</div>',
-                        '<div>{F_CREATED_ON:date("F j, Y")}</div>',
+                        //'<a class="link" href="{linkUrl}">',                        
+                        '<div><i class="far fa-file-image fa-4x" style="padding-top:14px;padding-bottom: 5px;"></i></div>',
+                            //'<img src="{[this.getSrcPath(values, xcount)]}" width="96" title="{name}" style="border:1px solid #888;" />',
+                        '<div style="font-weight: bold;">{name}</div>',                        
+                        '<div>{created:this.getFileDate}</div>',
                         {
                             getSrcPath: function(a,b){
                                 var str;
@@ -1944,20 +2148,27 @@ Ext.define('August.view.production.style.edit.FormController', {
                                     str = a.path;
                                 }
                                 else {
-                                    if(!Ext.isEmpty(a.F_NAME) && !Ext.isEmpty(a.F_TYPE)) {
-                                        //str = '../' + a.F_LINK + a.F_PATH + '/' + a.ID + '/' + a.F_NAME.replace(/(\.[^.]+)$/, "_medium$1");
-                                        str = '../' + a.F_LINK + a.F_PATH + '/' + a.ID + '/' + a.F_NAME + '?w=174&h=232';
+                                    if(!Ext.isEmpty(a.name) && !Ext.isEmpty(a.type)) {
+                                        
+                                        str = 'http://209.37.126.195:9090/StyleImages/' + a.name + '?w=174&h=232';
                                         if(a.ID < 0){
-                                            str = '../' + a.F_LINK + a.F_NAME + '?w=174&h=232';
+                                            str = 'http://209.37.126.195:9090/StyleImages/' + a.name + '?w=174&h=232';
                                         }
                                     }
                                     else {
-                                        str = '../' + a.F_LINK + a.F_PATH + '/' + a.F_LOCATION + a.F_EXT + '?w=174&h=232';
+                                        str = 'http://209.37.126.195:9090/StyleImages/' + a.name + '?w=174&h=232';
                                     }
                                 }
 
                                 return str;
                                 //return a.replace(/(\.[^.]+)$/, "_medium$1");
+                            },
+                            getFileDate: function(v){
+                                if(Ext.isEmpty(v)){
+                                    v = new Date();
+                                }
+
+                                return Ext.util.Format.date(v, 'F j, Y');
                             }
                         }
                     )
@@ -1966,8 +2177,9 @@ Ext.define('August.view.production.style.edit.FormController', {
                     layout: 'anchor',
 
                     style: {
-                        borderTop: '1px solid #ffffff'
+                        borderTop: '1px solid #ffffff'                        
                     },
+                    padding: '4px 0 0 0',
 
                     defaultType: 'textfield',
 
@@ -2034,6 +2246,10 @@ Ext.define('August.view.production.style.edit.FormController', {
                 value: '{theFile.active}'
             }
         },{
+            fieldLabel: 'File Name',
+            name: 'name',            
+            bind: '{theFile.name}'
+        },{
             xtype: 'tagfield',
             fieldLabel: 'Tag',
             name: 'tag',
@@ -2063,12 +2279,14 @@ Ext.define('August.view.production.style.edit.FormController', {
         },{
             fieldLabel: 'Label',
             name: 'label',
+            hidden: true,
             bind: '{theFile.label}'
         },{
             xtype: 'textarea',
             fieldLabel: 'Description',
             name: 'description',
             //height: 120,
+            hidden: true,
             grow: true,
             growMax: 300,
             bind: '{theFile.description}'
@@ -2078,362 +2296,80 @@ Ext.define('August.view.production.style.edit.FormController', {
     buildPhotoFields: function(){
 
         return [{
-            xtype: 'hiddenfield',
+            xtype: 'textfield',
+            fieldLabel: 'File Name',
             name: 'name',
+            hidden: true,
             bind: {
                 value: '{thePhoto.name}'
             }
         },{
-            xtype: 'hiddenfield',
-            name: 'type'
-        },{
-            xtype: 'hiddenfield',
-            name: 'size'
-        },{
             xtype: 'textfield',
-            name: 'F_NAME',
+            fieldLabel: 'File Type',
+            name: 'type',
             hidden: true,
             bind: {
-                value: '{thePhoto.F_NAME}'
+                value: '{thePhoto.type}'
             }
         },{
             xtype: 'textfield',
-            name: 'F_TYPE',
+            fieldLabel: 'File Size',
+            name: 'size',
             hidden: true,
             bind: {
-                value: '{thePhoto.F_TYPE}'
+                value: '{thePhoto.size}'
             }
         },{
-            xtype: 'textfield',
-            name: 'F_SIZE',
-            hidden: true,
-            bind: {
-                value: '{thePhoto.F_SIZE}'
-            }
-        },{
-            xtype: 'combo',
-            name: 'F_CATEGORY',
-            //reference: 'cboCategory',
-            fieldLabel: 'Category',
-            fieldCls: 'emphasized',
-            //hideLabel: true,
-            hideEmptyLabel: false,
-            //labelWidth: 50,
-            //width: 160,
-            hideTrigger: true,
-            bind: {
-                value: '{thePhoto.F_CATEGORY}'
-            },
-            valueField: "text",
-            displayField: "text",
-            publishes: '{value}',
-            //forceSelection: true,
-            //selectOnFocus: true,
-            editable: false,
-            readOnly: true,
-            //autoLoadOnValue: true,
-            queryMode: "local",
-            //queryParam: "filter",
-            //triggerAction: 'all',
-            //minChars: 1,
-            matchFieldWidth: false,
-            listConfig: {
-                loadindText: 'Searching...',
-                emptyText: 'No matching items found.',
-                width: 340
-            },
-            plugins: [{
-                ptype: "cleartrigger"
-            }],
-            listeners: {
-                select: function(combo, rec, e){
-                    var cboCode = combo.ownerCt.query('combo[name="F_DESC6"]')[0],
-                        store = cboCode.getStore();
-                }
-            }
-        },{
-            xtype: "combo",
-            name: 'F_STYLE',
-            fieldLabel: "Style #",
-            fieldCls: 'emphasized',
-            //hideLabel: true,
-            //labelWidth: 50,
-            //width: 160,
-            readOnly: true,
-            hideTrigger: true,
-            bind: {
-                //store: '{styles}',
-                value: '{thePhoto.F_STYLE}'
-            },
-            store: 'memStyles',
-            remoteStore: 'Styles',
-            valueField: "id",
-            displayField: "id",
-            //forceSelection: false,
-            //selectOnFocus: true,
-            pageSize: 99999,
-            //minChars: 1,
-            matchFieldWidth: false,
-            queryMode: "local",
-            //queryParam: "filter",
-            //triggerAction: 'last',
-            //lastQuery: '',
+            xtype: 'checkboxfield',
+            name: 'active',
+            fieldLabel: 'For RFQ',
+            labelWidth: 60,
+            labelAlign: 'left',
 
-            listConfig: {
-                loadindText: 'Searching...',
-                emptyText: 'No matching items found.',
-                width: 340
-            },
-            plugins: [{
-                ptype: "cleartrigger"
-            }],
-            listeners: {
-                beforequery: function(qe){
-                    //delete qe.combo.lastQuery;
-                }
+            bind: {
+                value: '{thePhoto.active}'
             }
         },{
-            xtype: "combo",
-            name: 'F_DESC5',
-            fieldLabel: "Body #",
-            fieldCls: 'emphasized',
-            //hideLabel: true,
-            //labelWidth: 50,
-            //width: 160,
-            readOnly: true,
-            hideTrigger: true,
+            xtype: 'tagfield',
+            fieldLabel: 'Tag',
+            name: 'tag',
+            //store: 'memBodies',
+            //remoteStore: 'Bodies',
             bind: {
-                //store: '{bodies}',
-                value: '{thePhoto.F_DESC5}'
+                value: '{thePhoto.tag}',
+                store: '{tags}'
             },
-            store: 'memBodies',
-            remoteStore: 'Bodies',
-            valueField: "id",
-            displayField: "id",
+            hideTrigger: true,
+            valueField: 'field',
+            displayField: 'label',
             //forceSelection: false,
             //selectOnFocus: true,
-            pageSize: 99999,
-            queryMode: "local",
-            //queryParam: "filter",
-            //triggerAction: 'last',
-            //lastQuery: '',
-            //minChars: 1,
+            //pageSize: 50,
+            queryMode: 'local',
+            autoLoadOnValue: true,
             matchFieldWidth: false,
             listConfig: {
                 loadindText: 'Searching...',
                 emptyText: 'No matching items found.',
                 width: 340
             },
-            plugins: [{
-                ptype: "cleartrigger"
-            }],
-            listeners: {
-                beforequery: function(qe){
-                    //delete qe.combo.lastQuery;
-                }
-            }
-        },{
-            xtype: "combo",
-            name: 'F_DESC6',
-            //reference: 'cboPrints',
-            fieldLabel: "Print #",
-            fieldCls: 'emphasized',
-            //hideLabel: true,
-            hideTrigger: true,
-            readOnly: true,
-            bind: {
-                //store: '{components}',
-                value: '{thePhoto.F_DESC6}'
-            },
-            store: 'memComponents',
-            remoteStore: 'Components',
-            valueField: "label",
-            displayField: "label",
-            //forceSelection: false,
-            //selectOnFocus: true,
-            //autoLoadOnValue: true,
-            pageSize: 99999,
-            queryMode: "local",
-            //queryParam: "filter",
-            //triggerAction: 'all',
-            //lastQuery: '',
-            //minChars: 1,
-            matchFieldWidth: false,
-            listConfig: {
-                loadindText: 'Searching...',
-                emptyText: 'No matching items found.',
-                width: 340
-            },
-            tpl: [
-                '<tpl for=".">',
-                //'<tpl if="[xindex] == 1">',
-                '<table class="cbStyles-list" width="100%">',
-                //'<tr>',
-                //'<th>Style</th>',
-                //'<th>Description</th>',
-                //'</tr>',
-                //'</tpl>',
-                '<tr class="x-boundlist-item">',
-                '<td style="padding:0px 0px;" width="60%">{label}</td>',
-                '<td width="40%">{text}</td>',
-                '</tr>',
-                '<tpl if="[xcount-xindex]==0">',
-                '</table>',
-                '</tpl>',
-                '</tpl>'
-            ],
             plugins: [{
                 ptype: "cleartrigger"
             }]
         },{
-            xtype: 'checkboxfield',
-            name: 'F_BFLAG',
-            //fieldLabel: 'For RFQ',
-
-            labelWidth: 60,
-            labelAlign: 'left',
-            bind: {
-                fieldLabel: '{fieldLabel}',
-                readOnly: '{readOnly}',
-                value: '{thePhoto.F_BFLAG}'
-            },
-            listeners: {
-                /*
-                render: function(ck){
-                    ck.getEl().on('click', function(e){
-                        var detail = ck.up('container[itemId="photo-detail"]'),
-                            dvm = detail.getViewModel(),
-                            rec = dvm.get('thePhoto');
-
-                        if(!ck.readOnly && rec.data.F_APPLICATION == 'PROD'){
-                            rec.set('F_LINK', ck.checked ? 'N41IMG/200xImages/' : 'DLIB/BLU-PHOTOS/');
-                        }
-
-                    })
-                }
-                */
-            }
-    },{
-            xtype: 'combo',
-            name: 'F_MFLAG',
-            fieldLabel: 'F/B',
-            editable: false,
-            bind: {
-                readOnly: '{!thePhoto.F_BFLAG}',
-                value: '{thePhoto.F_MFLAG}'
-            },
-            queryMode: 'local',
-            store: ['FRONT', 'BACK'],
-            plugins: [{
-                ptype: "cleartrigger"
-            }],
-            listeners: {
-                /*
-                select: function(cb, selected){
-                    var detail = cb.up('container[itemId="photo-detail"]'),
-                        dvm = detail.getViewModel(),
-                        rec = dvm.get('thePhoto');
-
-                    //console.log(rec.data.F_BFLAG, rec.data.F_APPLICATION, rec.data.F_NAME)
-                    if(!rec.data.F_BFLAG && rec.data.F_APPLICATION == 'PROD' && rec.data.F_NAME){
-                        var name = rec.data.F_NAME.split('.')[0];
-                        rec.set('F_NAME', name.split('_')[0] + '_' + name.split('_')[1] + '_' + selected.data.field1.toLowerCase() + rec.data.F_EXT);
-                    }
-                }
-                */
-            }
+            fieldLabel: 'Label',
+            name: 'label',
+            hidden: true,
+            bind: '{thePhoto.label}'
         },{
-            xtype: 'combo',
-            name: 'F_DESC8',
-            fieldLabel: 'Customer',
-            //hideLabel: true,
-            hideTrigger: true,
-            bind: {
-                //store: '{customers}',
-                value: '{thePhoto.F_DESC8}'
-            },
-            store: 'Customers',
-            valueField: "id",
-            displayField: "id",
-            forceSelection: false,
-            selectOnFocus: true,
-            queryMode: 'local',
-            autoLoadOnValue: true,
-            //queryParam: "filter",
-            //triggerAction: 'all',
-            //lastQuery: '',
-            //minChars: 1,
-            matchFieldWidth: false,
-            listConfig: {
-                loadindText: 'Searching...',
-                emptyText: 'No matching items found.',
-                width: 340
-            },
-            plugins: [{
-                ptype: "cleartrigger"
-            }],
-            listeners: {
-                render: function(c){
-                    c.on('focus', function () {
-                        c.expand();
-                    });
-                }
-            }
-        },{
-            xtype: "combo",
-            name: 'F_DESC4',
-            fieldLabel: "Vendor",
-            //hideLabel: true,
-            hideTrigger: true,
-            bind: {
-                //store: '{vendors}',
-                value: '{thePhoto.F_DESC4}'
-
-            },
-            store: 'Vendors',
-            valueField: "id",
-            displayField: "id",
-            forceSelection: false,
-            selectOnFocus: true,
-            autoLoadOnValue: true,
-            queryMode: 'local',
-            //queryParam: "filter",
-            //triggerAction: 'all',
-            //lastQuery: '',
-            //minChars: 1,
-            matchFieldWidth: false,
-            listConfig: {
-                loadindText: 'Searching...',
-                emptyText: 'No matching items found.',
-                width: 340
-            },
-            plugins: [{
-                ptype: "cleartrigger"
-            }],
-            listeners: {
-                render: function(c){
-                    c.on('focus', function () {
-                        c.expand();
-                    });
-                }
-            }
-        },{
-            xtype: "textfield",
-            name: 'F_DESC7',
-            fieldLabel: "Stone Price",
-            //hideLabel: true,
-            bind: {
-                value: '{thePhoto.F_DESC7}'
-            }
-        },{
-            xtype: 'textareafield',
-            name: 'F_DESC1',
+            xtype: 'textarea',
             fieldLabel: 'Description',
+            name: 'description',
+            //height: 120,
+            hidden: true,
             grow: true,
-            //hidLabel: true,
-            bind: {
-                value: '{thePhoto.F_DESC1}'
-            }
+            growMax: 300,
+            bind: '{thePhoto.description}'
         }];
     },
 
@@ -2465,7 +2401,7 @@ Ext.define('August.view.production.style.edit.FormController', {
 
                         if(!Ext.isEmpty(objResp)){
                             //var response = JSON.parse(objResp);                            
-                            console.log(objResp);
+                            console.log('Product - Batch Operation Complete', objResp);
                             /*
                             if(!Ext.isEmpty(response) && response.data.length > 0){
 
@@ -2517,7 +2453,7 @@ Ext.define('August.view.production.style.edit.FormController', {
 
                         //var response = JSON.parse(op.getResponse());                        
                         var response = op.getResponse();
-                        console.log(response)
+                        console.log('Product - Batch Complete',response)
 
                         processMask.hide('', function() {
                             Ext.Msg.alert('Status', 'Changes saved successfully.');

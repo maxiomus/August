@@ -10,9 +10,9 @@ Ext.define('August.model.sales.OrderList', {
     
     fields: [
         { name: 'orderno', type: 'int' },
-        { name: 'orderDate', type: 'date', dateFormat: 'c' },
-        { name: 'startDate', type: 'date', dateFormat: 'c' },
-        { name: 'cancelDate', type: 'date', dateFormat: 'c' },
+        { name: 'orderDate', type: 'date', dateFormat: 'C' },
+        { name: 'startDate', type: 'date', dateFormat: 'C' },
+        { name: 'cancelDate', type: 'date', dateFormat: 'C' },
         { name: 'type', type: 'string' },
         { name: 'status', type: 'string' },
         { name: 'customer', type: 'string' },
@@ -29,9 +29,9 @@ Ext.define('August.model.sales.OrderList', {
         { name: 'memo', type: 'string' },
         { name: 'houseMemo', type: 'string' },
         { name: 'userName', type: 'string' },
-        { name: 'userTime', type: 'date', dateFormat: 'c' },
+        { name: 'userTime', type: 'date', dateFormat: 'C' },
         { name: 'UpdateUser', type: 'string' },
-        { name: 'UpdateTime', type: 'date', dateFormat: 'c' }
+        { name: 'UpdateTime', type: 'date', dateFormat: 'C' }
     ],
 
     idProperty: 'orderno',

@@ -90,6 +90,57 @@ Ext.define('August.view.production.style.edit.FormModel', {
             */
         },
 
+        bundles: {
+            fields: ['label', 'value', 'descript'],
+            autoLoad: true,
+            pageSize: 0,
+            proxy: {
+                type: 'ajax',
+                url: '/WebApp/api/List/bundles',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            }
+        },
+
+        currencies: {
+            fields: ['label', 'value', 'descript'],
+            autoLoad: true,
+            pageSize: 0,
+            proxy: {
+                type: 'ajax',
+                url: '/WebApp/api/List/currencies',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            }
+        },
+
+        countries: {
+            fields: ['label', 'value', 'descript'],
+            autoLoad: true,
+            pageSize: 0,
+            proxy: {
+                type: 'ajax',
+                url: '/WebApp/api/List/countries',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            }
+        },
+
         labeltypes: {
             fields: ['id', 'text', 'type'],
             autoLoad: false
@@ -136,6 +187,24 @@ Ext.define('August.view.production.style.edit.FormModel', {
             proxy: {
                 type: "ajax",
                 url: "/WebApp/api/List/seasons",
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: "json",
+                    rootProperty: "data"
+                }
+            }
+        },
+
+        tariffnos: {
+            fields: ["label", "value"],
+            //storeId: 'customer',
+            autoLoad: true,
+            pageSize: 0,
+            proxy: {
+                type: "ajax",
+                url: "/WebApp/api/List/tariffs",
                 headers: {
                     'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
                 },

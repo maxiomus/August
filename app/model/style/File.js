@@ -26,7 +26,8 @@ Ext.define('August.model.style.File', {
         },
         {
             name: 'active', type: 'boolean', defaultValue: true, allowNull: true
-        },
+        }
+        /*
         {
             name: 'productId',
             reference: {
@@ -39,6 +40,7 @@ Ext.define('August.model.style.File', {
                 inverse: 'filesInProducts'
             }
         }
+        */
     ],
 
     idProperty: 'fileId',

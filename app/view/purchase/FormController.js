@@ -98,7 +98,7 @@ Ext.define('August.view.purchase.OrderFormController', {
         //console.log(rec)
     },
 
-    onItemContextMenu:function(h, j, k, g, l){
+    onItemContextMenu: function(h, j, k, g, l){
         l.stopEvent();
 
         var i = h.getSelectionModel();
@@ -107,6 +107,32 @@ Ext.define('August.view.purchase.OrderFormController', {
         }
 
         this.view.contextmenu.showAt(l.getXY());
+    },
+
+    onVendorChanged: function(combo, nv, ov){
+        //console.log('onVendorChanged', nv, ov);
+        var me = this,
+            vm = me.getViewModel();
+
+        August.model.Vendor.load(nv,{
+            success: function(rec, op){                        
+                vm.set('theVendor', rec);                
+            }
+        });
+        
+    },
+
+    onShipToChanged: function(combo, nv, ov){
+        //console.log('onShipToChanged', nv, ov);
+        var me = this,
+            vm = me.getViewModel();
+
+        August.model.ShipTo.load(nv, {
+            success: function(rec, op){
+                vm.set('theShipTo', rec);                
+            }
+        });
+        
     },
 
     showWindow: function(record, xtype, callback){

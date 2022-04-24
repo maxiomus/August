@@ -7,9 +7,9 @@ Ext.define('August.model.sales.Order', {
     
     fields: [
         { name: 'orderno', type: 'int' },
-        { name: 'orderDate', type: 'date', dateFormat: 'c' },
-        { name: 'startDate', type: 'date', dateFormat: 'c' },
-        { name: 'cancelDate', type: 'date', dateFormat: 'c' },
+        { name: 'orderDate', type: 'date', dateFormat: 'C' },
+        { name: 'startDate', type: 'date', dateFormat: 'C' },
+        { name: 'cancelDate', type: 'date', dateFormat: 'C' },
         { name: 'type', type: 'string' },
         { name: 'status', type: 'string' },
         { name: 'customer', type: 'string' },
@@ -24,7 +24,7 @@ Ext.define('August.model.sales.Order', {
         { name: 'memo', type: 'string' },
         { name: 'houseMemo', type: 'string' },
         { name: 'userName', type: 'string' },
-        { name: 'userTime', type: 'date', dateFormat: 'c' },
+        { name: 'userTime', type: 'date', dateFormat: 'C' },
         { name: 'bulkOrder', type: 'string' },
         { name: 'box', type: 'string' },
         { name: 'currency', type: 'string' },
@@ -35,15 +35,15 @@ Ext.define('August.model.sales.Order', {
         { name: 'housePo', type: 'int' },
         { name: 'void', type: 'int' },
         { name: 'UpdateUser', type: 'string' },
-        { name: 'UpdateTime', type: 'date', dateFormat: 'c' },
+        { name: 'UpdateTime', type: 'date', dateFormat: 'C' },
         { name: 'salesrep1', type: 'string' },
         { name: 'comrate1', type: 'number' },
         { name: 'salesrep2', type: 'string' },
         { name: 'comrate2', type: 'number' },
         { name: 'factor', type: 'string' },
         { name: 'Invoiceno', type: 'int' },
-        { name: 'voiddate', type: 'date', dateFormat: 'c' },
-        { name: 'cancelReasonDate', type: 'date', dateFormat: 'c' },
+        { name: 'voiddate', type: 'date', dateFormat: 'C' },
+        { name: 'cancelReasonDate', type: 'date', dateFormat: 'C' },
         { name: 'routingGuide', type: 'string' },
         { name: 'priceLevel', type: 'string' },
         { name: 'warehouse', type: 'string' },
@@ -57,12 +57,12 @@ Ext.define('August.model.sales.Order', {
         { name: 'user2', type: 'string' },
         { name: 'user3', type: 'string' },
         { name: 'user4', type: 'string' },
-        { name: 'userf_date', type: 'date', dateFormat: 'c' },
+        { name: 'userf_date', type: 'date', dateFormat: 'C' },
         { name: 'so_credit_decline', type: 'string' },
         { name: 'so_credit_apprv', type: 'string' },
         { name: 'cit_app_code', type: 'string' },
         { name: 'cit_ref_no', type: 'string' },
-        { name: 'cit_ref_date', type: 'date', dateFormat: 'c' },
+        { name: 'cit_ref_date', type: 'date', dateFormat: 'C' },
         { name: 'ship_whole', type: 'string' },
         { name: 'ccard_num', type: 'string' },
         { name: 'ccard_expdt', type: 'string' },
@@ -108,6 +108,10 @@ Ext.define('August.model.sales.Order', {
         type: 'rest',
         url: '/WebApp/api/SalesOrders',
 
+        headers: {
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        },
+
         pageParam: '',
         startParam: '',
         limitParam: '',        
@@ -125,8 +129,7 @@ Ext.define('August.model.sales.Order', {
         },
 
         //extraParams: {},
-
-        listeners: {            
+        listeners: {                      
             exception: function (proxy, response, operation) {
                 console.log('SalesOrder - Model', response, operation);
             }

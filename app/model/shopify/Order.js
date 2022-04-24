@@ -8,7 +8,7 @@ Ext.define('August.model.shopify.Order', {
     fields: [
         { name: "id", type: 'int' },
         { name: "app_id", type: 'int' },
-        { name: "billing_address", type: 'string' },
+        { name: "billing_address", type: 'auto' },
         { name: "browser_ip", type: 'string' },
         { name: "buyer_accepts_marketing", type: 'bool', allowNull: true },
         { name: "cancel_reason", type: 'string' },
@@ -66,7 +66,7 @@ Ext.define('August.model.shopify.Order', {
         { name: "metafields", type: "auto" },
         { name: "current_total_duties_set", type: "auto" },
         { name: "original_total_duties_set", type: "auto" },
-        { name: "total_line_items_price_set", type: "string" },
+        { name: "total_line_items_price_set", type: "auto" },
         { name: "total_discounts_set", type: "auto" },
         { name: "total_shipping_price_set", type: "auto" },
         { name: "subtotal_price_set", type: "auto" },

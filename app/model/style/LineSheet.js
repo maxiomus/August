@@ -1,22 +1,30 @@
-Ext.define('August.model.style.Linesheet', {
+Ext.define('August.model.style.LineSheet', {
     extend: 'August.model.Base',
 
     fields: [
-        { name: 'lineId' },
-        { name: 'title' },
-        { name: 'description' },
-        { name: 'season' },
-        { name: 'userId', type: 'string' },
-        { name: 'userTime', type: 'date', dateFormat: 'c' }
+        { name: 'lineseq', type: 'int' },
+        { name: 'linetitle', type: 'string' },
+        { name: 'descript', type: 'string' },
+        { name: 'totalCount', type: 'int' },
+        { name: 'createUser', type: 'string' },
+        { name: 'createTime', type: 'date', dateFormat: 'C' }
     ],
 
-    idProperty: 'lineId',
+    idProperty: 'lineseq',
     identifier: 'negative',
 
     proxy: {
         type: "rest",
-        url: "/api/Linesheets",
+        url: "/WebApp/api/Linesheets",
 
+        pageParam: '',
+        startParam: '',
+        limitParam: '',
+
+        headers: {
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        },
+                
         reader: {
             type: "json",
             rootProperty: "data"

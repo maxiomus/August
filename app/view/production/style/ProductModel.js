@@ -24,9 +24,7 @@ Ext.define('August.view.production.style.ProductModel', {
             proxy: {
                 type: 'rest',
                 url: '/WebApp/api/Products/',           
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },     
+                   
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -42,7 +40,7 @@ Ext.define('August.view.production.style.ProductModel', {
                     })
                 }
             }
-        },
+        },        
 
         vendors: {
             fields: ["label", "text"],

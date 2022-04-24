@@ -165,7 +165,7 @@
                 xtype: 'button',
                 text: 'Close',
                 action: 'close',
-                iconCls: 'x-fa fa-times-circle',
+                iconCls: 'x-far fa-times-circle',
                 handler: function(btn) {
                     me.close();
                 }
@@ -217,11 +217,17 @@
                     },
 
                     columns: [{
-                        text: 'Line', dataIndex: 'line', width: 50, align: 'center', sortable: false, fixed: true,
+                        xtype: 'rownumberer', text: 'Line', menuDisabled: true, width: 50, align: 'center', fixed: true, sortable: false
+                    },
+                    /*
+                    {
+                        text: 'Line', dataIndex: 'line', width: 50, align: 'center', sortable: false, fixed: true, 
                         renderer: function(value, metaData, record, rowIndex, colIndex, store){
                             return value;
                         }
-                    },{
+                    },
+                    */
+                    {
                         text: 'style', dataIndex: 'style', menuDisabled: true, width: 120
                     },{
                         text: 'color', dataIndex: 'color', menuDisabled: true, width: 120
@@ -419,8 +425,14 @@
                     },                                                        
                     
                     columns: [{
+                        xtype: 'rownumberer', text: 'Line', menuDisabled: true, width: 50, align: 'center', fixed: true, sortable: false
+                    }, 
+                    /*
+                    {
                         text: 'Line', dataIndex: 'line', menuDisabled: true, fixed: true, width: 50
-                    },{
+                    },
+                    */
+                    {
                         text: 'Style', dataIndex: 'style', menuDisabled: true, hidden: true
                     },{
                         text: 'Color', dataIndex: 'color', menuDisabled: true, hidden: true

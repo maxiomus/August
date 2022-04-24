@@ -27,8 +27,8 @@ Ext.define('August.view.shopify.Product', {
         actdelete: 'onActDeleteClick',
         actrefresh: 'onActRefreshClick',
         clearall: 'onClearFilters',
-        rowdblclick: 'onActEditClick',
-        itemdblclick: "onActEditClick",
+        //rowdblclick: 'onActEditClick',
+        //itemdblclick: "onActEditClick",
         itemcontextmenu: "onItemContextMenu"
     },
 
@@ -77,12 +77,21 @@ Ext.define('August.view.shopify.Product', {
                     },
 
                     plugins: [{
+                        ptype: 'rowediting',
+                        clicksToEdit: 2,
+                        clicksToMoveEditor: 1,
+                        autoCancel: false
+                    },{
                         ptype: "gridfilters"
                     },{
                         ptype: 'grid-exporter'
-                    },{
+                    }
+                    /*
+                    {
                         ptype: 'bufferedrenderer'
-                    }],
+                    }
+                    */
+                    ],
                     
                     viewConfig: {
                         loadMask: true,
@@ -148,8 +157,8 @@ Ext.define('August.view.shopify.Product', {
         var g=this.lookupReference("multiview"),
             j=g.lookupReference("shopify-product-grid"),
             h=g.lookupReference("display"),
-            f=g.lookupReference("topbar");
-
+            f=g.lookupReference("topbar");                    
+        
         var segmented = f.lookupReference('viewselection');
         segmented.items.items[1].setHidden(true);
         segmented.setValue(0);
@@ -198,7 +207,7 @@ Ext.define('August.view.shopify.Product', {
                     j.saveDocumentAs({
                         type: 'xlsx',
                         title: 'Shopify Style List',
-                        fileName: 'Shopify Product' + Ext.Date.format(new Date(), 'Y-m-d') + '.xlsx'
+                        fileName: 'Shopify Product' + Ext.Date.format(new Date(), 'Y-m-d')
                     });
                 }
             }]
@@ -241,7 +250,7 @@ Ext.define('August.view.shopify.Product', {
         },{
             text: "Product Title",
             dataIndex: "title",
-            width: 420,
+            width: 180,
             locked: false,
             filter: {
                 type: "string"
@@ -249,19 +258,30 @@ Ext.define('August.view.shopify.Product', {
             renderer: function (value, p, rec) {
                 var tpl = '<div style="">{0}</div><span class="file"><img style="vertical-align: middle;width:64px;margin:4px 0 4px 0;" src={1} /></span><div>{2} Photo(s)</div>';
 
-                //var xf = Ext.util.Format;
+                //var xf = Ext.util.Format;                
                 var images = rec.images();
-                if (!Ext.isEmpty(rec) && !Ext.isEmpty(images)) {                    
+                //console.log(images, images.count(), Ext.isEmpty(images));
+                if (!Ext.isEmpty(rec) && images.getCount() != 0) {                    
                     //metadata.tdAttr = 'data-qtip="' + Ext.String.format(tpl, value, "?w=264&h=288", record.data.BODYIMG) + '"';
                     //var tmp = '<img src="../DLIB/BLU-ILLUSTRATIONS/{0}.jpg?w=264&h=288" />';
                     //metadata.tdAttr = 'data-qtip="' + Ext.String.format(tmp, value) + '"';
                     //return Ext.String.format(tpl, encodeURIComponent(images.first().data.src));
-                    return Ext.String.format(tpl, value, images.first().data.src, images.count());
+                    return Ext.String.format(tpl, value, images.first().data.src, images.getCount());
                 }
 
                 return value;
             }
-        },                
+        },     
+        {
+            text: "Handle",
+            dataIndex: "handle",
+            //width: 100,
+            hidden: false,
+            filter: {type: "string"},
+            renderer: function(i, h, a){
+                return i;
+            }
+        },        
         {
             text: "Status",
             dataIndex: "status",
@@ -281,12 +301,23 @@ Ext.define('August.view.shopify.Product', {
             renderer: function(i, h, a){
                 return i;
             }
-        },       
+        },    
+        {
+            text: "Type",
+            dataIndex: "product_type",
+            width: 140,
+            hidden: false,
+            filter: {type: "string"},
+            renderer: function(i, h, a){
+                return i;
+            }
+        },   
         {
             xtype: 'datecolumn',
             text: "Created",
             dataIndex: "created_at",
-            format: 'm-d-Y',
+            hidden: true,
+            format: 'Y-m-d',            
             filter: {
                 type: "date"
             }
@@ -295,7 +326,8 @@ Ext.define('August.view.shopify.Product', {
             xtype: 'datecolumn',
             text: "Updated",
             dataIndex: "updated_at",
-            format: 'm-d-Y',
+            hidden: true,
+            format: 'Y-m-d',
             filter: {
                 type: "date"
             }
@@ -304,7 +336,7 @@ Ext.define('August.view.shopify.Product', {
             xtype: 'datecolumn',
             text: "Published",
             dataIndex: "published_at",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
                 type: "date"
             }
@@ -317,6 +349,10 @@ Ext.define('August.view.shopify.Product', {
             filter: {type: "string"},
             renderer: function(i, h, a){
                 return i;
+            },
+            editor: {
+                // defaults to textfield if no xtype is supplied
+                xtype: 'textfield'                
             }
         },
         {
@@ -327,6 +363,11 @@ Ext.define('August.view.shopify.Product', {
             filter: {type: "string"},
             renderer: function(i, h, a){
                 return i;
+            },
+            editor: {            
+                xtype: 'htmleditor',
+                enableColors: false,
+                enableAlignments: false                
             }
         },
         {
@@ -343,22 +384,12 @@ Ext.define('August.view.shopify.Product', {
             text: "Published Scope",
             dataIndex: "published_scope",
             width: 80,
-            hidden: false,
+            hidden: true,
             filter: {type: "string"},
             renderer: function(i, h, a){
                 return i;
             }
-        },
-        {
-            text: "Type",
-            dataIndex: "product_type",
-            width: 140,
-            hidden: false,
-            filter: {type: "string"},
-            renderer: function(i, h, a){
-                return i;
-            }
-        },
+        },        
         {
             text: "Inventory",
             dataIndex: "",
@@ -381,7 +412,7 @@ Ext.define('August.view.shopify.Product', {
                     fields: ["id"],
                     data: [["15"], ["25"], ["50"], ["100"], ["250"], ["500"]]
                 }),
-                value: "50",
+                value: "250",
                 displayField: "id",
                 valueField: "id",
                 editable: false,
@@ -456,7 +487,7 @@ Ext.define('August.view.shopify.Product', {
             store.setPageSize(e.getValue());
             store.load({
                 callback: function(recs, op, success){
-                    vm.set('shopifyLink', op.getLinkHeader());
+                    vm.set('shopifyLink', op.getResponse().responseJson.LinkHeader);
                 }
             });
             //console.log("combo select", f)

@@ -11,7 +11,7 @@ Ext.define('August.view.production.windows.style.StyleCopyModel', {
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/api/Combos/divisions",
+                url: "/WebApp/api/List/divisions",
 
                 reader: {
                     type: "json",
@@ -27,7 +27,7 @@ Ext.define('August.view.production.windows.style.StyleCopyModel', {
             pageSize: 0,
             proxy: {
                 type: 'ajax',
-                url: '/api/Combos/sizes',
+                url: '/WebApp/api/List/sizes',
 
                 reader: {
                     type: 'json',

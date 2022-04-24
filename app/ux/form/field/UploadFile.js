@@ -96,7 +96,7 @@ Ext.define('Ext.ux.form.field.UploadFile', {
             id = file;
         }
 
-        for(var i=0;i<this.filesQueue.length;i++) {
+        for(var i=0;i<this.filesQueue.length;i++) {            
             if(this.filesQueue[i].id == id) {
                 this.filesQueue.splice(i,1);
             }
@@ -107,7 +107,7 @@ Ext.define('Ext.ux.form.field.UploadFile', {
      * Set id to file to be uniquely identified
      */
     setIdToFile: function(file) {
-        file.id = this.generateUniqueId();
+        file.id = this.generateUniqueId();        
         return file;
     },
 
@@ -115,11 +115,11 @@ Ext.define('Ext.ux.form.field.UploadFile', {
      * Generates unique id for file
      */
     generateUniqueId: function() {
-        var id = 0;
+        var id = 1;
         var length = this.filesQueue.length;
         if(length > 0) {
             for(var i=0;i<length;i++) {
-                var element = this.filesQueue[i];
+                var element = this.filesQueue[i];                
                 if(id <= element.id) {
                     id = element.id + 1;
                 }
@@ -178,7 +178,7 @@ Ext.define('Ext.ux.form.field.UploadFile', {
     sendFileWithHeader: function() {
         if(this.filesQueue.length > 0) {
             var file = this.filesQueue[0];
-            this.formData.append(this.name, file);
+            this.formData.append(this.name, file);            
             this.xhr.open(this.method, this.url, true);
             this.setRequestHeaders(file.name,file.size,file.type);
             this.xhr.send(this.formData);
@@ -209,7 +209,7 @@ Ext.define('Ext.ux.form.field.UploadFile', {
         }
 
         for(var i=0;i<this.filesQueue.length;i++) {
-            this.formData.append(this.name, this.filesQueue[i]);
+            this.formData.append(this.name + '-' + (i+1), this.filesQueue[i]);            
         }
 
         this.xhr.open(method, url, true);
@@ -218,7 +218,7 @@ Ext.define('Ext.ux.form.field.UploadFile', {
             Ext.Msg.show({
                 msg: waitMsg,
                 progressText: 'Saving...',
-                width: 300,
+                width: 400,
                 wait: true,
                 waitConfig: {
                     interval: 200

@@ -3,6 +3,10 @@ Ext.define('August.view.shopify.ProductModel', {
 
     alias: 'viewmodel.shopify-product',
 
+    requires: [
+        'August.data.proxy.SimpleRest'
+    ],
+
     data: {
         shopifyLink: null
     },
@@ -11,15 +15,16 @@ Ext.define('August.view.shopify.ProductModel', {
         shopifyproducts: {
             model: 'shopify.Product',
 
-            storeId: 'shopifyproducts',
+            storeId: 'shopifyproducts',            
             autoLoad: false,
 
-            //session: true,
+            session: true,
             //remoteFilter: true,
             //remoteSort: true,            
 
-            leadingBufferZone: 300,
-            pageSize: 50,
+            //type: 'buffered',
+            //leadingBufferZone: 300,
+            pageSize: 100,
 
             proxy: {
                 type: 'rest',
@@ -40,8 +45,9 @@ Ext.define('August.view.shopify.ProductModel', {
                     //messageProperty: 'LinkHeader'
                     //totalProperty: 'total',
                     //successProperty: 'success'
-                }
+                }                    
             },
+            
             listeners: {
                 beforeload: {
                     fn: 'onBeforeStoreLoad',

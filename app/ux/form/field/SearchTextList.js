@@ -16,15 +16,19 @@
             cls: Ext.baseCSSPrefix + 'form-clear-trigger',
             tooltip: 'Clear',
             hidden: true,
-            handler: 'onClearClick',
-            scope: 'this'
+            handler: function(c, a){                     
+                // c - searchtextlist
+                // a - trigger           
+                c.fireEvent('triggerclear', this);
+            }
         },
         search: {
             weight: 1,
             cls: Ext.baseCSSPrefix + 'form-search-trigger',
             tooltip: 'Search',
-            handler: 'onSearchClick',
-            scope: 'this'
+            handler: function(c){
+                c.fireEvent('triggersearch', this);
+            }
         }
     },
 
@@ -71,14 +75,25 @@
         */        
     },
 
+    listeners: {
+        triggerclear: {
+            fn: 'onClearClick',
+            scope: 'this'
+        },
+        triggersearch: {
+            fn: 'onSearchClick',
+            scope: 'this'
+        }
+    },
+    
     /**
      * Adding
      */
-     onBindStore: function() {
-        if (this.rendered) {
+    onBindStore: function(s) {
+        if (s && this.rendered) {
             var me = this,
-            store = me.store,
-            proxy = store.getProxy();
+            store = me.store;
+            //proxy = store.getProxy();
 
             // We're going to use filtering
             //store.SetRemoteFilter(true);
@@ -114,7 +129,13 @@
     onSearchClick: function () {
         
         var me = this,
-            value = me.getValue().split(',');
+            value = me.getValue().split(',').map(function(item){
+                if(!isNaN(item)){
+                    return parseInt(item, 10);
+                }
+
+                return Ext.String.trim(item);
+            });
  
         if (value.length > 0) {
             // Param name is ignored here since we use custom encoding in the proxy.
@@ -130,7 +151,7 @@
             me.getTrigger('clear').show();
             me.updateLayout();
 
-            console.log(me.store, value, me.activeFilter);
+            //console.log(me.store, value, me.activeFilter);
         }
     }
 });

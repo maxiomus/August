@@ -22,14 +22,20 @@ Ext.define('August.view.purchase.OrderModel', {
             proxy: {
                 type: 'rest',
                 url: '/WebApp/api/PurchaseOrders/',      
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },          
+                          
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
                     //totalProperty: 'total',
                     //successProperty: 'success'
+                }
+            },
+
+            listeners: {
+                beforeload: function(s){                    
+                    s.getProxy().setHeaders({
+                        'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                    })
                 }
             }
         },

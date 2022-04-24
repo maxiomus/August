@@ -222,7 +222,7 @@ Ext.define('August.view.purchase.Order',{
                     j.saveDocumentAs({
                         type: 'xlsx',
                         title: 'Purchase List',
-                        fileName: 'PO' + Ext.Date.format(new Date(), 'Y-m-d') + '.xlsx'
+                        fileName: 'PO' + Ext.Date.format(new Date(), 'Y-m-d')
                     });
                 }
             }]
@@ -238,7 +238,8 @@ Ext.define('August.view.purchase.Order',{
             dataIndex: "pono",
             locked: false,
             filter: {
-                type: "number"
+                operator: 'in',
+                type: "list"
             },
             renderer: function(f, e, a){
                 return f;
@@ -278,7 +279,7 @@ Ext.define('August.view.purchase.Order',{
             xtype: 'datecolumn',
             text: "Order Date",
             dataIndex: "orderDate",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
                 type: "date"
             }
@@ -287,7 +288,7 @@ Ext.define('August.view.purchase.Order',{
             xtype: 'datecolumn',
             text: "ETA Date",
             dataIndex: "etatDate",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
                 type: "date"
             }
@@ -296,7 +297,7 @@ Ext.define('August.view.purchase.Order',{
             xtype: 'datecolumn',
             text: "CXL Date",
             dataIndex: "cancelDate",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
                 type: "date"
             }
@@ -305,7 +306,7 @@ Ext.define('August.view.purchase.Order',{
             xtype: 'datecolumn',
             text: "Start Date",
             dataIndex: "startDate",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
                 type: "date"
             }

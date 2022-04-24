@@ -17,30 +17,40 @@ Ext.define('August.view.production.TopBarController', {
         
         switch(j){            
             case "grp":
+                /*
                 if (st === '') {
                     st = 'groups';
-                }                
+                } 
+                */               
             case "subcategory":
+                /*
                 if (st === '') {
                     st = 'subcategories';
-                }                
+                } 
+                */               
             case "division":
+                /*
                 if(st === ''){
                     st = 'division';
-                }                
-            case "style":
-                n.paramName = j;
-                o.show();
-                m.hide();
-                n.hide();
-                break;
-            default:
+                } 
+                */
+            case "category":      
+            case "season":      
                 m.paramName = j;
                 m.show();
                 n.hide();
                 o.hide();
+                break;
+            default:
+                o.paramName = j;
+                o.show();
+                m.hide();
+                n.hide();
+                
+                
         }        
 
+        /*
         var view = this.getView(),
             k = view.getViewModel().getStore(st);
 
@@ -48,18 +58,7 @@ Ext.define('August.view.production.TopBarController', {
             k.load();
             n.bindStore(k);
         }
-    },
-
-    onClearFilters: function(b){
-        var me = this,
-            searchcombo = me.lookupReference('searchcombo'),
-            searchtext = me.lookupReference('searchtextlist');
-
-        searchcombo.setValue('');
-        searchcombo.getTrigger('clear').hide();
-        searchtext.setValue('');
-        searchtext.getTrigger('clear').hide();
-        searchtext.grid.filters.clearFilters();
+        */
     }
 
 });

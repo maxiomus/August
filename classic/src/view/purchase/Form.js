@@ -20,16 +20,18 @@ Ext.define('August.view.purchase.OrderForm',{
 
     session: true,
     trackResetOnLoad: true,
-    //scrollable: 'y',
+    scrollable: true,
     style: {
         borderTop: '1px solid #cfcfcf'
     },
 
+    /*
     layout: {
         type: 'vbox',
         pack: 'start',
         align: 'stretch'
     },
+    */
 
     listeners: {
 
@@ -42,6 +44,49 @@ Ext.define('August.view.purchase.OrderForm',{
             '<tpl for=".">',
             '<div class="item">{button}</div>',
             '</tpl>'
+        );        
+
+        var addressTpl = new Ext.XTemplate(
+            '<div class="item-boxer">',
+                '<div class="box-row">',                                    
+                    '<div class="box ab">{[values.addr1.length != 0 ? values.addr1 : "<br />"]}</div>',                                    
+                '</div>',
+                '<div class="box-row">',                                    
+                    '<div class="box ab">',
+                        '{[values.addr2.length != 0 ? values.addr2 : "<br />"]}',
+                    '</div>',                                    
+                '</div>',
+                '<div class="box-row">',
+                    '<div class="box ab">',
+                        '<div class="item-boxer">',
+                            '<div class="box rb" style="width:140px;">{[values.city.length != 0 ? values.city : "<br />"]}</div>',
+                            '<div class="box rb" style="width:50px;">{state}</div>',
+                            '<div class="box nb" style="width:80px;">{zip}</div>',                                    
+                        '</div>',
+                    '</div>', 
+                '</div>',                               
+                '<div class="box-row">',                                    
+                    '<div class="box ab">',
+                        '{[values.country.length != 0 ? values.country : "<br />"]}',
+                    '</div>',                                    
+                '</div>',
+                '<div class="box-row">',
+                    '<div class="box ab">',
+                        '<div class="item-boxer">',
+                            '<div class="box rb" style="width:50%;">Tel: {[values.phone1.length != 0 ? values.phone1 : "<br />"]}</div>',
+                            '<div class="box nb" style="width:50%;">Fax: {fax1}</div>',                                                                
+                        '</div>',
+                    '</div>',
+                '</div>', 
+            '</div>',
+            {
+                // XTemplate configuration:
+                //disableFormats: true,
+                // member functions:
+                isValueEmpty: function(value){
+                   return value.length == 0;
+                }
+            }                                                                               
         );
 
         /*
@@ -85,23 +130,22 @@ Ext.define('August.view.purchase.OrderForm',{
          this.fireEvent("actcopy", this, item);
          },
          scope: this
-         });
+         });         
          */
-
-         var memShipvias = Ext.create('Ext.data.Store', {
-             storeId: 'memShipvias',
-             pageSize: 50,
-             remoteFilter: true,
-             proxy: {
+        var memShipvias = Ext.create('Ext.data.Store', {
+            storeId: 'memShipvias',
+            pageSize: 50,
+            remoteFilter: true,
+            proxy: {
                  type: 'memory',
                  enablePaging: true,
                  reader: {
                      type: 'json',
                      rootProperty: 'data'
                  }
-             }
+            }
         });     
-
+        
         var shipvias = Ext.create('Ext.data.Store', {
             
             fields: ['label', 'value'],
@@ -135,7 +179,7 @@ Ext.define('August.view.purchase.OrderForm',{
                     memShipvias.load();
                 }
             }
-        });
+        });        
 
         var btnNew = {
             text: 'New',
@@ -197,7 +241,7 @@ Ext.define('August.view.purchase.OrderForm',{
                 tooltip: 'Save the Data',                
                 handler: 'onSave'                
             },{
-                iconCls: 'x-fa fa-times-circle',
+                iconCls: 'x-far fa-times-circle',
                 text: 'Close',
                 //glyph:'xf0c7@FontAwesome',
                 tooltip: 'Close View',
@@ -229,6 +273,7 @@ Ext.define('August.view.purchase.OrderForm',{
                 },
                 //margin: "0 0 5 0",
                 //bodyPadding: 8,
+                scrollable: true,
                 defaultType: 'container',
                 defaults: {
                     //margin: "5 0 0 0"
@@ -249,6 +294,7 @@ Ext.define('August.view.purchase.OrderForm',{
                     },
                     defaultType: 'textfield',
                     defaults: {
+                        width: 220,
                         constrain: true,
                         margin: '0 10 3 0',
                         labelWidth: 80
@@ -432,12 +478,12 @@ Ext.define('August.view.purchase.OrderForm',{
                         }
                     },{
                         xtype: 'datefield',
-                        name: 'shipDate',                        
+                        name: 'shipdate',                        
                         format: 'Y-m-d',
                         fieldLabel: 'Ship Date',
                         //editable: false,
                         bind: {
-                            value: '{thePO.shipDate}'
+                            value: '{thePO.shipdate}'
                         }
                         //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                     },
@@ -464,7 +510,7 @@ Ext.define('August.view.purchase.OrderForm',{
                     {
                         xtype: 'combo',
                         name: 'processType',
-                        fieldLabel: 'Process Type',
+                        fieldLabel: 'Proc. Type',
                         fieldCls: 'required',
                         displayField: 'label',
                         valueField: 'value',
@@ -503,6 +549,27 @@ Ext.define('August.view.purchase.OrderForm',{
                             store: '{paymentcodes}',
                             value: '{thePO.paymentcode}'
                         }
+                    },
+                    {
+                        xtype: 'combo',
+                        name: 'cancelreason',
+                        fieldLabel: 'CXL Reason',
+                        displayField: 'label',
+                        valueField: 'value',
+                        editable: false,
+                        //selectOnFocus: true,
+                        allowBlank: false,
+                        forceSelection: true,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{cxlreasons}',
+                            value: '{thePO.cancelreason}'
+                        }
                     },  
                     {
                         xtype: 'combo',
@@ -524,8 +591,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             store: '{memocodes}',
                             value: '{thePO.memocode}'
                         }
-                    }, 
-                    /*
+                    },                     
                     {
                         xtype: 'combo',
                         name: 'term',
@@ -546,27 +612,33 @@ Ext.define('August.view.purchase.OrderForm',{
                             store: '{terms}',
                             value: '{thePO.term}'
                         }
-                    },                                                       
+                    },
                     {
-                        xtype: 'container',
-                        colspan: 2,
-                        height: 32
-                    }
-                */]
+                        xtype: 'datefield',
+                        name: 'cancelReasonDate',                        
+                        format: 'Y-m-d',
+                        fieldLabel: 'CXL R. Date',
+                        //editable: false,
+                        bind: {
+                            value: '{thePO.cancelReasonDate}'
+                        }
+                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                    }]
                 },{
                     responsiveCls: 'small-100',
                     //width: '30%',
                     layout: {
                         type: 'table',
-                        columns: 3,
+                        columns: 5,
                         tableAttrs: {
                             style: {}
                         }
                     },
                     defaultType: 'textfield',
                     defaults: {
+                        width: 220,
                         constrain: true,
-                        margin: '0 10 3 0',
+                        margin: '0 10 3 0',                        
                         labelWidth: 80
                         //minHeight: 720,
                         //padding: '10 10 0 10'
@@ -579,12 +651,13 @@ Ext.define('August.view.purchase.OrderForm',{
                             selectOnFocus: false,
                             //flex: 1,
                             bind: {
-                                value: '{thePO.SONo}'
+                                value: '{thePO.SoNo}'
                             }
                         },
                         {
                             xtype: 'textfield',
                             name: 'user1',
+                            width: 250,
                             fieldLabel: 'Main Label',
                             readOnly: true,
                             selectOnFocus: false,
@@ -596,12 +669,40 @@ Ext.define('August.view.purchase.OrderForm',{
                         },{
                             xtype: 'textfield',
                             name: 'user6',
+                            width: 160,
                             fieldLabel: 'Price Ticket',
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
                                 value: '{thePO.user6}'
+                            }
+                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                        },
+                        {
+                            xtype: 'textfield',
+                            name: 'user11',
+                            width: 140,
+                            labelWidth: 60,
+                            fieldLabel: 'Hanger',
+                            readOnly: true,
+                            selectOnFocus: false,
+                            //editable: false,
+                            bind: {
+                                value: '{thePO.user11}'
+                            }
+                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                        },
+                        {
+                            xtype: 'textfield',
+                            name: 'createUser',
+                            width: 230,
+                            fieldLabel: 'Created by',
+                            readOnly: true,
+                            selectOnFocus: false,
+                            //editable: false,
+                            bind: {
+                                value: '{thePO.createUser}'
                             }
                             //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                         },
@@ -619,29 +720,58 @@ Ext.define('August.view.purchase.OrderForm',{
                         },
                         {
                             xtype: 'radiogroup',
-                            name: 'user2',
+                            //name: 'user2',
+                            width: 270,
                             fieldLabel: 'Po Type',                            
                             selectOnFocus: false,
                             //editable: false,
+                            simpleValue: true,
                             items: [{
-                                boxLabel: 'NEW PO', inputValue: 'NEW PO'
+                                boxLabel: 'NEW PO', name: 'user2', inputValue: 'NEW PO'
                             },{
-                                boxLabel: 'RE ORDER', inputValue: 'RE ORDER'
+                                boxLabel: 'RE ORDER', name: 'user2', inputValue: 'RE ORDER'
                             }],
-                            bind: {
-                                value: '{thePO.user2}'
-                            }
+                            bind: '{thePO.user2}'
                             //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                         },
                         {
                             xtype: 'textfield',
                             name: 'user7',
+                            width: 160,
                             fieldLabel: 'Size Label',
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
                                 value: '{thePO.user7}'
+                            }
+                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                        },
+                        {
+                            xtype: 'textfield',
+                            name: 'user12',
+                            width: 140,
+                            labelWidth: 60,
+                            fieldLabel: 'Polybag',
+                            readOnly: true,
+                            selectOnFocus: false,
+                            //editable: false,
+                            bind: {
+                                value: '{thePO.user12}'
+                            }
+                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                        },
+                        {
+                            xtype: 'datefield',
+                            name: 'createDate',
+                            width: 230,
+                            fieldLabel: 'Created on',                            
+                            readOnly: true,
+                            selectOnFocus: false,
+                            //editable: false,
+                            format: 'Y-m-d h:i a',
+                            bind: {
+                                value: '{thePO.createDate}'
                             }
                             //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                         },
@@ -660,6 +790,7 @@ Ext.define('August.view.purchase.OrderForm',{
                         {
                             xtype: 'combo',
                             name: 'user3',
+                            width: 250,
                             fieldLabel: 'Coordinator',
                             displayField: 'label',
                             valueField: 'value',
@@ -684,12 +815,40 @@ Ext.define('August.view.purchase.OrderForm',{
                         {
                             xtype: 'textfield',
                             name: 'user8',
+                            width: 160,
                             fieldLabel: 'Care Label',
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
                                 value: '{thePO.user8}'
+                            }
+                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                        },
+                        {
+                            xtype: 'textfield',
+                            name: 'user13',
+                            width: 140,
+                            labelWidth: 60,
+                            fieldLabel: 'Sizer',
+                            readOnly: true,
+                            selectOnFocus: false,
+                            //editable: false,
+                            bind: {
+                                value: '{thePO.user13}'
+                            }
+                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                        },
+                        {
+                            xtype: 'textfield',
+                            name: 'updateUser',
+                            width: 230,
+                            fieldLabel: 'Updated by',
+                            readOnly: true,
+                            selectOnFocus: false,
+                            //editable: false,
+                            bind: {
+                                value: '{thePO.updateUser}'
                             }
                             //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                         },
@@ -708,6 +867,7 @@ Ext.define('August.view.purchase.OrderForm',{
                         {
                             xtype: 'textfield',
                             name: 'user4',
+                            width: 250,
                             fieldLabel: 'Pack',
                             readOnly: true,
                             selectOnFocus: false,
@@ -720,6 +880,7 @@ Ext.define('August.view.purchase.OrderForm',{
                         {
                             xtype: 'textfield',
                             name: 'user9',
+                            width: 160,
                             fieldLabel: 'Hang Tag',
                             readOnly: true,
                             selectOnFocus: false,
@@ -729,6 +890,35 @@ Ext.define('August.view.purchase.OrderForm',{
                             }
                             //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                         },
+                        {
+                            xtype: 'textfield',
+                            name: 'user14',
+                            width: 140,
+                            labelWidth: 60,
+                            fieldLabel: 'Barcode',
+                            readOnly: true,
+                            selectOnFocus: false,
+                            //editable: false,
+                            bind: {
+                                value: '{thePO.user14}'
+                            }
+                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                        },   
+                        {
+                            xtype: 'datefield',
+                            name: 'updateDate',
+                            width: 230,
+                            fieldLabel: 'Updated on',
+                            //labelWidth: 85,
+                            readOnly: true,
+                            selectOnFocus: false,
+                            //editable: false,
+                            format: 'Y-m-d h:i a',
+                            bind: {
+                                value: '{thePO.updateDate}'
+                            }
+                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                        },                                                                                                                        
                         {
                             xtype: 'textfield',
                             name: 'parent_pono',
@@ -744,6 +934,7 @@ Ext.define('August.view.purchase.OrderForm',{
                         {
                             xtype: 'textfield',
                             name: 'user5',
+                            width: 250,
                             fieldLabel: 'TECH TEAM',
                             readOnly: true,
                             selectOnFocus: false,
@@ -756,6 +947,8 @@ Ext.define('August.view.purchase.OrderForm',{
                         {
                             xtype: 'textfield',
                             name: 'user10',
+                            colspan: 3,
+                            width: 160,
                             fieldLabel: 'COO Label',
                             readOnly: true,
                             selectOnFocus: false,
@@ -764,14 +957,120 @@ Ext.define('August.view.purchase.OrderForm',{
                                 value: '{thePO.user10}'
                             }
                             //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        }                                               
+                        },                                                                                                  
+                        {
+                            xtype: 'container',   
+                            colspan: 5,                                                     
+                            style: {
+                                //border: '1px solid black'
+                            },
+                            height: 24
+                        }                                                                                               
                     ]
                 },{
                     responsiveCls: 'small-100',
                     //width: '30%',
                     layout: {
                         type: 'table',
-                        columns: 6,
+                        columns: 2,
+                        tableAttrs: {
+                            style: {
+                                //border: '1px solid black'
+                            }
+                        }
+                    },
+                    defaultType: 'combobox',
+                    defaults: {
+                        constrain: true,
+                        margin: '0 10 3 0',
+                        labelWidth: 80
+                        //minHeight: 720,
+                        //padding: '10 10 0 10'
+                    },
+                    items: [{
+                        xtype: 'combo',
+                        name: 'vendor',
+                        fieldLabel: 'Vendor',
+                        displayField: 'label',
+                        valueField: 'value',
+                        editable: false,
+                        //selectOnFocus: true,
+                        allowBlank: false,
+                        forceSelection: true,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{vendors}',
+                            value: '{thePO.vendor}'
+                        },
+                        listeners: {
+                            change: {
+                                fn: 'onVendorChanged',
+                                scope: this.controller
+                            }
+                        }
+                    },
+                    {
+                        xtype: 'combo',
+                        name: 'shipto',
+                        fieldLabel: 'Ship To',
+                        displayField: 'label',
+                        valueField: 'value',
+                        editable: false,
+                        //selectOnFocus: true,
+                        allowBlank: false,
+                        forceSelection: true,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{shiptos}',
+                            value: '{thePO.shipto}'
+                        },
+                        listeners: {
+                            change: {
+                                fn: 'onShipToChanged',
+                                scope: this.controller
+                            }
+                        }
+                    },{
+                        xtype: 'component',
+                        name: 'vendorAddress',                        
+                        //width: 260,                        
+                        height: 93,
+                        style: {
+                            //border: '1px solid #cfcfcf'
+                        },
+                        tpl: addressTpl,
+                        bind: {
+                            data: '{theVendor}'
+                        }
+                    },{
+                        xtype: 'component',
+                        name: 'shipToAddress',
+                        //width: 240,
+                        height: 93,
+                        style: {
+                            //border: '1px solid #cfcfcf'
+                        },
+                        tpl: addressTpl,
+                        bind: {
+                            data: '{theShipTo}'
+                        }
+                    }]
+                },{
+                    responsiveCls: 'small-100',
+                    //width: '30%',
+                    layout: {
+                        type: 'table',
+                        columns: 4,
                         tableAttrs: {
                             style: {}
                         }
@@ -789,8 +1088,8 @@ Ext.define('August.view.purchase.OrderForm',{
                         name: 'memo',
                         emptyText: 'Memo 1:',
                         colspan: 2,
-                        width: 520,
-                        height: 130,
+                        width: 480,
+                        height: 120,
                         bind: {
                             value: '{thePO.memo}'
                         }
@@ -801,79 +1100,12 @@ Ext.define('August.view.purchase.OrderForm',{
                         name: 'trimmemo',
                         emptyText: 'Memo 2:',
                         colspan: 2,
-                        width: 520,
-                        height: 130,
+                        width: 480,
+                        height: 120,
                         bind: {
                             value: '{thePO.trimmemo}'
                         }
                         //fieldLabel: 'Memo'
-                    }]
-                },{
-                    responsiveCls: 'small-100',
-                    //width: '30%',
-                    layout: {
-                        type: 'table',
-                        columns: 2,
-                        tableAttrs: {
-                            style: {}
-                        }
-                    },
-                    defaultType: 'textfield',
-                    defaults: {
-                        constrain: true,
-                        margin: '0 10 3 0',
-                        labelWidth: 80
-                        //minHeight: 720,
-                        //padding: '10 10 0 10'
-                    },
-                    items: [{
-                        xtype: 'textfield',
-                        name: 'createUser',
-                        fieldLabel: 'Created By',
-                        readOnly: true,
-                        selectOnFocus: false,
-                        //editable: false,
-                        bind: {
-                            value: '{thePO.createUser}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                    },{
-                        xtype: 'datefield',
-                        name: 'createDate',
-                        fieldLabel: 'Created On',
-                        labelWidth: 85,
-                        readOnly: true,
-                        selectOnFocus: false,
-                        //editable: false,
-                        format: 'Y-m-d h:i a',
-                        bind: {
-                            value: '{thePO.createDate}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                    },{
-                        xtype: 'textfield',
-                        name: 'updateUser',
-                        fieldLabel: 'Updated By',
-                        readOnly: true,
-                        selectOnFocus: false,
-                        //editable: false,
-                        bind: {
-                            value: '{thePO.updateUser}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                    },{
-                        xtype: 'datefield',
-                        name: 'updateDate',
-                        fieldLabel: 'Updated On',
-                        labelWidth: 85,
-                        readOnly: true,
-                        selectOnFocus: false,
-                        //editable: false,
-                        format: 'Y-m-d h:i a',
-                        bind: {
-                            value: '{thePO.updateDate}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                     }]
                 }]
             },            
@@ -969,129 +1201,123 @@ Ext.define('August.view.purchase.OrderForm',{
                 ]
             },            
             {
-                xtype: 'panel',
-                
-                flex: 1,     
+                xtype: 'purchase-view',
+                reference: "po-view",
                 layout: 'fit',
-                items: [                    
-                {
-                    xtype: 'purchase-view',
-                    reference: "po-view",
-                    
-                    scrollable: true,
-                    margin: 5,
-                    cls: 'pi-view',
-                    bind: {
-                        selection: '{selection}',
-                        store: "{thePO.purchaseorderitems}"
-                    },
-                    listeners: {
-                        select: 'onItemSelect',
-                        itemcontextmenu: 'onItemContextMenu',
-                        itemdblclick: {
-                            fn: 'onItemDblClick'
-                        }
-                    },
-                    tpl: new Ext.XTemplate(                        
-                        '<tpl for=".">',
-                            '<div class="item-selector">',
-                                '<div class="item-boxer" style="width:1800px;">',
-                                    '<div class="box-row">',
-                                        '<div class="box ab center" style="width:30px;">{line}</div>',
-                                        '<div class="box ab">',
-                                            '<div class="item-boxer">',
-                                                '<div class="box rb" style="width:160px;">{style:trim}</div>',
-                                                '<div class="box nb" style="width:160px;">{color:trim}</div>',
-                                            '</div>',
+                flex: 1,
+                scrollable: true,
+                margin: 5,
+                cls: 'pi-view',
+                bind: {
+                    selection: '{selection}',
+                    store: "{thePO.purchaseorderitems}"
+                },
+                listeners: {
+                    select: 'onItemSelect',
+                    itemcontextmenu: 'onItemContextMenu',
+                    itemdblclick: {
+                        fn: 'onItemDblClick'
+                    }
+                },
+                tpl: new Ext.XTemplate(                        
+                    '<tpl for=".">',
+                        '<div class="item-selector">',
+                            '<div class="item-boxer" style="width:1800px;">',
+                                '<div class="box-row">',
+                                    '<div class="box ab center" style="width:30px;">{line}</div>',
+                                    '<div class="box ab">',
+                                        '<div class="item-boxer">',
+                                            '<div class="box rb" style="width:160px;">{style:trim}</div>',
+                                            '<div class="box nb" style="width:160px;">{color:trim}</div>',
                                         '</div>',
-                                        '<div class="box ab">',
-                                            '<div class="item-boxer">',
-                                                '<div class="box rb center" style="width:50px;">{size1}</div>',
-                                                '<div class="box rb center" style="width:50px;">{size2}</div>',
-                                                '<div class="box rb center" style="width:50px;">{size3}</div>',
-                                                '<div class="box rb center" style="width:50px;">{size4}</div>',
-                                                '<div class="box rb center" style="width:50px;">{size5}</div>',
-                                                '<div class="box rb center" style="width:50px;">{size6}</div>',
-                                                '<div class="box rb center" style="width:50px;">{size7}</div>',
-                                                '<div class="box rb center" style="width:50px;">{size8}</div>',
-                                                '<div class="box nb center" style="width:82px;"></div>',
-                                            '</div>',
-                                        '</div>',                                    
-                                        '<div class="box ab center" style="width:90px;"></div>',
-                                        '<div class="box ab center" style="width:90px;"></div>',
-                                        '<div class="box ab center" style="width:90px;"></div>',
-                                        '<div class="box ab" style="width:120px;">{canceldate:date("Y-m-d")}</div>',
-                                        '<div class="box ab" style="width:140px;">{cancelReason}</div>',
-                                        '<div class="box ab center" style="width:90px;"></div>',                                                                        
-                                        '<div class="box nb center" style="width:0px;"></div>',
                                     '</div>',
-                                    '<div class="box-row">',
-                                        '<div class="box ab" style="width:30px;"></div>',
-                                        '<div class="box ab" style="width:320px;">{descript:trim}</div>',
-                                        '<div class="box ab">',
-                                            '<div class="item-boxer">',
-                                                '<div class="box rb right" style="width:50px;">{unit1}</div>',
-                                                '<div class="box rb right" style="width:50px;">{unit2}</div>',
-                                                '<div class="box rb right" style="width:50px;">{unit3}</div>',
-                                                '<div class="box rb right" style="width:50px;">{unit4}</div>',
-                                                '<div class="box rb right" style="width:50px;">{unit5}</div>',
-                                                '<div class="box rb right" style="width:50px;">{unit6}</div>',
-                                                '<div class="box rb right" style="width:50px;">{unit7}</div>',
-                                                '<div class="box rb right" style="width:50px;">{unit8}</div>',
-                                                '<div class="box nb right" style="width:82px;"></div>',
-                                            '</div>',
+                                    '<div class="box ab">',
+                                        '<div class="item-boxer">',
+                                            '<div class="box rb center" style="width:50px;">{size1}</div>',
+                                            '<div class="box rb center" style="width:50px;">{size2}</div>',
+                                            '<div class="box rb center" style="width:50px;">{size3}</div>',
+                                            '<div class="box rb center" style="width:50px;">{size4}</div>',
+                                            '<div class="box rb center" style="width:50px;">{size5}</div>',
+                                            '<div class="box rb center" style="width:50px;">{size6}</div>',
+                                            '<div class="box rb center" style="width:50px;">{size7}</div>',
+                                            '<div class="box rb center" style="width:50px;">{size8}</div>',
+                                            '<div class="box nb center" style="width:82px;"></div>',
                                         '</div>',
-                                        '<div class="box ab right" style="width:90px;">{unitSum}</div>',
-                                        '<div class="box ab center" style="width:90px;">{price:usMoney}</div>',                                        
-                                        '<div class="box ab" style="width:90px;">{uom}</div>',
-                                        '<div class="box ab center" style="width:120px;">{warehouse}</div>',
-                                        '<div class="box ab" style="width:140px;">{cancelReason}</div>',
-                                        '<div class="box ab center" style="width:90px;">{id}</div>',                                        
-                                        '<div class="box nb center" style="width:0px;"></div>',
-                                    '</div>',
-                                    '<div class="box-row">',
-                                        '<div class="box ab" style="width:30px;"></div>',                                        
-                                        '<div class="box ab " style="width:160px;"></div>',
-                                        '<div class="box ab">',
-                                            '<div class="item-boxer">',
-                                                '<div class="box rb right" style="width:50px;"></div>',
-                                                '<div class="box rb right" style="width:50px;"></div>',
-                                                '<div class="box rb right" style="width:50px;"></div>',
-                                                '<div class="box rb right" style="width:50px;"></div>',
-                                                '<div class="box rb right" style="width:50px;"></div>',
-                                                '<div class="box rb right" style="width:50px;"></div>',
-                                                '<div class="box rb right" style="width:50px;"></div>',
-                                                '<div class="box rb right" style="width:50px;"></div>',
-                                                '<div class="box nb right" style="width:82px;"></div>',
-                                            '</div>',
+                                    '</div>',                                    
+                                    '<div class="box ab center" style="width:90px;"></div>',
+                                    '<div class="box ab center" style="width:90px;"></div>',
+                                    '<div class="box ab center" style="width:90px;"></div>',
+                                    '<div class="box ab" style="width:120px;">{canceldate:date("Y-m-d")}</div>',
+                                    '<div class="box ab" style="width:140px;">{cancelReason}</div>',
+                                    '<div class="box ab center" style="width:90px;"></div>',                                                                        
+                                    '<div class="box nb center" style="width:0px;"></div>',
+                                '</div>',
+                                '<div class="box-row">',
+                                    '<div class="box ab" style="width:30px;"></div>',
+                                    '<div class="box ab" style="width:320px;">{descript:trim}</div>',
+                                    '<div class="box ab">',
+                                        '<div class="item-boxer">',
+                                            '<div class="box rb right" style="width:50px;">{unit1}</div>',
+                                            '<div class="box rb right" style="width:50px;">{unit2}</div>',
+                                            '<div class="box rb right" style="width:50px;">{unit3}</div>',
+                                            '<div class="box rb right" style="width:50px;">{unit4}</div>',
+                                            '<div class="box rb right" style="width:50px;">{unit5}</div>',
+                                            '<div class="box rb right" style="width:50px;">{unit6}</div>',
+                                            '<div class="box rb right" style="width:50px;">{unit7}</div>',
+                                            '<div class="box rb right" style="width:50px;">{unit8}</div>',
+                                            '<div class="box nb right" style="width:82px;"></div>',
                                         '</div>',
-                                        '<div class="box ab right" style="width:90px;">{totalUnit}</div>',
-                                        '<div class="box ab center" style="width:90px;">{extPrice:usMoney}</div>',                                        
-                                        '<div class="box ab" style="width:90px;">{onhand}</div>',
-                                        '<div class="box ab" style="width:120px;">{SoNo}</div>',
-                                        '<div class="box ab" style="width:140px;">{cancelReasondate:date("Y-m-d")}</div>',
-                                        '<div class="box ab center" style="width:90px;">{sodid}</div>',                                        
-                                        '<div class="box nb center" style="width:0px;"></div>',
                                     '</div>',
+                                    '<div class="box ab right" style="width:90px;">{unitSum}</div>',
+                                    '<div class="box ab center" style="width:90px;">{price:usMoney}</div>',                                        
+                                    '<div class="box ab" style="width:90px;">{uom}</div>',
+                                    '<div class="box ab center" style="width:120px;">{warehouse}</div>',
+                                    '<div class="box ab" style="width:140px;">{cancelReason}</div>',
+                                    '<div class="box ab center" style="width:90px;">{id}</div>',                                        
+                                    '<div class="box nb center" style="width:0px;"></div>',
+                                '</div>',
+                                '<div class="box-row">',
+                                    '<div class="box ab" style="width:30px;"></div>',                                        
+                                    '<div class="box ab " style="width:160px;"></div>',
+                                    '<div class="box ab">',
+                                        '<div class="item-boxer">',
+                                            '<div class="box rb right" style="width:50px;"></div>',
+                                            '<div class="box rb right" style="width:50px;"></div>',
+                                            '<div class="box rb right" style="width:50px;"></div>',
+                                            '<div class="box rb right" style="width:50px;"></div>',
+                                            '<div class="box rb right" style="width:50px;"></div>',
+                                            '<div class="box rb right" style="width:50px;"></div>',
+                                            '<div class="box rb right" style="width:50px;"></div>',
+                                            '<div class="box rb right" style="width:50px;"></div>',
+                                            '<div class="box nb right" style="width:82px;"></div>',
+                                        '</div>',
+                                    '</div>',
+                                    '<div class="box ab right" style="width:90px;">{totalUnit}</div>',
+                                    '<div class="box ab center" style="width:90px;">{extPrice:usMoney}</div>',                                        
+                                    '<div class="box ab" style="width:90px;">{onhand}</div>',
+                                    '<div class="box ab" style="width:120px;">{SoNo}</div>',
+                                    '<div class="box ab" style="width:140px;">{cancelReasondate:date("Y-m-d")}</div>',
+                                    '<div class="box ab center" style="width:90px;">{sodid}</div>',                                        
+                                    '<div class="box nb center" style="width:0px;"></div>',
                                 '</div>',
                             '</div>',
-                        '</tpl>'
-                    )
-                    /*
-                     itemSelector: 'item',
-                     prepareData: function(data){
-                     //this.callParent(arguments);
-                     data.button = new Ext.button.Button({text: data.text});
+                        '</div>',
+                    '</tpl>'
+                )
+                /*
+                 itemSelector: 'item',
+                 prepareData: function(data){
+                 //this.callParent(arguments);
+                 data.button = new Ext.button.Button({text: data.text});
 
-                     return data;
-                     },
-                     store: {
-                     autoLoad: true,
-                     data: [{text: 'Red'}, {text: 'Green'}, {text: 'Blue'}],
-                     fields: ['text']
-                     }
-                     */
-                }]
+                 return data;
+                 },
+                 store: {
+                 autoLoad: true,
+                 data: [{text: 'Red'}, {text: 'Green'}, {text: 'Blue'}],
+                 fields: ['text']
+                 }
+                 */
             }]
         });
 

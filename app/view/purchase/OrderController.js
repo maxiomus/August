@@ -95,8 +95,7 @@ Ext.define('August.view.purchase.OrderController', {
     onContextMenuBookmarkClick: function(d, c){
         this.addBookmark(d, this.getView());
     },
-
-    /*
+    
     onClearFilters: function(b){
         var me = this,
             layout = me.view.lookupReference("multiview"),
@@ -108,8 +107,7 @@ Ext.define('August.view.purchase.OrderController', {
         searchfield.getTrigger('clear').hide();
         grid.filters.clearFilters();
     },
-    */
-
+    
     /**
      *
      * @param sm

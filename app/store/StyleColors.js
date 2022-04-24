@@ -5,7 +5,9 @@
 Ext.define('August.store.StyleColors', {
     extend: 'Ext.data.Store',
 
-    fields: ['id', 'text'],
+    alias: 'store.StyleColors',
+
+    fields: ['id', 'label', 'value', 'descript'],
     // allow the grid to interact with the paging scroller by buffering
     //buffered: true,
 

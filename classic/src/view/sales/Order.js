@@ -209,13 +209,20 @@ Ext.define('August.view.sales.Order',{
         f.insert(14,
             [{
                 xtype: 'button',
+                iconCls: 'x-fa fa-file-export',
+                text: 'PO Addition',
+                action: 'openPOTemplate',
+                handler: 'onOpenPOTemplateClick',
+                scope: me.controller
+            },{
+                xtype: 'button',
                 iconCls: 'x-fa fa-external-link-alt',
                 text: 'Export',
                 handler: function(b){
                     j.saveDocumentAs({
                         type: 'xlsx',
                         title: 'Sales Order List',
-                        fileName: 'SO ' + Ext.Date.format(new Date(), 'Y-m-d') + '.xlsx'
+                        fileName: 'SO ' + Ext.Date.format(new Date(), 'Y-m-d')
                     });
                 }
             }]
@@ -241,27 +248,31 @@ Ext.define('August.view.sales.Order',{
             xtype: 'datecolumn',
             text: "S.O Date",
             dataIndex: "orderDate",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
-                type: "date"
+                type: "date",
+                format: 'Y-m-d',
+                dateFormat: 'C'
             }
         },
         {
             xtype: 'datecolumn',
             text: "Start Date",
             dataIndex: "startDate",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
-                type: "date"
+                type: "date",
+                dateFormat: 'C'
             }
         },
         {
             xtype: 'datecolumn',
             text: "CXL Date",
             dataIndex: "cancelDate",
-            format: 'm-d-Y',
+            format: 'Y-m-d',
             filter: {
-                type: "date"
+                type: "date",
+                dateFormat: 'C'
             }
         },
         {

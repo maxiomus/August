@@ -5,21 +5,20 @@ Ext.define('August.model.style.Product', {
         'Ext.data.validator.Presence'
     ],
 
-    fields: [
-        { name: 'id', type: 'int' },
+    fields: [        
         { name: 'style', type: 'string' },
         { name: 'color', type: 'string' },
         { name: 'status', type: 'string' },
         { name: 'location', type: 'string' },
         { name: 'cost', type: 'number' },
-        { name: 'availableDate', type: 'date', dateFormat: 'c', dateWriteFormat: 'Y-m-d' },
+        { name: 'availableDate', type: 'date', dateFormat: 'C', dateWriteFormat: 'Y-m-d' },
         { name: 'price1', type: 'number' },
         { name: 'price2', type: 'number' },
         { name: 'price3', type: 'number' },
         { name: 'price4', type: 'number' },
         { name: 'price5', type: 'number' },
         { name: 'userName', type: 'string' },
-        { name: 'userTime', type: 'date', dateFormat: 'c' },
+        { name: 'userTime', type: 'date', dateFormat: 'C' },
         { name: 'season', type: 'string' },
         { name: 'oh1', type: 'number' },
         { name: 'oh2', type: 'number' },
@@ -84,7 +83,167 @@ Ext.define('August.model.style.Product', {
         { name: 'po13', type: 'number' },
         { name: 'po14', type: 'number' },
         { name: 'po15', type: 'number' },
-        { name: 'pos', type: 'number' },
+        { name: 'pos', type: 'number' },        
+        { name: 'ats1', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh1 + data.po1 - data.order1;
+            }
+        },
+        { name: 'ats2', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh2 + data.po2 - data.order2;
+            } 
+        },
+        { name: 'ats3', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh3 + data.po3 - data.order3;
+            } 
+        },
+        { name: 'ats4', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh4 + data.po4 - data.order4;
+            } 
+        },
+        { name: 'ats5', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh5 + data.po5 - data.order5;
+            } 
+        },
+        { name: 'ats6', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh6 + data.po6 - data.order6;
+            } 
+        },
+        { name: 'ats7', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh7 + data.po7 - data.order7;
+            } 
+        },
+        { name: 'ats8', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh8 + data.po8 - data.order8;
+            } 
+        },
+        { name: 'ats9', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh9 + data.po9 - data.order9;
+            } 
+        },
+        { name: 'ats10', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh10 + data.po10 - data.order10;
+            } 
+        },
+        { name: 'ats11', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh11 + data.po11 - data.order11;
+            } 
+        },
+        { name: 'ats12', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh12 + data.po12 - data.order12;
+            } 
+        },
+        { name: 'ats13', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh13 + data.po13 - data.order13;
+            } 
+        },
+        { name: 'ats14', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh14 + data.po14 - data.order14;
+            } 
+        },
+        { name: 'ats15', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh15 + data.po15 - data.order15;
+            } 
+        },
+        { name: 'ats', type: 'number', persist: false,
+            calculate: function(data){
+                return data.ohs + data.pos - data.orders;
+            } 
+        },
+        { name: 'ots1', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh1 - data.order1;
+            }
+        },
+        { name: 'ots2', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh2 - data.order2;
+            } 
+        },
+        { name: 'ots3', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh3 - data.order3;
+            } 
+        },
+        { name: 'ots4', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh4 - data.order4;
+            } 
+        },
+        { name: 'ots5', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh5 - data.order5;
+            } 
+        },
+        { name: 'ots6', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh6 - data.order6;
+            } 
+        },
+        { name: 'ots7', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh7 - data.order7;
+            } 
+        },
+        { name: 'ots8', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh8 - data.order8;
+            } 
+        },
+        { name: 'ots9', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh9 - data.order9;
+            } 
+        },
+        { name: 'ots10', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh10 - data.order10;
+            } 
+        },
+        { name: 'ots11', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh11 - data.order11;
+            } 
+        },
+        { name: 'ots12', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh12 - data.order12;
+            } 
+        },
+        { name: 'ots13', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh13 - data.order13;
+            } 
+        },
+        { name: 'ots14', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh14 - data.order14;
+            } 
+        },
+        { name: 'ots15', type: 'number', persist: false,
+            calculate: function(data){
+                return data.oh15 - data.order15;
+            } 
+        },
+        { name: 'ots', type: 'number', persist: false,
+            calculate: function(data){
+                return data.ohs - data.orders;
+            } 
+        },
         { name: 'division', type: 'string' },
         { name: 'grp', type: 'string' },
         { name: 'lot', type: 'string' },
@@ -111,6 +270,13 @@ Ext.define('August.model.style.Product', {
         { name: 'subdivision', type: 'string' },
         { name: 'type', type: 'string' },
         { name: 'sizeCat', type: 'string' },
+        { 
+            name: 'Size', persist: false,
+            reference: {
+                type: 'style.SizeCategory',
+                unique: true
+            }
+        }, 
         { name: 'descript', type: 'string' },
         { name: 'category', type: 'string' },
         { name: 'vendor1', type: 'string' },
@@ -122,7 +288,7 @@ Ext.define('August.model.style.Product', {
         { name: 'uom2', type: 'string' },
         { name: 'uom3', type: 'string' },
         { name: 'UpdateUser', type: 'string' },
-        { name: 'UpdateTime', type: 'date', dateFormat: 'c' },
+        { name: 'UpdateTime', type: 'date', dateFormat: 'C' },
         { name: 'impCat', type: 'string' },
         { name: 'memo', type: 'string' },
         { name: 'ldp', type: 'number' },
@@ -135,9 +301,10 @@ Ext.define('August.model.style.Product', {
         { name: 'currency2', type: 'string' },
         { name: 'currency3', type: 'string' },
         { name: 'rawMatType', type: 'string' },
-        { name: 'asRaw' },
+        { name: 'asRaw', type: 'string' },
+        { name: 'id', type: 'int' },
         { name: 'defaultBomCost', type: 'number' },
-        { name: 'noneInventory' },
+        { name: 'noneInventory', type: 'string' },
         { name: 'weight', type: 'number' },
         { name: 'sgtRetailPrice', type: 'number' },
         { name: 'originalProjection', type: 'int' },
@@ -226,7 +393,7 @@ Ext.define('August.model.style.Product', {
         { name: 'Small_QtyPerBox', type: 'number' },
         { name: 'hs_tariffno', type: 'string' },
         { name: 'min_order_qty', type: 'number' },
-        { name: 'userdate', type: 'date', dateFormat: 'c', dateWriteFormat: 'Y-m-d' },
+        { name: 'userdate', type: 'date', dateFormat: 'C', dateWriteFormat: 'Y-m-d' },
         { name: 'binlocation', type: 'string' },
         { name: 'receivedQty', type: 'number' },
         { name: 'allowancerate', type: 'number' },
@@ -241,17 +408,17 @@ Ext.define('August.model.style.Product', {
         { name: 'total_inv_qty', type: 'number' },
         { name: 'web_yn', type: 'bool' },
         { name: 'active_yn', type: 'bool' },
-        { name: 'ignore_price_rule' },
-        { name: 'do_not_allocate' },
-        { name: 'do_not_pick' },
-        { name: 'do_not_scanpack' },
-        { name: 'do_not_invoice' },
+        { name: 'ignore_price_rule', type: 'string' },
+        { name: 'do_not_allocate', type: 'string' },
+        { name: 'do_not_pick', type: 'string' },
+        { name: 'do_not_scanpack', type: 'string' },
+        { name: 'do_not_invoice', type: 'string' },
         { name: 'cost_cur_cs', type: 'number' },
         { name: 'price_ddp', type: 'number' },
-        { name: 'nafta' },
-        { name: 'send_846_file' },
+        { name: 'nafta', type: 'string' },
+        { name: 'send_846_file', type: 'string' },
         { name: 'price_fob', type: 'number' },
-        { name: 'startSellDate', type: 'date', dateFormat: 'c' },
+        { name: 'startSellDate', type: 'date', dateFormat: 'C' },
         { name: 'userId', type: 'string', mapping: 'userName', persist: false}
         /*
         { name: 'productId',
@@ -269,7 +436,7 @@ Ext.define('August.model.style.Product', {
         color: 'presence',
         //rawMatType: 'presence',
         season: 'presence',
-        division: 'presence',
+        division: 'presence'
         //fabcontent: 'presence',
         //fabricType: 'presence'
         /*
@@ -284,12 +451,16 @@ Ext.define('August.model.style.Product', {
 
     proxy: {
         type: 'rest',
-        url: '/WebApp/api/Product/',
+        url: '/WebApp/api/Products/',
 
         pageParam: '',
         startParam: '',
         limitParam: '',
 
+        headers: {
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        },
+        
         reader: {
             type: 'json',
             rootProperty: 'data'
@@ -301,8 +472,6 @@ Ext.define('August.model.style.Product', {
             //writeAllFields: true,
             allowSingle: false // set false to send a single record in array
         },
-
-        //extraParams: {},
 
         listeners: {
             exception: function (proxy, response, operation) {

@@ -17,9 +17,9 @@ Ext.define('August.model.style.Bolh', {
         { name: 'TotalCost', type: 'number' },
         { name: 'for_allstyle', defaultValue: 'N' },
         { name: 'createUser', type: 'string' },
-        { name: 'createTime', type: 'date', dateFormat: 'c' },
+        { name: 'createTime', type: 'date', dateFormat: 'C' },
         { name: 'updateUser', type: 'string', allowNull: true },
-        { name: 'updateTime', type: 'date', dateFormat: 'c' },
+        { name: 'updateTime', type: 'date', dateFormat: 'C' },
         { name: 'userId', type: 'string', mapping: 'createUser', persist: false},
         {
             name: 'bomhId',

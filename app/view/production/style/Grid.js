@@ -8,7 +8,7 @@ Ext.define("August.view.production.style.Grid", {
         'August.view.production.style.GridController',
         'August.view.production.style.GridModel',
         'August.plugin.grid.Exporter',
-        'Ext.grid.plugin.Exporter',
+        //'Ext.grid.plugin.Exporter',
         'Ext.grid.filters.Filters'
     ],
 
@@ -25,7 +25,7 @@ Ext.define("August.view.production.style.Grid", {
     },
 
     selModel: {
-        mode: 'MULTI',        
+        //type: 'checkboxmodel',              
         pruneRemoved: false
     },
 
@@ -41,8 +41,9 @@ Ext.define("August.view.production.style.Grid", {
         deferEmptyText: true,
         //emptyText: '<h1 style="margin: 20px">No matching results</h1>',
         getRowClass: function(a, g, f, h){
-            return "custom-row-style";
+            //return "custom-row-style";
         },
+
         listeners: {
             render: function(view){
                 //var view = grid.getView();
@@ -180,6 +181,38 @@ Ext.define("August.view.production.style.Grid", {
             },
             */
             {
+                header: "Start S. Date",
+                dataIndex: "startSellDate",
+                filter: {type: "date"},
+                renderer: function(k, i, a){
+                    if(k!=undefined){
+                        var d=new Date(k),
+                        j = function(c){
+                            return c<10 ? "0"+c : c;
+                        };
+                        var l = j(d.getUTCMonth()+1)+"-"+j(d.getUTCDate())+"-"+d.getUTCFullYear();
+                        i.tdAttr='data-qtip="'+l+'"';
+                        return l;
+                    }
+                }
+            },
+            {
+                header: "Avail. Date",
+                dataIndex: "availableDate",
+                filter: {type: "date"},
+                renderer: function(k, i, a){
+                    if(k!=undefined){
+                        var d=new Date(k),
+                        j = function(c){
+                            return c<10 ? "0"+c : c;
+                        };
+                        var l = j(d.getUTCMonth()+1)+"-"+j(d.getUTCDate())+"-"+d.getUTCFullYear();
+                        i.tdAttr='data-qtip="'+l+'"';
+                        return l;
+                    }
+                }
+            },
+            {
                 header: "Category",
                 dataIndex: "category",
                 width: 140,
@@ -209,8 +242,8 @@ Ext.define("August.view.production.style.Grid", {
                 dataIndex: "division",
                 hidden: false,
                 filter: {
-                    //operator: 'st',
-                    type: "list"
+                    operator: 'st',  
+                    type: "string"
                 },
                 renderer: function(f, e, a){
                     return f;
@@ -229,6 +262,18 @@ Ext.define("August.view.production.style.Grid", {
                 }
             },
             {
+                header: "Designer",
+                dataIndex: "designer",
+                width: 140,            
+                filter: {
+                    operator: 'st',
+                    type: "string"
+                },
+                renderer: function(f, e, a){
+                    return f;
+                }
+            },  
+            {
                 header: "O.H Qty",
                 dataIndex: "ohs",                
                 hidden: false,
@@ -241,9 +286,32 @@ Ext.define("August.view.production.style.Grid", {
             },
             {
                 header: "ATS",
-                dataIndex: "its",
+                dataIndex: "ats",
                 locked: false,
                 hidden: true,
+                filter: {
+                    type: "number"
+                },
+                renderer: function(f, e, a){
+                    return f;
+                }
+            },
+            {
+                header: "OTS",
+                dataIndex: "ots",
+                locked: false,
+                hidden: true,
+                filter: {
+                    type: "number"
+                },
+                renderer: function(f, e, a){
+                    return f;
+                }
+            },            
+            {
+                header: "P.O Qty",
+                dataIndex: "pos",
+                locked: false,
                 filter: {
                     type: "number"
                 },
@@ -263,8 +331,19 @@ Ext.define("August.view.production.style.Grid", {
                 }
             },
             {
-                header: "P.O Qty",
-                dataIndex: "pos",
+                header: "Pick Qty",
+                dataIndex: "picks",
+                locked: false,
+                filter: {
+                    type: "number"
+                },
+                renderer: function(f, e, a){
+                    return f;
+                }
+            },
+            {
+                header: "Ship Qty",
+                dataIndex: "ships",
                 locked: false,
                 filter: {
                     type: "number"
@@ -298,14 +377,17 @@ Ext.define("August.view.production.style.Grid", {
                 }
             },
             {
-                xtype: 'checkcolumn',
-                header: "Web Y/N",
-                dataIndex: "web_yn",
-                headerCheckbox: false,
-                locked: false,
+                header: "Prod. Cat",
+                dataIndex: "impCat",
                 hidden: false,
-                stopSelection: false
-            },
+                filter: {
+                    operator: 'st',  
+                    type: "string"
+                },
+                renderer: function(f, e, a){
+                    return f;
+                }
+            },                                   
             {
                 header: "Bin Location",
                 dataIndex: "binlocation",
@@ -317,7 +399,16 @@ Ext.define("August.view.production.style.Grid", {
                 renderer: function(f, e, a){
                     return f;
                 }
-            },            
+            },     
+            {
+                xtype: 'checkcolumn',
+                header: "Web Y/N",
+                dataIndex: "web_yn",
+                headerCheckbox: false,
+                locked: false,
+                hidden: false,
+                stopSelection: false
+            },        
             {
                 header: "Group",
                 dataIndex: "grp",
@@ -344,6 +435,7 @@ Ext.define("August.view.production.style.Grid", {
                     return f;
                 }
             },
+            /*
             {
                 header: "",
                 dataIndex: "",
@@ -356,9 +448,48 @@ Ext.define("August.view.production.style.Grid", {
                     return f;
                 }
             },
+            */
             {
-                header: "Price",
-                dataIndex: "price",
+                header: "Reference 1",
+                dataIndex: "reference1",
+                width: 120,
+                hidden: false,
+                filter: {
+                    operator: 'st',
+                    type: "string"
+                },
+                renderer: function(f, e, a){
+                    return f;
+                }
+            },
+            {
+                header: "Fab Content",
+                dataIndex: "fabcontent",
+                width: 120,
+                hidden: false,
+                filter: {
+                    operator: 'st',
+                    type: "string"
+                },
+                renderer: function(f, e, a){
+                    return f;
+                }
+            },
+            {
+                header: "MSRP",
+                dataIndex: "sgtRetailPrice",
+                width: 80,
+                align: 'center',
+                hidden: false,
+                renderer: function(v, meta, rec){
+                    var xf = Ext.util.Format;
+
+                    return v ? xf.usMoney(v) : '';
+                }
+            },
+            {
+                header: "Price 1",
+                dataIndex: "price1",
                 width: 80,
                 hidden: false,
                 renderer: function(v, meta, rec){
@@ -368,7 +499,7 @@ Ext.define("August.view.production.style.Grid", {
                 }
             },
             {
-                header: "Price5",
+                header: "Price 5",
                 dataIndex: "price5",
                 width: 80,
                 hidden: false,

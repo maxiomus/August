@@ -1,0 +1,26 @@
+[     
+    {
+      "label": "Style #",
+      "value": "style"
+    }, 
+    {
+      "label": "SO #",
+      "value": "orderNO"
+    },
+    {
+      "label": "Customer",
+      "value": "customer"
+    },
+    {
+      "label": "Customer PO #",
+      "value": "PO"
+    },    
+    {
+      "label": "Division",
+      "value": "division"
+    },
+    {
+      "label": "Vendor",
+      "value": "vendor"
+    }              
+  ]  

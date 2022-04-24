@@ -79,20 +79,21 @@ Ext.define('August.view.authenticate.LoginController', {
         if(action.result.success === 'true') {
             // has session...add to application stack
             //August.LoggedInUser = Ext.create( 'August.model.security.User', result.data );
-            //Ext.util.Cookies.set('loggedInUser', Ext.encode(result.data));            
+            //Ext.util.Cookies.set('loggedInUser', Ext.encode(result.data));      
+            August.app.accessToken = result.access_token;
+
             localStorage.setItem('access_token', result.access_token);                        
             localStorage.setItem('expires', result[".expires"]);
             
             var userInfo = Ext.decode(result.userInfo);
-            console.log('onLoginSuccess', result[".expires"]);
+            August.loggedInUser = userInfo;
+            console.log('onLoginSuccess', result[".expires"], August.app.accessToken);
             
             localStorage.setItem('userId', userInfo.userId);
             localStorage.setItem('name', userInfo.name);
             localStorage.setItem('roles', userInfo.roles);
             localStorage.setItem('group', userInfo.group);
-
-            August.loggedInUser = userInfo;
-
+            
             //Ext.getStore('Settings').load();
 
             //August.account = Ext.create('August.model.authenticate.Account', action.result.userInfo);//                        
@@ -100,12 +101,12 @@ Ext.define('August.view.authenticate.LoginController', {
             //Ext.GlobalEvents.fireEvent('aftervalidateloggedin');
 
             // Get previous location...
-            //var node = August.app.getPrevNode();//
-            //if(node == null) {//
-            //    node = 'dashboard';//
-            //}//
+            var node = August.app.getPrevNode();
+            if(node == null) {
+                node = 'dashboard';
+            }
 
-            me.redirectTo('dashboard');
+            me.redirectTo(node);
 
             // show message
             August.util.Utilities.showNotification('Confirm', 'ux-notification-icon-information', '<p>You are successfully logged in.</p>');            

@@ -28,10 +28,22 @@ Ext.define('August.view.production.windows.style.web.ExportController', {
         
         //console.log(me, topbar, field.getValue(), vm.get('selected').get('style'));
         //store.removeAll();
+        var siteId = field.getValue();
+        console.log(field.getValue())
+        switch (siteId) {            
+            case '10':
+            case '11':
+            case '12':
+            case '13':            
+            case '16':
+            case '99':
+                siteId = 16;
+                break;
 
+        }
         Ext.apply(store.getProxy().extraParams, {
             style: encodeURIComponent(vm.get('selected').data.style),
-            siteid: encodeURIComponent(field.getValue())
+            siteid: siteId
         });
     },
 

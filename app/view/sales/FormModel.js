@@ -176,6 +176,124 @@ Ext.define('August.view.sales.OrderFormModel', {
                     */
                 }
             }
+        },
+
+        paymentcodes: {
+            fields: ['label', 'value'],
+            // allow the grid to interact with the paging scroller by buffering
+            //buffered: true,
+            pageSize: 0,
+            //numFromEdge: 5,
+            //trailingBufferZone: 100,
+            //leadingBufferZone: 100,
+            autoLoad: true,
+            remoteFilter: true,
+
+            proxy: {
+                type: 'ajax',
+                url: '/WebApp/api/List/paymentcodes',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                    /*
+                    totalProperty: 'total',
+                    successProperty: 'success'
+                    */
+                }
+            }
+        },
+
+        terms: {
+            fields: ['label', 'value'],
+            // allow the grid to interact with the paging scroller by buffering
+            //buffered: true,
+            pageSize: 0,
+            //numFromEdge: 5,
+            //trailingBufferZone: 100,
+            //leadingBufferZone: 100,
+            autoLoad: true,
+            remoteFilter: true,
+
+            proxy: {
+                type: 'ajax',
+                url: '/WebApp/api/List/terms',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                    /*
+                    totalProperty: 'total',
+                    successProperty: 'success'
+                    */
+                }
+            }
+        },
+        /*
+        customers: {
+            fields: ['label', 'value'],
+            // allow the grid to interact with the paging scroller by buffering
+            //buffered: true,
+            pageSize: 50,
+            //numFromEdge: 5,
+            //trailingBufferZone: 100,
+            //leadingBufferZone: 100,
+            autoLoad: true,
+            remoteFilter: true,
+
+            proxy: {
+                type: 'ajax',
+                url: '/WebApp/api/List/customers',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                    
+                    //totalProperty: 'total',
+                    //successProperty: 'success'
+                    
+                }
+            }
+        },
+        */
+        stores: {
+            fields: ['label', 'value'],
+            // allow the grid to interact with the paging scroller by buffering
+            //buffered: true,
+            pageSize: 0,
+            //numFromEdge: 5,
+            //trailingBufferZone: 100,
+            //leadingBufferZone: 100,
+            autoLoad: false,
+            remoteFilter: true,
+
+            proxy: {
+                type: 'ajax',
+                url: '/WebApp/api/List/stores',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                    /*
+                    totalProperty: 'total',
+                    successProperty: 'success'
+                    */
+                }
+            },
+            listeners: {
+                beforeload: {
+                    fn: 'onShipToBeforeLoad',
+                    scope: this.controller
+                }
+            }
         }
     }
 

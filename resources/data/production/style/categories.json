@@ -1,8 +1,7 @@
 [
   {"label": "Style #", "field": "style"},
+  {"label": "SO #", "field": "orderno"},
   {"label": "Category", "field": "category"},
   {"label": "Season", "field": "season"},
-  {"label": "Division", "field": "division"},
-  {"label": "Group", "field": "grp"},
-  {"label": "Sub. Cat", "field": "subcategory"}
+  {"label": "Division", "field": "division"}
 ]
