@@ -6,8 +6,7 @@ Ext.define('August.view.sales.Order',{
         'August.view.sales.OrderController',
         'August.view.sales.OrderModel',
         'August.view.sales.OrderForm',
-        'August.plugin.grid.Exporter',
-        'Ext.ux.CTemplate'
+        'August.plugin.grid.Exporter'
     ],
 
     alias: "widget.sales-order",
@@ -191,10 +190,12 @@ Ext.define('August.view.sales.Order',{
                 }
             },
             {
-                xtype: 'searchnumber',
+                xtype: 'searchtextlist',
                 //reference: 'searchnumber',
                 width: 300,
-                grid: "sales-order-grid",
+                bind: {
+                    store: '{salesorders}'
+                },
                 paramName: 'orderno'
             },  
             {

@@ -7,7 +7,8 @@ Ext.define('August.model.purchase.OrderItem', {
     ],
 
     fields: [
-        //{ name: 'pono', type: 'int' },        
+        //{ name: 'pono', type: 'int' },    
+        { name: 'id', type: 'int' },    
         { name: 'style', type: 'string' },
         { name: 'color', type: 'string' },
         { name: 'bundle', type: 'string' },
@@ -41,8 +42,7 @@ Ext.define('August.model.purchase.OrderItem', {
             }
         },
         { name: 'status', type: 'string' },
-        { name: 'SONo', type: 'int' },
-        { name: 'id', type: 'int' },
+        { name: 'SONo', type: 'int' },        
         { name: 'pack', type: 'string' },
         { name: 'ratioID', type: 'int' },
         { name: 'line', type: 'int' },
@@ -130,7 +130,7 @@ Ext.define('August.model.purchase.OrderItem', {
         writer: {
             type: 'json',
             //clientIdProperty: 'clientId',
-            //writeAllFields: true,
+            writeAllFields: false,
             allowSingle: false // set false to send a single record in array
         },
 

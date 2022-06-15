@@ -40,7 +40,7 @@ Ext.define('August.model.style.Reqd', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Reqd',
+        url: '/WebApp/api/Reqd',
 
         pageParam: '',
         startParam: '',

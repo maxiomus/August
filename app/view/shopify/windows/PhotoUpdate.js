@@ -4,10 +4,10 @@ Ext.define('August.view.shopify.windows.PhotoUpdate',{
 
     requires: [
         'August.view.shopify.windows.PhotoUpdateController',
-        'August.view.shopify.windows.PhotoUpdateModel',
-        'Ext.view.MultiSelector',
-        'Ext.ux.form.ItemSelector',
         'August.view.shopify.windows.PhotoUpdateModel'
+        //'Ext.view.MultiSelector',
+        //'Ext.ux.form.ItemSelector',
+        //'August.view.shopify.windows.PhotoUpdateModel'
     ],
 
     alias: 'widget.shopify-windows-photoupdate',

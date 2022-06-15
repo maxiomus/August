@@ -43,6 +43,16 @@ Ext.define('August.view.sales.OrderModel', {
         categories: {
             fields: ['label', 'field'],
             autoLoad: true   
+        },
+
+        forms: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        figures: {
+            fields: ['label', 'value'],
+            autoLoad: true   
         }
     }
 });

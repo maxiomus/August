@@ -115,7 +115,7 @@ Ext.define('August.view.production.style.ProductController', {
 
             proxy: {
                 type: 'ajax',
-                url: '/api/Options/colors',
+                url: '/WebApp/api/Options/colors',
 
                 reader: {
                     type: 'json',
@@ -496,7 +496,7 @@ Ext.define('August.view.production.style.ProductController', {
             });
         }
         /*
-        August.model.sample.Product.load(parseInt(sRec.getId(),10), {
+        August.model.style.Product.load(parseInt(sRec.getId(),10), {
             success: function (rec, ope) {
 
                 var colors = [];
@@ -713,7 +713,7 @@ Ext.define('August.view.production.style.ProductController', {
 
         var processMask = new Ext.LoadMask({
             msg: 'Saving... Please wait',
-            target: me.getView()
+            target: me.win
         });        
         
         var p = me.constructShopifyProduct(store, saveColors);
@@ -855,7 +855,7 @@ Ext.define('August.view.production.style.ProductController', {
                         var response = JSON.parse(operation.getResponse().responseText);
                         if(field && field.getFilesQueue().length > 0){
                             field.send({
-                                url: '/api/Files/Photos/upload',
+                                url: '/WebApp/api/Files/Photos/upload',
                                 success: function(resp){
                                     //console.log(resp);
                                     processMask.hide('', function() {

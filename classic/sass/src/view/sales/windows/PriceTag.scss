@@ -1,0 +1,109 @@
+@page {
+  width: 8.5in; height: 11in; margin: 0;
+}
+
+/** For screen preview **/
+/*
+@media screen {
+  div.sheet {
+    background: #e0e0e0;
+    box-shadow: 0 .5mm 2mm rgba(0,0,0,.3);
+    margin: 5mm auto;
+  }
+}
+*/
+@media print {
+    html, body {
+      width: 8.5in;
+      height: 11in;
+  }
+
+  .pagebreak {
+      page-break-inside: avoid; page-break-after: always; margin: 0.11in 0 0.11in 0;
+  }  
+
+}
+
+html, body { width: 8.75in; height: 11in; margin:0; font-family: "Helvetica Neue", Arial, Helvetica, sans-serif; }
+
+.price-tag-view .x-item-over {
+  -moz-border-radius:.8em;
+  -webkit-border-radius:.8em;
+  border-radius:.8em;
+
+  border: 1px solid #6593cf;
+  background: #E2EFF8;
+}
+
+.price-tag-view .x-item-selected {
+  //border: 1px solid #6593cf;
+  //background: #C1DDF2;
+  -moz-border-radius:.8em;
+  -webkit-border-radius:.8em;
+  border-radius:.8em;
+
+  border: 1px solid #6593cf;
+  background: #FFEFBB;
+}
+
+.price-tag-view .item-selector {      
+  -moz-border-radius:.7em;
+  -webkit-border-radius:.7em;
+  border-radius:.7em;  
+  background: #ffffff;
+  border: 1px solid #1c1c1c;
+  //display: table;
+  float: left;
+  margin: 0 0.13in 0 0;
+  width: 2.63in;
+  height: 1in;
+  padding: 7px 0 0 7px;    
+  border-collapse: collapse;
+  cursor: pointer;    
+}
+
+.price-tag-view .item-boxer {
+  display: table;
+  //width: 100%;
+  border-collapse: collapse;
+}
+
+.price-tag-view .item-boxer .box-row {
+  display: table-row;
+  border-collapse: collapse;
+}
+
+.price-tag-view .item-boxer .center {
+  text-align: center;
+}
+
+.price-tag-view .item-boxer .right {
+  text-align: right;
+}
+
+.price-tag-view .item-boxer .box {
+  display: table-cell;
+  //text-align: left;
+  //padding: 0px 2px 0px 2px;
+  //display: inline-block;
+  //white-space: nowrap;
+  vertical-align: middle;
+}
+
+.price-tag-view .item-boxer .ab {
+  border: 1px solid $base-border-color;
+}
+
+.price-tag-view .item-boxer .rb {
+  border-right: 1px solid $base-border-color;
+}
+
+.price-tag-view .item-boxer .lb {
+  border-left: 1px solid $base-border-color;
+}
+
+.price-tag-view .item-boxer .nb {
+  //width: 8%;
+  //min-width: 80px;
+  border: none;
+}

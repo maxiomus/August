@@ -36,9 +36,9 @@
     $item-text-font-size: 14px,
 
     // Various sizes for the pieces:
-    $item-icon-font-size: 18px,
+    //$item-icon-font-size: 18px,
     $item-icon-width: 44px,
-    $item-expander-font-size: 16px,
+    $item-expander-font-size: 14px,
     $item-expander-width: 24px,
 
     // Style the "row indicator" (the vertical stripe on the left edge):
@@ -87,6 +87,7 @@
 /*
  * Generates a set of style rules for the "navigation" panel UI.
  */
+ 
 @include extjs-panel-ui(
     $ui: 'navigation',
     $ui-header-color: #fff,
@@ -166,7 +167,7 @@
 
 .top-english-button{
     .x-btn-icon-el{
-        width:21px;
+        width:24px;
         height:14px;
     }
 }
@@ -199,9 +200,11 @@
         display:none;
     }
 }
+
 .x-grid-cell{
     position:relative;
 }
+
 .hot-icon,.new-icon{
     &.hot-icon:after{
         content: "HOT";

@@ -50,7 +50,8 @@ Ext.define('August.view.customer.payment.receiveForm',{
                 text: 'Save',
                 nextStep: 'save',
                 tooltip: 'Save the Data',                
-                handler: 'onSave'                
+                handler: 'onSave',
+                scope: this.controller                
             },{
                 iconCls: 'x-far fa-times-circle',
                 text: 'Close',
@@ -130,8 +131,9 @@ Ext.define('August.view.customer.payment.receiveForm',{
                         allowBlank: false
                     },{
                         xtype: 'numberfield',
-                        name: 'amt',                        
-                        fieldLabel: 'Received Amt',                                                
+                        name: 'amt',  
+                        fieldCls: 'required',                      
+                        fieldLabel: 'Received Amt',                                                                        
                         editable: true,                        
                         //minValue: 0,
                         selectOnFocus: true,
@@ -141,7 +143,25 @@ Ext.define('August.view.customer.payment.receiveForm',{
                         mouseWheelEnabled: false,
                         bind: {
                             value: '{thePayment.amt}'
+                        },
+                        listeners: {
+                            focusleave: function(c, e){                                
+                                var panel = me.lookupReference('pmheader'),
+                                    balance = panel.down('numberfield[name=bal]');
+                                //balance = Ext.ComponentQuery('combo[name="bal"]')[0];                                
+                                balance.setValue(c.getValue());
+                            }
                         }
+                        /*
+                        validator: function(val) {
+                            if (val > 0) {
+                                return true;
+                            }
+                            else {
+                                return "Value cannot be 0.";
+                            }
+                        }
+                        */
                         //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                     },{
                         xtype: 'textfield',
@@ -178,6 +198,15 @@ Ext.define('August.view.customer.payment.receiveForm',{
                         mouseWheelEnabled: false,
                         bind: {
                             value: '{thePayment.totalPaid}'
+                        },
+                        listeners: {
+                            change: function(c, nv, ov){
+                                var panel = me.lookupReference('pmheader'),
+                                    amt = panel.down('numberfield[name=amt]'),
+                                    balance = panel.down('numberfield[name=bal]');
+                                //balance = Ext.ComponentQuery('combo[name="bal"]')[0];                                
+                                balance.setValue(amt.getValue() - c.getValue());
+                            }
                         }
                     },{
                         xtype: 'textfield',
@@ -212,7 +241,8 @@ Ext.define('August.view.customer.payment.receiveForm',{
                         //store: ['00', 'OS', 'SA'],
                         store: 'memCustomers',
                         remoteStore: 'Customers',
-                        bind: {                            
+                        bind: {                           
+                            disabled: '{setAmt}', 
                             value: '{thePayment.customer}'
                         },
                         listConfig: {
@@ -304,7 +334,7 @@ Ext.define('August.view.customer.payment.receiveForm',{
                         keyNavEnabled: false,
                         mouseWheelEnabled: false,
                         bind: {
-                            value: '{thePayment.available_credit}'
+                            value: '{thePayment.total_discount}'
                         }
                     },{
                         xtype: 'combo',
@@ -324,7 +354,7 @@ Ext.define('August.view.customer.payment.receiveForm',{
                         queryMode: 'local',
                         //queryParam: 'filter',
                         //triggerAction: 'all',                        
-                        bind: {                
+                        bind: {                                            
                             store: '{divisions}',            
                             value: '{thePayment.division}'
                         },
@@ -367,7 +397,7 @@ Ext.define('August.view.customer.payment.receiveForm',{
                         keyNavEnabled: false,
                         mouseWheelEnabled: false,
                         bind: {
-                            value: '{thePayment.total_credit}'
+                            value: '{thePayment.total_writeoff}'
                         }
                     },{
                         xtype: 'combo',
@@ -575,7 +605,7 @@ Ext.define('August.view.customer.payment.receiveForm',{
             {
                 xtype: "grid",                
                 reference: "payment-detail-grid",
-                title: 'Detail',
+                //title: 'Detail',
                 iconCls: 'x-fa fa-th',                
                 region: 'center',                             
                 //collapseFirst: true,
@@ -587,16 +617,42 @@ Ext.define('August.view.customer.payment.receiveForm',{
                     borderBottom: '1px solid #cfcfcf'
                 },
 
+                header: {
+                    title: 'Detail',
+                    iconCls: 'x-fa fa-th',  
+                    titlePosition: 2,
+                    titleAlign: 'left',
+                    items: [{
+                        xtype: 'button',
+                        text: 'Uncheck',
+                        iconCls: 'x-fa fa-times-circle', 
+                        bind: {
+                            disabled: '{!selection}'
+                        },
+                        handler: 'onUncheckClick',
+                        scope: this.controller
+                    },{
+                        xtype: 'tbspacer',
+                        width: 10
+                    }]
+                },
+
                 bind: {
                     selection: '{selection}',
-                    store: '{thePayment.paymentdetails}'
+                    store: '{Paymentdetails}'
                 },
 
                 listeners: {
+                    select: {
+                        fn: 'onSelect',
+                        scope: this.controller
+                    },
+                    /*
                     selectionchange: {
                         fn: 'onSelectionChanged',
                         scope: this.controller
                     },
+                    */
                     edit: {
                         fn: 'onRowEditing',
                         scope: this.controller
@@ -618,11 +674,13 @@ Ext.define('August.view.customer.payment.receiveForm',{
                     preserveScrollOnRefresh: true,
                     preserveScrollOnReload: true,
                     deferInitialRefresh: true,
-                    emptyText: '<h1 style="margin: 20px">No matching results</h1>',
+                    emptyText: '<h1 style="margin: 20px">No matching results</h1>'
+                    /*
                     getRowClass: function(a, g, f, h){
                         return "custom-row-style";
                     },
                     listeners: {
+                        
                         render: function(view){
                             //var view = grid.getView();
                             view.tip = Ext.create('Ext.tip.ToolTip', {
@@ -656,14 +714,17 @@ Ext.define('August.view.customer.payment.receiveForm',{
                                     }
                                 }
                             });
-                        }
+                        }                        
                     }
+                    */
                 },
 
+                /*
                 features: [{
                     ftype: 'summary'
                 }],
-
+                */
+               
                 plugins: [{
                     ptype: 'rowediting',
                     clicksToMoveEditor: 1,
@@ -680,6 +741,7 @@ Ext.define('August.view.customer.payment.receiveForm',{
     },          
         
     buildGridColumns: function(){
+        var me = this;
         return [{
             xtype: 'rownumberer',
             text: 'Line',
@@ -692,7 +754,17 @@ Ext.define('August.view.customer.payment.receiveForm',{
             width: 55,
             headerCheckbox: true,
             menuDisabled: true,
-            listeners: {                
+            listeners: {    
+                beforecheckchange: function(c, rdx, checked, rec){
+                    var panel = me.lookupReference('pmheader'),
+                        balance = panel.down('numberfield[name=bal]');
+                        
+                    if(checked){
+                        return balance.getValue() != 0;                    
+                    }
+                    
+                    
+                },         
                 checkchange: {
                     fn: 'onCheckChanged',
                     scope: this.controller
@@ -800,9 +872,9 @@ Ext.define('August.view.customer.payment.receiveForm',{
             formatter: 'usMoney',            
             filter: {
                 type: "number"
-            },
-            summaryType: 'sum',
-            summaryRenderer: Ext.util.Format.usMoney            
+            }
+            //summaryType: 'sum',
+            //summaryRenderer: Ext.util.Format.usMoney            
         },
         {
             text: "Due Amount",
@@ -812,9 +884,9 @@ Ext.define('August.view.customer.payment.receiveForm',{
             formatter: 'usMoney',            
             filter: {
                 type: "number"
-            },
-            summaryType: 'sum',
-            summaryRenderer: Ext.util.Format.usMoney            
+            }
+            //summaryType: 'sum',
+            //summaryRenderer: Ext.util.Format.usMoney            
         },
         {
             text: "Payment",
@@ -827,9 +899,9 @@ Ext.define('August.view.customer.payment.receiveForm',{
             },
             filter: {
                 type: "number"
-            },
-            summaryType: 'sum',
-            summaryRenderer: Ext.util.Format.usMoney           
+            }
+            //summaryType: 'sum',
+            //summaryRenderer: Ext.util.Format.usMoney           
         },        
         {
             text: "Apply Credit",
@@ -849,9 +921,9 @@ Ext.define('August.view.customer.payment.receiveForm',{
             formatter: 'usMoney',
             filter: {
                 type: "number"
-            },
-            summaryType: 'sum',
-            summaryRenderer: Ext.util.Format.usMoney            
+            }
+            //summaryType: 'sum',
+            //summaryRenderer: Ext.util.Format.usMoney            
         },        
         {
             text: "Discount",
@@ -864,9 +936,9 @@ Ext.define('August.view.customer.payment.receiveForm',{
             },
             filter: {
                 type: "number"
-            },
-            summaryType: 'sum',
-            summaryRenderer: Ext.util.Format.usMoney            
+            }
+            //summaryType: 'sum',
+            //summaryRenderer: Ext.util.Format.usMoney            
         },
         {
             text: "Write-off",
@@ -879,9 +951,9 @@ Ext.define('August.view.customer.payment.receiveForm',{
             },
             filter: {
                 type: "number"
-            },
-            summaryType: 'sum',
-            summaryRenderer: Ext.util.Format.usMoney            
+            }
+            //summaryType: 'sum',
+            //summaryRenderer: Ext.util.Format.usMoney            
         },
         {
             text: "Total Pay",
@@ -892,8 +964,8 @@ Ext.define('August.view.customer.payment.receiveForm',{
             filter: {
                 type: "number"
             },
-            summaryType: 'sum',
-            summaryRenderer: Ext.util.Format.usMoney,
+            //summaryType: 'sum',
+            //summaryRenderer: Ext.util.Format.usMoney,
             renderer: function(value, h, rec) {                
                 return value;
             }
@@ -907,10 +979,10 @@ Ext.define('August.view.customer.payment.receiveForm',{
             filter: {
                 type: "number"
             },
-            summaryType: 'sum',
-            summaryRenderer: Ext.util.Format.usMoney,
+            //summaryType: 'sum',
+            //summaryRenderer: Ext.util.Format.usMoney,
             renderer: function(value, h, rec) {
-                return rec.get('dueAmt') - rec.get('paidAmount') + rec.get('pay_credit') + rec.get('pay_discount') + rec.get('pay_writeoff');
+                return rec.get('dueAmt') - rec.get('paidAmount') + rec.get('pay_credit') + rec.get('pay_discount') + rec.get('pay_writeoff');                
             }        
         },
         {

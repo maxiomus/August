@@ -221,6 +221,9 @@
             },
             {
                 "path": "resources/lib/xlsx.core.min.js"
+            },
+            {
+                "path": "resources/lib/JsBarcode.all.min.js"
             }
         ]
     },
@@ -271,6 +274,12 @@
             "bundle": true,
             "exclude": ["fashion"]
         }
+        /*       
+        {
+            // Custom Css files
+            "path": "classic/resources/css/paper.css"
+        }
+        */               
     ],
 
     /**
@@ -522,7 +531,7 @@
     "builds": {
         "classic": {
             "toolkit": "classic",
-            "theme": "theme-neptune",
+            "theme": "theme-27",
             "sass": {
                 "generated": {
                     "var": "classic/sass/save.scss",

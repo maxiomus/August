@@ -76,7 +76,7 @@ Ext.define('August.view.production.WIPModel', {
             autoLoad: true,
             proxy: {
                 type: 'ajax',
-                url: '/api/Combos/activities',
+                url: '/WebApp/api/List/activities',
 
                 pageParam: '',
                 startParam: '',

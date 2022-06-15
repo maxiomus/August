@@ -9,7 +9,7 @@ Ext.define('August.view.dashboard.NewsModel', {
             autoLoad: true,
             proxy: {
                 type: 'rest',
-                url: '/api/Widgets/news',
+                url: '/WebApp/api/Widgets/news',
                 //noCache: true,
                 pageParam: '',
                 startParam: '',

@@ -44,7 +44,7 @@ Ext.define('August.model.style.Reqh', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Reqh',
+        url: '/WebApp/api/Reqh',
 
         timeout: 900000,
 

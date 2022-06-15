@@ -62,7 +62,6 @@ Ext.define('August.view.customer.payment.ReceiveController', {
             layout = me.lookupReference('multiview'),
             grid = layout.lookupReference('payment-receive-grid'),
             rec = grid.getSelection()[0];
-
         
         /*
         me.showWindow(rec, 'windows-payment-invoices', function(type){

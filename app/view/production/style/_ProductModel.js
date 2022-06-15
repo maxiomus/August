@@ -54,7 +54,7 @@ Ext.define('August.view.production.style._ProductModel', {
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/api/Combos/processtypes",
+                url: "/api/List/processtypes",
 
                 reader: {
                     type: "json",
@@ -73,7 +73,7 @@ Ext.define('August.view.production.style._ProductModel', {
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/api/Combos/vendors",
+                url: "/api/List/vendors",
 
                 reader: {
                     type: "json",
@@ -89,7 +89,7 @@ Ext.define('August.view.production.style._ProductModel', {
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/api/Combos/groups",
+                url: "/api/List/groups",
 
                 reader: {
                     type: "json",
@@ -105,7 +105,7 @@ Ext.define('August.view.production.style._ProductModel', {
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/api/Combos/subcategories",
+                url: "/api/List/subcategories",
 
                 reader: {
                     type: "json",

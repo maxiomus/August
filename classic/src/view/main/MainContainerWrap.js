@@ -1,5 +1,6 @@
 Ext.define('August.view.main.MainContainerWrap', {
     extend: 'Ext.container.Container',
+    
     xtype: 'maincontainerwrap',
 
     requires : [
@@ -7,7 +8,7 @@ Ext.define('August.view.main.MainContainerWrap', {
         'Ext.layout.container.Border'
     ],
 
-    scrollable: 'y',    
+    //scrollable: 'y',    
 
     layout: {
         //type: 'hbox',

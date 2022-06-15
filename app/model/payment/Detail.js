@@ -19,30 +19,27 @@ Ext.define('August.model.payment.Detail', {
         { name: "originalAmt", type: 'number', persist: false },
         { name: "dueAmt", type: 'number', persist: false },
         { name: "totalPay", type: 'number', persist: false,
-            mapping: function(data) {
+            calculate: function(data) {
                 return data.paidAmount + data.pay_credit + data.pay_discount + data.pay_writeoff;
             }
         },
         { name: "balance", type: 'number', persist: false,
-            mapping: function(data) {
+            calculate: function(data) {
                 return data.dueAmt - data.paidAmount + data.pay_credit + data.pay_discount + data.pay_writeoff;
             }
         },        
         { name: 'checked', type: 'auto', persist: false },        
         { name: 'id', type: 'int' },                
-        { name: "invoiceNo", type: 'int' },
-        //{ name: "accepts_marketing_updated_at", type: 'date' },
-        //{ name: "marketing_opt_in_level", type: 'string' },
+        { name: "invoiceNo", type: 'int' },        
         { name: "cmno", type: 'int' },
-        { name: "paymentDate", type: 'date', dateFormat: 'c' },
-        //{ name: "product_id", type: 'number' },
+        { name: "paymentDate", type: 'date', dateFormat: 'c' },        
         { name: "paidAmount", type: 'number' },
         { name: "pay_discount", type: 'number' },
         { name: "pay_writeoff", type: 'number' },
         { name: "pay_credit", type: 'number' },        
         { name: "charge_type", type: 'string' },
-        { name: "adjust_id", type: 'int' },  
-        //{ name: 'paymentNo', type: 'int' }        
+        { name: "adjust_id", type: 'int' },          
+        //{ name: 'paymentNo', type: 'int' }          
         {
             //
             //     When associate models,
@@ -56,45 +53,12 @@ Ext.define('August.model.payment.Detail', {
                 parent: 'payment.Header',
 
                 field: 'paymentNo',
-                inverse: 'paymentdetails'
+                inverse: 'details'
             }
-        }
+        }            
         
     ],
 
-    //idProperty:  'id',
-    identifier: 'negative',
-
-    proxy: {
-        type: 'rest',
-        url: '/WebApp/api/PaymentDetails',
-
-        pageParam: '',
-        startParam: '',
-        limitParam: '',
-
-        headers: {
-            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-        },
-        
-        reader: {
-            type: 'json',
-            rootProperty: 'data'
-        },
-
-        writer: {
-            type: 'json',
-            //clientIdProperty: 'clientId',
-            //writeAllFields: true,
-            allowSingle: false // set false to send a single record in array
-        },
-
-        extraParams: {},
-
-        listeners: {
-            exception: function (proxy, response, operation) {
-                console.log('Payment Detail - Model', response, operation);
-            }
-        }
-    }
+    idProperty:  'id',
+    identifier: 'negative'    
 });

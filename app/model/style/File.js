@@ -48,7 +48,7 @@ Ext.define('August.model.style.File', {
 
     proxy: {
         type: "rest",
-        url: "/api/Files/Style",
+        url: "/WebApp/api/Files/Style",
 
         isUpload: true,
 

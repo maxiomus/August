@@ -15,12 +15,16 @@ Ext.define('August.model.VendorType', {
 
     proxy: {
         type: "rest",
-        url: "/api/VendorTypes/",
+        url: "/WebApp/api/VendorTypes/",
 
         pageParam: '',
         startParam: '',
         limitParam: '',
 
+        headers: {
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        },
+        
         reader: {
             type: "json",
             rootProperty: "data"

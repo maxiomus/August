@@ -15,7 +15,7 @@
   }
   
   .pi-view .item-selector {
-    display: table;
+    //display: table;
     //width: 100%;
     //width: 1600px;
     //height: 114px;
@@ -49,6 +49,8 @@
     display: table-cell;
     //text-align: left;
     padding: 0px 2px 0px 2px;
+    //display: inline-block;
+    //white-space: nowrap;
     vertical-align: middle;
   }
   

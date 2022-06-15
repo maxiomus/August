@@ -11,12 +11,10 @@ Ext.define('August.view.main.Main', {
     xtype: 'app-main',
 
     requires: [
-        //'Ext.plugin.Viewport',
+        'Ext.container.Viewport',
         //'Ext.window.MessageBox',
-
         'August.view.main.MainController',
-        'August.view.main.MainModel',
-        'August.view.main.List'
+        'August.view.main.MainModel'
     ],
 
     controller: 'main',
@@ -27,6 +25,10 @@ Ext.define('August.view.main.Main', {
     layout: {
         type: 'vbox',
         align: 'stretch'
+    },
+
+    listeners: {
+        render: 'onMainViewRender'
     },
 
     items: [
@@ -95,7 +97,7 @@ Ext.define('August.view.main.Main', {
                 width: 64,
                 expandedWidth: 280, // When Micro mode first, set width
                 micro: true,
-                //highlightPath: true,
+                highlightPath: true,
                 expanderFirst: false,
                 expanderOnly: false,
                 singleExpand: true,

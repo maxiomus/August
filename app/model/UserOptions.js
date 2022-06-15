@@ -15,7 +15,7 @@
 
     proxy: {
         type: 'rest',
-        url: '/api/UserOptions',
+        url: '/WebApp/api/UserOptions',
         noCache: true,
         pageParam: '',
         startParam: '',

@@ -28,7 +28,7 @@ Ext.define('August.view.shopify.ProductModel', {
 
             proxy: {
                 type: 'rest',
-                url: '/WebApp/api/ShopifyProducts/',                
+                url: '/WebApp/api/ShopifyProducts',                
                 noCache: false,
 
                 pageParam: '',
@@ -72,7 +72,17 @@ Ext.define('August.view.shopify.ProductModel', {
                     type: 'json',
                     rootProperty: 'data'
                 }
-            }   
+            },
+            
+            listeners: {
+                load: function(store){
+                    store.each(function(rec, idx){
+                        if(rec.get('value') > 99){
+                            rec.drop();
+                        }
+                    });
+                }
+            }
         }
     }
 });

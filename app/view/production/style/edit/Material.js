@@ -214,7 +214,7 @@ Ext.define('August.view.production.style.edit.Material',{
                 xtype: 'combo',
                 name: 'rawStyle',
                 displayField: 'label',
-                valueField: 'label',
+                valueField: 'value',
                 autoLoadOnValue: true,
                 hideTrigger: false,
                 allowBlank: false,
@@ -243,8 +243,8 @@ Ext.define('August.view.production.style.edit.Material',{
                             '</tr>' +
                     '</tpl>' +
                         '<tr class="x-boundlist-item">' +
-                            '<td>{text}</td>' +
-                            '<td>{label}</td>' +
+                            '<td>{descript}</td>' +
+                            '<td>{value}</td>' +
                         '</tr>' +
                     '<tpl if="[xcount-xindex]==0">' +
                         '</table>' +
@@ -264,8 +264,8 @@ Ext.define('August.view.production.style.edit.Material',{
                         var cboRawType = combo.ownerCt.query('combo[name="rawMatType"]')[0],
                             txtUOM = combo.ownerCt.query('textfield[name="uom"]')[0];
 
-                        cboRawType.setValue(rec.data.text);
-                        txtUOM.setValue(rec.data.descript);
+                        cboRawType.setValue(rec.data.descript);
+                        txtUOM.setValue(rec.data.uom);
                         //console.log(combo, rec);
                     }
 
@@ -287,7 +287,7 @@ Ext.define('August.view.production.style.edit.Material',{
                 xtype: 'combo',
                 name: 'rawColor',
                 displayField: 'label',
-                valueField: 'label',
+                valueField: 'value',
                 autoLoadOnValue: true,
                 hideTrigger: false,
                 allowBlank: false,
@@ -296,8 +296,8 @@ Ext.define('August.view.production.style.edit.Material',{
                 matchFieldWidth: false,
                 pageSize: 9999,
                 //minChars: 0,
-                store: 'memCompColors',
-                remoteStore: 'compColors',
+                store: 'memColors',
+                remoteStore: 'Colors',
                 queryMode: 'local',
                 //triggerAction: 'query',
                 //lastQuery: '',
@@ -310,15 +310,15 @@ Ext.define('August.view.production.style.edit.Material',{
                     '<tpl if="[xindex] == 1">' +
                         '<table class="cbo-list">' +
                             '<tr>' +
-                                '<th width="45%">Color</th>' +
-                                '<th width="45%">Code #</th>' +
-                                '<th width="10%">Cost</th>' +
+                                '<th width="50%">Color</th>' +
+                                '<th width="50%">Code #</th>' +
+                                //'<th width="10%">Cost</th>' +
                             '</tr>' +
                     '</tpl>' +
                         '<tr class="x-boundlist-item">' +
                             '<td>{label}</td>' +
-                            '<td>{text}</td>' +
-                            '<td>{descript:this.getCost}</td>' +
+                            '<td>{value}</td>' +
+                            //'<td>{descript:this.getCost}</td>' +
                         '</tr>' +
                     '<tpl if="[xcount-xindex]==0">' +
                         '</table>' +
@@ -335,6 +335,7 @@ Ext.define('August.view.production.style.edit.Material',{
                 listeners: {
                     beforequery: {
                         fn: function(qe){
+                            /*
                             var cboStyle = qe.combo.ownerCt.query('combo[name="rawStyle"]')[0],
                                 store = qe.combo.getStore();
 
@@ -343,11 +344,12 @@ Ext.define('August.view.production.style.edit.Material',{
                             if(!Ext.isEmpty(cboStyle.getValue())){
 
                                 store.filter([{
-                                    property: 'text',
+                                    property: 'value',
                                     value: cboStyle.getValue().toUpperCase(),
                                     operator: '='
                                 }]);
                             }
+                            */
                         }
                     },
                     select: function (combo, rec) {

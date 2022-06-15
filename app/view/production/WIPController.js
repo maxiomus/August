@@ -289,7 +289,7 @@ Ext.define('August.view.production.WIPController', {
         processMask.show();
 
         Ext.Ajax.request({
-            url: '/api/Wips/Export/excel',
+            url: '/WebApp/api/Wips/Export/excel',
             method: 'POST',
             timeout: 900000,
             binary: true,

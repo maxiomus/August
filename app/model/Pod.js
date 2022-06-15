@@ -89,7 +89,7 @@ Ext.define('August.model.Pod', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Pods',
+        url: '/WebApp/api/Pods',
 
         pageParam: '',
         startParam: '',

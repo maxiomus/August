@@ -38,7 +38,8 @@ Ext.define('August.Application', {
 
     init: function() {
         var me = this;
-        Ext.tip.QuickTipManager.init();
+        Ext.tip.QuickTipManager.init();        
+
         //this.setGlyphFontFamily('Pictos');
 
         me.splashscreen = Ext.getBody().mask(
@@ -79,7 +80,7 @@ Ext.define('August.Application', {
                 // check if success flag is true
                 if(result.success) {
                     // has session...add to application stack
-                    //Vega.LoggedInUser = Ext.create('August.model.authenticate.Account', result.data );
+                    //August.LoggedInUser = Ext.create('August.model.authenticate.Account', result.data );
                     //Ext.util.Cookies.set('loggedInUser', result.data);
                     //Ext.getStore('Settings').load();
 

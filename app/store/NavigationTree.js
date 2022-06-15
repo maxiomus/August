@@ -57,12 +57,12 @@ Ext.define('August.store.NavigationTree', {
                 id: 'customer',
                 children: [                
                 {
-                    text: 'Main',
-                    view: 'customer.Main',
+                    text: 'Invoice',
+                    view: 'customer.invoice.List',
                     leaf: true,
                     read: true,
                     iconCls: 'x-far fa-address-book',
-                    routeId: 'customer-main'
+                    routeId: 'customer-invoice'
                 },{
                     text: 'Payments',
                     view: 'customer.payment.Receive',
@@ -185,67 +185,7 @@ Ext.define('August.store.NavigationTree', {
                     routeId: 'shopify.freetherose'
                 }
                 */       
-            ]},                                 
-            /*          
-            {
-                text: 'Development',
-                expanded: false,
-                selectable: false,
-                iconCls: 'x-fa fa-cogs',
-                routeId:'development',
-                id: 'development',
-                children: [
-                {
-                    text: 'Style',
-                    view: 'development.style.Style',
-                    leaf: true,
-                    read: true,
-                    iconCls: 'x-fa fa-tag',
-                    routeId: 'style'
-                },
-                {
-                    text: 'Line Sheet',
-                    view: 'development.Line',
-                    leaf: true,
-                    read: true,
-                    iconCls: 'x-fa fa-tags',
-                    routeId: 'line'
-                },                
-                {
-                    text: 'P.L.M',
-                    view: 'development.plm.Plm',
-                    selectable: false,
-                    leaf: true,
-                    read: true,
-                    iconCls: 'x-fa fa-tasks',
-                    routeId: 'development.plm'
-                },                            
-                {
-                    text: 'Fabric Request',
-                    view: 'development.request.Fabric',
-                    leaf: true,
-                    read: true,
-                    iconCls: 'x-fa fa-database',
-                    routeId: 'request-fabric'
-                },
-                {
-                    text: 'Work Request',
-                    view: 'development.request.Work',
-                    leaf: true,
-                    read: true,
-                    iconCls: 'x-fa fa-scissors',
-                    routeId: 'request-work'
-                },
-                {
-                    text: 'Graphic Request',
-                    view: 'development.request.Graphic',
-                    leaf: true,
-                    read: true,
-                    iconCls: 'x-fa fa-file-picture-o',
-                    routeId: 'request-graphic'
-                }]
-            },
-            */
+            ]},                                             
             {
                 text: 'Production',
                 expanded: false,
@@ -303,8 +243,7 @@ Ext.define('August.store.NavigationTree', {
                 iconCls: 'x-fa fa-cubes',
                 routeId : 'inventory',
                 id:       'inventory',
-                children: [
-                /*
+                children: [                
                     {
                     text: 'P.I',
                     view: 'inventory.pi.Physical',
@@ -313,46 +252,37 @@ Ext.define('August.store.NavigationTree', {
                     iconCls: 'x-fa fa-calculator',
                     routeId: 'physical'
                 },{
+                    text: 'WH Transfer',
+                    view: 'inventory.transfer.List',
+                    leaf: true,
+                    read: true,
+                    iconCls: 'x-fa fa-calculator',
+                    routeId: 'transfer'
+                }
+                /*,{
                     text: 'Receiving',
                     view: 'inventory.fabric.Receiving',
                     leaf: true,
                     read: true,
                     iconCls: 'x-fa fa-edit',
                     routeId: 'receiving'
-                },
-                {
-                    text: 'Fabric Allocate',
-                    view: 'inventory.fabric.Allocation',
-                    leaf: true,
-                    read: true,
-                    iconCls: 'x-fa fa-exchange',
-                    routeId: 'allocation'
-                },
-                {
-                    text: 'Fabric Rolls',
-                    view: 'inventory.fabric.Rolls',
-                    leaf: true,
-                    read: true,
-                    iconCls: 'x-fa fa-dot-circle-o',
-                    routeId: 'rolls'
-                }
-                */
-            ]
+                }*/]
             },
+            /*
             {
-                text: 'Reports',
-                expanded: false,
-                selectable: false,
+                text: 'Reports',                
                 iconCls: 'x-fab fa-leanpub',
                 routeId : 'reports',
                 id:       'reports',
+                expanded: false,
+                selectable: false,
                 children: [{
-                    text: 'Lot Activities',
-                    view: 'reports.inventory.LotActivity',
+                    text: 'Invoice Monthly Summaries',
+                    view: 'reports.invoice.SummaryBySoType',
                     iconCls: 'x-fa fa-edit',
                     leaf: true,
                     read: true,
-                    routeId: 'lotactivity'
+                    routeId: 'reports-invoice-summarybysotype'
                 },
                 {
                     text: 'Inventory By Lot',
@@ -363,13 +293,23 @@ Ext.define('August.store.NavigationTree', {
                     routeId: 'inventorybylot'
                 },
                 {
-                    text: 'Transactions',
-                    view: 'reports.transaction.Layout',
+                    text: 'Inventory Aging by Warehouse',
+                    view: 'reports.inventory.AgingInterval',
                     iconCls: 'x-fa fa-edit',
                     leaf: true,
                     read: true,
-                    routeId: 'layout'
+                    routeId: 'reports-inventory-aginginterval'
                 }]
+            },
+            */
+            {
+                text: 'Reports',
+                view: 'reports.Default',
+                iconCls: 'x-fa fa-poll',
+                granted: ['administrators'],
+                leaf: true,
+                read: true,
+                routeId: 'reports'
             },
             {
                 text: 'Settings',

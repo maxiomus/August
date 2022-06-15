@@ -37,7 +37,7 @@ Ext.define('August.model.production.Task', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Tnap',
+        url: '/WebApp/api/Tnap',
 
         batchActions: true,
 

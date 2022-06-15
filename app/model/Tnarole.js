@@ -17,7 +17,7 @@ Ext.define('August.model.Tnarole', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Tnaroles',
+        url: '/WebApp/api/Tnaroles',
 
         pageParam: '',
         startParam: '',

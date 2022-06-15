@@ -185,21 +185,9 @@ Ext.define('August.model.sales.OrderItem', {
         { name: 'inv_balance', type: 'int' },
         { name: 'startselldate', type: 'date', dateFormat: 'C' },
         { name: 'user3', type: 'string' },            
-        {
-            //
-            //     When associate models,
-            //     model name with Id prefixed.
-            //     ex. pihId
-            //    or using field...
-            //
+        {            
             name: 'orderno',
-            //mapping: 'orderNo', persist: false,
-            reference: {
-                parent: 'sales.Order',
-
-                field: 'orderno',
-                inverse: 'salesorderitems'
-            }
+            type: 'int'   
         }         
     ],
 
@@ -228,9 +216,7 @@ Ext.define('August.model.sales.OrderItem', {
             //clientIdProperty: 'clientId',
             //writeAllFields: true,
             allowSingle: false // set false to send a single record in array
-        },
-
-        extraParams: {},
+        },        
 
         listeners: {            
             exception: function (proxy, response, operation) {

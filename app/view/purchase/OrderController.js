@@ -132,7 +132,7 @@ Ext.define('August.view.purchase.OrderController', {
     onFilterItemChange: function(combo, j, g, l){
          var topbar = combo.up("topbar"),
             m = topbar.down("searchgrid"),
-            n = topbar.down("searchnumber"),            
+            n = topbar.down("searchtextlist"),            
             j = combo.getValue();
 
          switch(j){

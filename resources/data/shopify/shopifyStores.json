@@ -35,6 +35,16 @@
       "value": "16"
     },
     {
+      "label": "2.7 August Apparel",
+      "name": "AA", 
+      "value": "17"
+    },
+    {
+      "label": "2.7 Sales Channel",
+      "name": "AM", 
+      "value": "18"
+    },
+    {
       "label": "Lord & Taylor",
       "name": "LT", 
       "value": "100"

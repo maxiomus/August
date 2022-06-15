@@ -23,7 +23,7 @@ Ext.define('August.view.shopify.OrderModel', {
 
             proxy: {
                 type: 'rest',
-                url: '/WebApp/api/ShopifyOrders/',                
+                url: '/WebApp/api/ShopifyOrders',                
                 noCache: false,
 
                 pageParam: '',
@@ -67,7 +67,17 @@ Ext.define('August.view.shopify.OrderModel', {
                     type: 'json',
                     rootProperty: 'data'
                 }
-            }   
+            },
+            
+            listeners: {
+                load: function(store){
+                    store.each(function(rec, idx){
+                        if(rec.get('value') > 99){
+                            rec.drop();
+                        }
+                    });
+                }
+            }
         }
     }
 

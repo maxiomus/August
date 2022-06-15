@@ -106,6 +106,7 @@ Ext.define("August.view.production.style.Product", {
                         store: "{products}",
                         selection: "{selectedProduct}"
                     },
+                    
                     listeners: {
                         select: {
                             fn: 'onSelect',

@@ -132,7 +132,7 @@ Ext.define('August.view.production.style.ProductModel', {
 
             proxy: {
                 type: 'ajax',
-                url: '/api/Combos/bodies',
+                url: '/WebApp/api/List/bodies',
                 pageParam: '',
                 startParam: '',
                 limitParam: '',
@@ -151,7 +151,7 @@ Ext.define('August.view.production.style.ProductModel', {
 
             proxy: {
                 type: 'ajax',
-                url: '/api/Combos/styles',
+                url: '/WebApp/api/List/styles',
 
                 pageParam: '',
                 startParam: '',
@@ -171,7 +171,7 @@ Ext.define('August.view.production.style.ProductModel', {
             //pageSize: 25,
             proxy: {
                 type: 'ajax',
-                url: '/api/Combos/components',
+                url: '/WebApp/api/List/components',
 
                 pageParam: '',
                 startParam: '',

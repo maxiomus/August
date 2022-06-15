@@ -21,12 +21,16 @@ Ext.define('August.model.SubCategory', {
 
     proxy: {
         type: "rest",
-        url: "/api/SubCategories/",
+        url: "/WebApp/api/SubCategories/",
 
         pageParam: '',
         startParam: '',
         limitParam: '',
 
+        headers: {
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        },
+        
         reader: {
             type: "json",
             rootProperty: "data"

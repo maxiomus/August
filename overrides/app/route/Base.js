@@ -31,14 +31,14 @@ Ext.define('Ext.app.route.Base', {
     },
 
     onTabChange: function(tabpanel, newTab, oldTab, eOpts){
-        //console.log('Base - onTabChange', tabpanel, newTab);
+        console.log('Base - onTabChange', tabpanel, newTab);
         this.redirectTo(this.getTabRoute(tabpanel, newTab));
         //var route = this.getTabRoute(tabpanel, newTab);
         //this.changeRoute(this, route);
     },
 
     changeRoute: function (controller, route) {
-        //console.log('Base - changeRoute', route);
+        console.log('Base - changeRoute', route);
         if (route.substring(0, 1) !== '!') {
             route = '!' + route;
         }
@@ -157,6 +157,15 @@ Ext.define('Ext.app.route.Base', {
                     }
                     
                     break;
+                case 'invoice-form':
+                    route[1] = tab.opMode;
+    
+                    if(tvm.get('theInvoice') != null && tvm.get('theInvoice').id > 0){
+                        console.log(tvm.get('theInvoice').id);
+                        route[2] = tvm.get('theInvoice').id;
+                    }
+                    
+                    break;
                 case 'payment-receiveForm':
                     route[1] = tab.opMode;
     
@@ -183,6 +192,12 @@ Ext.define('Ext.app.route.Base', {
                     route[1] = tab.opMode;
                     if(tvm.get('thePhysical').id > 0) {
                         route[2] = tvm.get('thePhysical').id;
+                    }
+                    break;
+                case 'transfer-form':
+                    route[1] = tab.opMode;
+                    if(tvm.get('theTransfer').id > 0) {
+                        route[2] = tvm.get('theTransfer').id;
                     }
                     break;
                 default:
@@ -281,7 +296,7 @@ Ext.define('Ext.app.route.Base', {
         //console.log(record.getFields())
         Ext.Ajax.request({
             //url: Ext.urlAppend(proxy.url + '.' + proxy.format + encodeURIComponent('')),
-            url: '/api/Bookmarks',
+            url: '/WebApp/api/Bookmarks',
             method: 'POST',
             params: {
                 //filters: Ext.encode([{type: 'string', value: record.get('UserName'), field: 'UserName'}])
@@ -366,11 +381,11 @@ Ext.define('Ext.app.route.Base', {
 
         //console.log('downloadItems', recordIds);
 
-        location.href = '/api/FileStreams/download?' + Ext.Object.toQueryString({ids: recordIds});
+        location.href = '/WebApp/api/FileStreams/download?' + Ext.Object.toQueryString({ids: recordIds});
 
         // No need to use Ajax request for download files...
         /*Ext.Ajax.request({
-            //url: '/api/Files/download',
+            //url: '/WebApp/api/Files/download',
             url: '/WebService.asmx/downloadFiles',
             method: 'GET',
 

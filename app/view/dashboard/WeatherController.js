@@ -33,7 +33,7 @@ Ext.define('August.view.dashboard.WeatherController', {
     getOptionsByUser: function(category, scope, callbackFn, extraData){
 
         Ext.Ajax.request({
-            url: '/api/UserOptions/' + category,
+            url: '/WebApp/api/UserOptions/' + category,
             method: 'GET',
 
             params: {
@@ -235,7 +235,7 @@ Ext.define('August.view.dashboard.WeatherController', {
                 xtype: 'form',
                 bodyPadding: '12 10 10',
                 border: false,
-                url: '/api/UserOptions/Climates',
+                url: '/WebApp/api/UserOptions/Climates',
                 method: 'POST',
                 items: [{
                     xtype: 'hidden',

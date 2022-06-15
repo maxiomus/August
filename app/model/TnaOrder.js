@@ -28,7 +28,7 @@ Ext.define('August.model.TnaOrder', {
 
     proxy: {
         type: 'rest',
-        url: '/api/TnaOrder',
+        url: '/WebApp/api/TnaOrder',
 
         pageParam: '',
         startParam: '',

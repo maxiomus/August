@@ -29,6 +29,8 @@ Ext.define('August.view.shopify.ProductController', {
 
             topbar = me.getView().down("toolbar"),
             combo = topbar.down("combo[name=sites]");
+        
+        //console.log('Shopify Product beforeload', combo.getValue());
 
         store.getProxy().setHeaders({
             'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
@@ -37,7 +39,8 @@ Ext.define('August.view.shopify.ProductController', {
         Ext.apply(store.getProxy().extraParams, {            
             store: combo.getValue()
         });
-    },
+               
+    },    
 
     onStoreChange: function(combo, nValue, oValue){
         var me = this,
@@ -72,96 +75,27 @@ Ext.define('August.view.shopify.ProductController', {
         //console.log(rec.data.id);
         //this.showWindow(grid.getSelection()[0]);
         this.redirectTo("shopify-product/edit/" + rec.data.id);
-    },
+    },      
 
-    /**
-     *
-     * @param b
-     * @param c
-     */
-    onActCopyClick: function(b, c){
-        var me = this,
-            multiview = me.getView().lookupReference('multiview'),
-            grid = multiview.lookupReference('grid'),
-            rec = grid.getSelectionModel().selected.items[0];
+    onActDeleteClick: function(b, c){
+        var me = this;
+        Ext.Msg.show({
+            title:'Warning!',
+            message: 'Are you sure you want to delete this?',
+            buttons: Ext.Msg.OKCANCEL,
+            icon: Ext.Msg.QUESTION,
+            fn: function(btn) {
+                if (btn === 'ok') {
+                    //grid.getStore().remove(rec);
+                    var layout = me.lookupReference('multiview'),
+                        grid = layout.lookupReference('grid'),
+                        rec = grid.getSelection()[0];
 
-        me.showWindow(rec, 'windows-style-stylecopy', function(type){
-            var win = me.win,
-                //colorStore = win.down('multiselector').getStore(),
-                colors = win.lookupReference('colors'),
-                divisionSize = win.lookupReference('divisionSize'),
-                btnSave = win.down('button[action="save"]');
-
-            divisionSize.setHidden(true);
-
-            win.lookupReference('chkNewColor').on('change', function(c, n, o){
-                if(!n){
-                    colors.setValue('');
-                }
-                btnSave.setDisabled(n === true && colors.getValue().length === 0);
-            });
-
-            colors.on('change', function(c, n, o){
-                btnSave.setDisabled(c.getValue().length === 0);
-            });
-
-            /*
-            colorStore.on('datachanged', function(store){
-                btnSave.setDisabled(store.getCount() == 0);
-            });
-            */
-
-            win.on('saveclick', me.onSaveCopy, me);
-        });
-
-        //var wvm = me.win.getViewModel();
-        /*
-        wvm.setStores({
-            colors: {
-                //storeId: 'memMyColors',
-                pageSize: 50,
-                remoteFilter: true,
-                proxy: {
-                    type: 'memory',
-                    enablePaging: true,
-                    reader: {
-                        type: 'json',
-                        rootProperty: 'data'
-                    }
+                    //rec.drop();
+                    //me.saveStore(grid, me.getView());
                 }
             }
         });
-
-        var remoteColors = Ext.create('Ext.data.Store', {
-            model: 'Color',
-
-            pageSize: 0,
-            autoLoad: true,
-
-            remoteFilter: true,
-
-            proxy: {
-                type: 'ajax',
-                url: '/api/Options/colors',
-
-                reader: {
-                    type: 'json',
-                    rootProperty: 'data'
-                    //totalProperty: 'total',
-                    //successProperty: 'success'
-                }
-            },
-
-            listeners: {
-                load: function(s){
-
-                    wvm.getStore('colors').getProxy().setData(s.getRange());
-                    wvm.getStore('colors').load();
-
-                }
-            }
-        });
-        */
     },
 
     onActRefreshClick: function(b, c){
@@ -189,25 +123,115 @@ Ext.define('August.view.shopify.ProductController', {
         });
     },
 
-    onActDeleteClick: function(b, c){
-        var me = this;
-        Ext.Msg.show({
-            title:'Warning!',
-            message: 'Are you sure you want to delete this?',
-            buttons: Ext.Msg.OKCANCEL,
-            icon: Ext.Msg.QUESTION,
-            fn: function(btn) {
-                if (btn === 'ok') {
-                    //grid.getStore().remove(rec);
-                    var layout = me.lookupReference('multiview'),
-                        grid = layout.lookupReference('grid'),
-                        rec = grid.getSelection()[0];
+    onTagSelected: function(tag, rec) {
+        var vm = this.getViewModel();
 
-                    //rec.drop();
-                    //me.saveStore(grid, me.getView());
-                }
-            }
+        vm.set('selectedStores', tag.getValue().join());
+        console.log('tag', tag.getValue(), vm.get('selectedStores'));
+    },
+
+    /**
+     *
+     * @param b
+     * @param c
+     */
+     onSyncClick: function(b, c){
+        var me = this,
+            multiview = me.getView().lookupReference('multiview');
+
+        me.showWindow(null, 'shopify-windows-inventorysync', b, function(type){
+            var win = me.win,
+                //colorStore = win.down('multiselector').getStore(),                
+                tag = win.down('tagfield[name="targetStores"]');                        
+            
+            win.on('syncclick', me.onSync, me);
         });
+        
+    },  
+
+    onSync: function(b, e){
+
+        var me = this,
+            vm = me.getViewModel(),
+            selected = vm.get('selectedStores');
+            //topbar = me.getView().down("toolbar"),
+            //combo = topbar.down("combo[name=sites]"),
+            //selected = combo.getSelection();                
+
+        var processMask = new Ext.LoadMask({
+            msg: 'Syncing... Please wait',
+            target: me.getView()
+        });        
+                    
+        Ext.Ajax.setTimeout(600000);
+        Ext.Ajax.request({
+            url: '/WebApp/api/ShopifyInvs/Set/' + selected,          
+            method: 'GET',        
+            //useDefaultXhrHeader: false,
+            cors: true,
+            disableCaching: false,                        
+
+            headers: {
+                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+            },
+            
+            params: {
+                
+            }
+                                
+        }).then(function(response){
+            var result = response.responseText;
+            console.log(response, result);                        
+
+            if(result =! null) {
+                processMask.hide('', function() {
+                    Ext.MessageBox.show({                        
+                        title: 'Status: Sync Complete',
+                        iconCls: 'x-fa fa-info-circle', 
+                        //'Inventory Updated Successfully!',     
+                        msg: response.responseText, 
+                        width: 420,
+                        height: 280,        
+                        animateTarget: me.getView(),
+                        buttons: Ext.MessageBox.OK
+                    });
+                });                
+            }
+            else {
+
+            }                      
+        }).otherwise(function(reason){
+            processMask.hide('', function() {
+                console.log(reason);
+                //Ext.Msg.alert(reason.statusText + ' - ' + reason.status, reason.responseJson.Message);
+            });
+            
+            if(batch.hasException) {
+                for (var i = 0; i < batch.exceptions.length; i++) {
+                    switch (batch.exceptions[i].action) {
+                        case "destroy" :
+                            msg = msg + batch.exceptions[i].records.length + " Delete, ";
+                            break;
+                        case "update" :
+                            msg = msg + batch.exceptions[i].records.length + " Update, ";
+                            break;
+                        case "create" :
+                            msg = msg + batch.exceptions[i].records.length + " Create, ";
+                            break;
+                    }
+                }
+
+                Ext.Msg.alert("Status", msg + " operation failed!");
+            }
+            else
+            {
+                Ext.Msg.alert('Status', 'Changes failed.');
+            }
+                     
+        });
+                
+        me.win.close();
+        processMask.show();
     },
 
     onUpdatePhotoClick: function(b, e){
@@ -216,7 +240,7 @@ Ext.define('August.view.shopify.ProductController', {
             grid = multiview.lookupReference('shopify-product-grid'),
             rec = grid.getSelectionModel().selected.items[0];        
 
-        me.showWindow(rec, 'shopify-windows-photoupdate', function(type){
+        me.showWindow(rec, 'shopify-windows-photoupdate', b, function(type){
 
             var win = me.win,
                 wvm = win.getViewModel(),
@@ -381,7 +405,7 @@ Ext.define('August.view.shopify.ProductController', {
         k[1] = "default";
         k[2] = rec.get("id");
 
-        console.log('grid - onSelect', rec);
+        //console.log('grid - onSelect', rec);
         this.redirectTo(k.join("/"));
     },
 
@@ -397,24 +421,23 @@ Ext.define('August.view.shopify.ProductController', {
         this.view.contextmenu.showAt(l.getXY());
     },
 
-    showWindow: function(rec, xtype, callback){
+    showWindow: function(rec, xtype, btn, callback){
         var me = this,
             view = me.getView(),
-            multiview = view.lookupReference('multiview');
-
-        me.isEdit = !!rec;
+            multiview = view.lookupReference('multiview');        
 
         me.win = view.add({
             xtype: xtype,
 
             viewModel: {
                 data: {
-                    selected: rec
+                    
                 }
             },
             // Create a child session that will spawn from the current session of this view
             session: true,
 
+            animateTarget: btn,
             renderTo: Ext.getBody()
         });
 

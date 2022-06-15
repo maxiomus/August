@@ -98,7 +98,7 @@ Ext.define('August.model.sales.Order', {
         { name: 'additionalRate', type: 'number' },
         { name: 'prepay', type: 'string' },
         { name: 'email_proforma', type: 'string' },
-        { name: 'rowguid', type: 'string' }
+        { name: 'rowguid', type: 'string', persist: false }
     ],
 
     idProperty: 'orderno',
@@ -123,8 +123,20 @@ Ext.define('August.model.sales.Order', {
 
         writer: {
             type: 'json',
+            // save nested (associated) data...
+            allDataOptions: {
+                persist: false,
+                associated: true
+            },
+            
+            partialDataOptions: {
+                changes: true,
+                critical: true,
+                associated: true
+            },
             //clientIdProperty: 'clientId',
-            //writeAllFields: true,
+            writeAllFields: false,
+            
             allowSingle: false // set false to send a single record in array
         },
 

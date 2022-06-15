@@ -33,7 +33,7 @@ Ext.define('August.model.style.Reqe', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Reqe',
+        url: '/WebApp/api/Reqe',
 
         pageParam: '',
         startParam: '',

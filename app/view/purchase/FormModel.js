@@ -17,7 +17,7 @@ Ext.define('August.view.purchase.OrderFormModel', {
             //trailingBufferZone: 100,
             //leadingBufferZone: 100,
             autoLoad: true,
-            remoteFilter: true,
+            //remoteFilter: true,
 
             proxy: {
                 type: 'ajax',
@@ -45,7 +45,7 @@ Ext.define('August.view.purchase.OrderFormModel', {
             //trailingBufferZone: 100,
             //leadingBufferZone: 100,
             autoLoad: true,
-            remoteFilter: true,
+            //remoteFilter: true,
 
             proxy: {
                 type: 'ajax',
@@ -73,7 +73,7 @@ Ext.define('August.view.purchase.OrderFormModel', {
             //trailingBufferZone: 100,
             //leadingBufferZone: 100,
             autoLoad: true,
-            remoteFilter: true,
+            //remoteFilter: true,
 
             proxy: {
                 type: 'ajax',
@@ -129,7 +129,7 @@ Ext.define('August.view.purchase.OrderFormModel', {
             //trailingBufferZone: 100,
             //leadingBufferZone: 100,
             autoLoad: true,
-            remoteFilter: true,
+            //remoteFilter: true,
 
             proxy: {
                 type: 'ajax',
@@ -157,7 +157,7 @@ Ext.define('August.view.purchase.OrderFormModel', {
             //trailingBufferZone: 100,
             //leadingBufferZone: 100,
             autoLoad: true,
-            remoteFilter: true,
+            //remoteFilter: true,
 
             proxy: {
                 type: 'ajax',
@@ -185,7 +185,7 @@ Ext.define('August.view.purchase.OrderFormModel', {
             //trailingBufferZone: 100,
             //leadingBufferZone: 100,
             autoLoad: false,
-            remoteFilter: true,
+            //remoteFilter: true,
 
             proxy: {
                 type: 'ajax',

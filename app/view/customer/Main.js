@@ -10,7 +10,5 @@ Ext.define('August.view.customer.Main',{
     controller: 'customer-main',
     viewModel: {
         type: 'customer-main'
-    },
-
-    html: 'Hello, World!!'
+    }
 });

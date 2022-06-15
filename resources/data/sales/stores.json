@@ -26,6 +26,48 @@
         "label": "Type",
         "field": "type"
       }           
-    ]       
+    ],
+    
+    "forms": [
+      {
+        "label": "Avery 5160 with MSRP",
+        "value": "5160-1"
+      },
+      {
+        "label": "Avery 5160 with Ticket MSRP",
+        "value": "5160-2"
+      }          
+    ],
+
+    "figures": [
+      {
+        "label": "MSRP",
+        "value": "msrp"
+      },
+      {
+        "label": "Ticket MSRP",
+        "value": "ticket_msrp"
+      },
+      {
+        "label": "Price 1",
+        "value": "price1"
+      },
+      {
+        "label": "Price 2",
+        "value": "price2"
+      },
+      {
+        "label": "Price 3",
+        "value": "price3"
+      },
+      {
+        "label": "Price 4",
+        "value": "price4"
+      },
+      {
+        "label": "Price 5",
+        "value": "price5"
+      }
+    ]
   }
 }

@@ -192,12 +192,15 @@ Ext.define('August.view.purchase.Order',{
                 }
             },
             {
-                xtype: 'searchnumber',
-                //reference: 'searchnumber',
-                width: 300,
-                grid: "purchase-order-grid",
-                paramName: 'pono'
-            },            
+                xtype: "searchtextlist",
+                //reference: 'searchlist',
+                width: 300,              
+                bind: {                    
+                    store: '{purchaseorders}'
+                },  
+                
+                paramName: "pono"            
+            },                      
             {
                 xtype: "searchgrid",
                 width: 300,
@@ -238,9 +241,14 @@ Ext.define('August.view.purchase.Order',{
             dataIndex: "pono",
             locked: false,
             filter: {
+                type: "number"
+            },
+            /*
+            filter: {
                 operator: 'in',
                 type: "list"
             },
+            */
             renderer: function(f, e, a){
                 return f;
             }

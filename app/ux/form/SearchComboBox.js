@@ -142,7 +142,7 @@ Ext.define('Ext.ux.form.SearchComboBox', {
                     return false
                 }
             });
-            console.log("onSearchClick", f, j, h.paramName);
+            //console.log("onSearchClick", f, j, h.paramName);
             if(f.type == 'list'){
 
                 if(f.menu != null){

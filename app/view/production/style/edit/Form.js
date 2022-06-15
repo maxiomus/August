@@ -92,6 +92,7 @@ Ext.define('August.view.production.style.edit.Form',{
                     items: [{
                         responsiveCls: 'small-100',
                         //width: '30%',
+                        columnWidth: 0.4,
                         layout: {
                             type: 'table',
                             columns: 2,
@@ -104,7 +105,7 @@ Ext.define('August.view.production.style.edit.Form',{
                         defaultType: 'textfield',
                         defaults: {
                             constrain: true,
-                            margin: '0 10 3 0',
+                            margin: '0 10 1 0',
                             width: 230,
                             labelWidth: 75
                             //selectOnTab: false
@@ -127,7 +128,7 @@ Ext.define('August.view.production.style.edit.Form',{
                             colspan: 2,
                             //labelWidth: 50,
                             width: 470,
-                            margin: '10 10 3 0',
+                            margin: '10 10 1 0',
                             //autoSelect: false,
                             //hideTrigger: true,
                             //publishes: 'value',
@@ -709,6 +710,7 @@ Ext.define('August.view.production.style.edit.Form',{
                     {
                         responsiveCls: 'small-100',
                         //width: '40%',
+                        columnWidth: 0.3,
                         layout: {
                             type: 'table',
                             columns: 2,
@@ -720,7 +722,7 @@ Ext.define('August.view.production.style.edit.Form',{
                         },
                         defaultType: 'numberfield',
                         defaults: {
-                            margin: '0 10 3 0',
+                            margin: '0 10 1 0',
                             width: 200,
                             labelWidth: 80,
                             minValue: 0,
@@ -744,7 +746,7 @@ Ext.define('August.view.production.style.edit.Form',{
                             fieldLabel: 'Price 1',
                             //labelWidth: 70,                            
                             width: 420,
-                            margin: '10 10 3 0',
+                            margin: '10 10 1 0',
                             colspan: 2,
                             layout: 'hbox',
                             defaults: {
@@ -997,14 +999,14 @@ Ext.define('August.view.production.style.edit.Form',{
                         {
                             name: 'cost',
                             fieldLabel: 'Cost',
-                            margin: '9 0 3 0',
+                            margin: '9 0 1 0',
                             bind: {
                                 value: '{theProduct.cost}'
                             }
                         },{
                             name: 'avgCost',
                             fieldLabel: 'Month Avg Cost',
-                            margin: '9 0 3 0',
+                            margin: '9 0 1 0',
                             width: 210,
                             labelWidth: 100,
                             bind: {
@@ -1119,18 +1121,27 @@ Ext.define('August.view.production.style.edit.Form',{
                             margin: '7 0 0 0',
                             fieldLabel: 'Warehouse',
                             displayField: 'label',
-                            valueField: 'value',
-                            hideTrigger: false,
+                            valueField: 'value',                            
+                            value: 'All',
                             //selectOnFocus: true,
-                            editable: false,
+                            //editable: true,
                             forceSelection: true,
+                            hideTrigger: false,
                             minChars: 1,
                             queryMode: 'local',
                             //queryParam: 'filter',
                             //triggerAction: 'all',
                             bind: {
-                                store: '{warehouses}',
-                                value: '{theProduct.warehouse}'
+                                store: '{warehouses}'
+                            },
+                            plugins: [{
+                                ptype: "cleartrigger"
+                            }],
+                            listeners: {
+                                select: {
+                                    fn: 'onWarehouseSelect',
+                                    scope: this.controller
+                                }
                             }
                         }                                                                      
                         /*
@@ -1176,7 +1187,8 @@ Ext.define('August.view.production.style.edit.Form',{
                     },                    
                     {
                         responsiveCls: 'small-100',
-                        //width: '30%',
+                        //width: '30%',                        
+                        columnWidth: 0.3,
                         layout: {
                             type: 'table',
                             columns: 2,
@@ -1203,7 +1215,7 @@ Ext.define('August.view.production.style.edit.Form',{
                             fieldLabel: 'Memo',
                             hideLabel: true,
                             margin: '9 0 9 0',
-                            height: 190,
+                            height: 180,
                             bind: {
                                 value: '{theProduct.memo}'
                             }
@@ -1226,10 +1238,13 @@ Ext.define('August.view.production.style.edit.Form',{
                             }
                             //fieldLabel: 'Memo'
                         }]
-                    },                    
+                    },
+                    /**
                     {
                         responsiveCls: 'small-100',
                         //width: '40%',
+                        hidden: true,
+                        columnWidth: 0.7,
                         layout: {
                             type: 'table',
                             columns: 2,
@@ -1241,7 +1256,7 @@ Ext.define('August.view.production.style.edit.Form',{
                         },
                         defaultType: 'fieldcontainer',
                         defaults: {                            
-                            width: 940,
+                            width: 920,
                             labelWidth: 130,
                             colspan: 4,
                             layout: 'hbox',
@@ -1780,7 +1795,349 @@ Ext.define('August.view.production.style.edit.Form',{
                                     value: '{theProduct.otss}'
                                 }
                             }]
-                        },{
+                        }]    
+                    }
+                    **/
+                    ,{
+                        responsiveCls: 'small-100',
+                        //width: '40%',
+                        width: 930,
+                        margin: '0 18 0 0',
+                        hidden: false,
+                        
+                        columnWidth: 0.7,                                                               
+
+                        items: [{
+                            xtype: 'dataview',
+                            reference: "inv-view",
+                            //width: 918,
+                            //scrollable: true,                            
+                            cls: 'inv-view',
+                            overItemCls: "x-item-over",
+                            itemSelector: "div.item-selector",
+                            //preserveScrollOnRefresh: true,
+                            //deferInitialRefresh: true,    
+
+                            prepareData: function(f, d, e){
+                                Ext.apply(f, {
+                                    
+                                });
+
+                                return f;
+                            },
+
+                            bind: {                                
+                                store: "{inventories}"
+                            },
+
+                            listeners: {
+                                refresh: 'onViewRefresh',                                
+
+                                beforeitemclick: {
+                                    fn: 'onBeforeViewItemClick',
+                                    scope: this.controller
+                                }
+                            },
+
+                            tpl: new Ext.XTemplate(                                
+                                '<tpl for=".">',
+                                    '<div class="item-selector">',
+                                        '<div class="item-boxer">',
+                                            '<div class="box-row">',   
+                                                '<div class="box nb" style="width:20px;"></div>',                                         
+                                                '<div class="box ab" style="width:150px;"></div>',
+                                                '<div class="box ab">',
+                                                    '<div class="item-boxer" style="height:22px">',
+                                                        '<div class="box rb center" style="width:50px;">{size1}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size2}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size3}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size4}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size5}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size6}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size7}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size8}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size9}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size10}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size11}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size12}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size13}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{size14}</div>',
+                                                        //'<div class="box rb center" style="width:50px;">{size15}</div>',
+                                                        '<div class="box nb center" style="width:50px;">Total</div>',
+                                                    '</div>',
+                                                '</div>',                                           
+                                            '</div>',
+                                            '<div class="box-row">',                                            
+                                                '<div class="box nb" style="width:20px;"><i class="dataview-icon-onhand x-fa fa-search" style="cursor:pointer"></i></div>',
+                                                '<div class="box ab" style="width:150px;">On Hand:</div>',
+                                                '<div class="box ab">',
+                                                    '<div class="item-boxer" style="height:22px">',
+                                                        '<div class="box rb center" style="width:50px;">{oh1}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh2}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh3}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh4}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh5}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh6}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh7}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh8}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh9}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh10}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh11}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh12}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh13}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{oh14}</div>',
+                                                        //'<div class="box rb center" style="width:50px;">{oh15}</div>',
+                                                        '<div class="box nb center" style="width:50px;">{ohs}</div>',
+                                                    '</div>',
+                                                '</div>',                                            
+                                            '</div>',
+                                            '<div class="box-row">',        
+                                                '<div class="box nb" style="width:20px;"><i class="dataview-icon-onorder x-fa fa-search" style="cursor:pointer"></i></div>',                                    
+                                                '<div class="box ab" style="width:150px;">On Order</div>',
+                                                '<div class="box ab">',
+                                                    '<div class="item-boxer" style="height:22px">',
+                                                        '<div class="box rb center" style="width:50px;">{order1}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order2}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order3}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order4}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order5}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order6}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order7}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order8}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order9}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order10}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order11}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order12}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order13}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{order14}</div>',
+                                                        //'<div class="box rb center" style="width:50px;">{order15}</div>',
+                                                        '<div class="box nb center" style="width:50px;">{orders}</div>',
+                                                    '</div>',
+                                                '</div>',                                            
+                                            '</div>',
+                                            '<div class="box-row">',   
+                                                '<div class="box nb" style="width:20px;"><i class="dataview-icon-wip x-fa fa-search" style="cursor:pointer"></i></div>',                                        
+                                                '<div class="box ab" style="width:150px;">WIP(Open PO):</div>',
+                                                '<div class="box ab">',
+                                                    '<div class="item-boxer" style="height:22px">',
+                                                        '<div class="box rb center" style="width:50px;">{wip1}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip2}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip3}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip4}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip5}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip6}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip7}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip8}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip9}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip10}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip11}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip12}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip13}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{wip14}</div>',
+                                                        //'<div class="box rb center" style="width:50px;">{wip15}</div>',
+                                                        '<div class="box nb center" style="width:50px;">{wips}</div>',
+                                                    '</div>',
+                                                '</div>',                                            
+                                            '</div>',
+                                            '<div class="box-row">',          
+                                                '<div class="box nb" style="width:20px;"></div>',                                  
+                                                '<div class="box ab" style="width:150px;">ATS (OH + WIP - SO):</div>',
+                                                '<div class="box ab">',
+                                                    '<div class="item-boxer" style="height:22px">',
+                                                        '<div class="box rb center" style="width:50px;">{ats1}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats2}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats3}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats4}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats5}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats6}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats7}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats8}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats9}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats10}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats11}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats12}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats13}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ats14}</div>',
+                                                        //'<div class="box rb center" style="width:50px;">{ats15}</div>',
+                                                        '<div class="box nb center" style="width:50px;">{ats}</div>',
+                                                    '</div>',
+                                                '</div>',                                            
+                                            '</div>',
+                                            '<div class="box-row">',   
+                                                '<div class="box nb" style="width:20px;"></div>',                                         
+                                                '<div class="box ab" style="width:150px;">OTS (OH - SO):</div>',
+                                                '<div class="box ab">',
+                                                    '<div class="item-boxer" style="height:22px">',
+                                                        '<div class="box rb center" style="width:50px;">{ots1}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots2}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots3}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots4}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots5}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots6}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots7}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots8}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots9}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots10}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots11}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots12}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots13}</div>',
+                                                        '<div class="box rb center" style="width:50px;">{ots14}</div>',
+                                                        //'<div class="box rb center" style="width:50px;">{ots15}</div>',
+                                                        '<div class="box nb center" style="width:50px;">{ots}</div>',
+                                                    '</div>',
+                                                '</div>',                                            
+                                            '</div>',
+                                        '</div>',
+                                    '</div>',
+                                '</tpl>'
+                            )                            
+                        }]
+                    },{
+                        responsiveCls: 'small-100',
+                        //width: '30%',                        
+                        columnWidth: 0.3,
+                        layout: {
+                            type: 'table',
+                            columns: 2,
+                            tableAttrs: {
+                                style: {
+
+                                }
+                            }
+                        },
+                        defaultType: 'textfield',
+                        defaults: {
+                            constrain: true,                            
+                            //labelAlign: 'left',
+                            margin: '0 10 1 0',
+                            labelWidth: 160,
+                            hideEmptyLabel: false,
+                            colspan: 2,
+                            width: 470
+                            //padding: '10 10 0 10'
+                        },
+                        items: [{
+                            xtype: 'label',
+                            html: '<b>USER FIELDS</>',
+                            margin: '0 0 0 0'                              
+                        },{                            
+                            name: 'user1',
+                            margin: '9 10 1 0', 
+                            fieldLabel: 'Design Dept',                                                        
+                            bind: {
+                                value: '{theProduct.user1}'
+                            }
+                        },{                                                        
+                            name: 'user2',
+                            fieldLabel: 'Sales Dept',                                               
+                            bind: {
+                                value: '{theProduct.user2}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{                                                        
+                            name: 'user3',
+                            fieldLabel: 'Production Dept',                                                      
+                            bind: {
+                                value: '{theProduct.user3}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{                                                        
+                            name: 'user4',
+                            fieldLabel: 'Fit Dept',                                                     
+                            bind: {
+                                value: '{theProduct.user4}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{                                                        
+                            name: 'user5',
+                            fieldLabel: 'Receiving/Q.C Dept',                                                      
+                            bind: {
+                                value: '{theProduct.user5}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{                                                        
+                            name: 'user6',
+                            fieldLabel: 'Retail Size',                                                       
+                            bind: {
+                                value: '{theProduct.user6}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{                                                        
+                            name: 'user7',
+                            fieldLabel: '',                                                                               
+                            bind: {
+                                value: '{theProduct.user7}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{                                                        
+                            name: 'user8',
+                            fieldLabel: 'MKPL DISCOUNT ',                                                      
+                            bind: {
+                                value: '{theProduct.user8}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{                                                        
+                            name: 'user9',
+                            fieldLabel: 'MKPL COLOR',                                                     
+                            bind: {
+                                value: '{theProduct.user9}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{ 
+                            xtype: 'datefield',                                                       
+                            name: 'userdate',
+                            fieldLabel: '',                                                                                                                     
+                            bind: {
+                                value: '{theProduct.userdate}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{ 
+                            xtype: 'datefield',                                                       
+                            name: 'userdate1',
+                            fieldLabel: 'MKPL DISCOUNT START',                                                  
+                            bind: {
+                                value: '{theProduct.userdate1}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{ 
+                            xtype: 'datefield',                                                       
+                            name: 'userdate2',
+                            fieldLabel: 'MKPL DISCOUNT END',                                                    
+                            bind: {
+                                value: '{theProduct.userdate2}'
+                            }
+                            //fieldLabel: 'Memo'
+                        },{ 
+                            xtype: 'datefield',                                                       
+                            name: 'userdate3',
+                            fieldLabel: '',                                                     
+                            bind: {
+                                value: '{theProduct.userdate3}'
+                            }
+                            //fieldLabel: 'Memo'
+                        }]
+                    },{
+                        responsiveCls: 'small-100',
+                        //width: '40%',                        
+                        columnWidth: 0.7,
+                        layout: {
+                            type: 'table',
+                            columns: 2,
+                            tableAttrs: {
+                                style: {
+
+                                }
+                            }
+                        },
+                        defaultType: 'fieldcontainer',
+                        defaults: {                            
+                            width: 920,
+                            labelWidth: 130,
+                            colspan: 4,
+                            layout: 'hbox',
+                            margin: '0 10 1 0'
+                        },
+                        items: [{
                             xtype: 'label',
                             html: '<b>VENDOR INFO',
                             margin: '0 0 0 0',
@@ -2002,11 +2359,11 @@ Ext.define('August.view.production.style.edit.Form',{
                                     value: '{theProduct.currency3}'
                                 }
                             }]
-                        }]    
-                    },
-                    {
+                        }]                        
+                    },{
                         responsiveCls: 'small-100',
                         //width: '30%',
+                        columnWidth: 0.3,
                         layout: {
                             type: 'table',
                             columns: 2,
@@ -2020,7 +2377,7 @@ Ext.define('August.view.production.style.edit.Form',{
                         defaults: {
                             constrain: true,                            
                             //labelAlign: 'left',
-                            margin: '0 10 3 0',
+                            margin: '9 10 1 0',
                             labelWidth: 160,
                             hideEmptyLabel: false,
                             colspan: 2,
@@ -2029,111 +2386,12 @@ Ext.define('August.view.production.style.edit.Form',{
                         },
                         items: [{
                             xtype: 'label',
-                            html: '<b>USER FIELDS</>',
-                            margin: '0 0 0 0'                              
-                        },{                            
-                            name: 'user1',
-                            margin: '9 10 3 0', 
-                            fieldLabel: 'Design Dept',                                                        
-                            bind: {
-                                value: '{theProduct.user1}'
-                            }
-                        },{                                                        
-                            name: 'user2',
-                            fieldLabel: 'Sales Dept',                                               
-                            bind: {
-                                value: '{theProduct.user2}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{                                                        
-                            name: 'user3',
-                            fieldLabel: 'Production Dept',                                                      
-                            bind: {
-                                value: '{theProduct.user3}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{                                                        
-                            name: 'user4',
-                            fieldLabel: 'Fit Dept',                                                     
-                            bind: {
-                                value: '{theProduct.user4}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{                                                        
-                            name: 'user5',
-                            fieldLabel: 'Receiving/Q.C Dept',                                                      
-                            bind: {
-                                value: '{theProduct.user5}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{                                                        
-                            name: 'user6',
-                            fieldLabel: 'Retail Size',                                                       
-                            bind: {
-                                value: '{theProduct.user6}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{                                                        
-                            name: 'user7',
-                            fieldLabel: '',                                                                               
-                            bind: {
-                                value: '{theProduct.user7}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{                                                        
-                            name: 'user8',
-                            fieldLabel: 'MKPL DISCOUNT ',                                                      
-                            bind: {
-                                value: '{theProduct.user8}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{                                                        
-                            name: 'user9',
-                            fieldLabel: 'MKPL COLOR',                                                     
-                            bind: {
-                                value: '{theProduct.user9}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{ 
-                            xtype: 'datefield',                                                       
-                            name: 'userdate',
-                            fieldLabel: '',                                                                                                                     
-                            bind: {
-                                value: '{theProduct.userdate}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{ 
-                            xtype: 'datefield',                                                       
-                            name: 'userdate1',
-                            fieldLabel: 'MKPL DISCOUNT START',                                                  
-                            bind: {
-                                value: '{theProduct.userdate1}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{ 
-                            xtype: 'datefield',                                                       
-                            name: 'userdate2',
-                            fieldLabel: 'MKPL DISCOUNT END',                                                    
-                            bind: {
-                                value: '{theProduct.userdate2}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{ 
-                            xtype: 'datefield',                                                       
-                            name: 'userdate3',
-                            fieldLabel: '',                                                     
-                            bind: {
-                                value: '{theProduct.userdate3}'
-                            }
-                            //fieldLabel: 'Memo'
-                        },{
-                            xtype: 'label',
-                            html: '<b>OHTER INFO',
+                            html: '<b>OTHER INFO',
                             margin: '0 0 0 0'
                         },{                                                        
                             name: 'reference1',
                             fieldLabel: 'Reference 1',        
-                            margin: '9 0 3 0',
+                            //margin: '9 0 3 0',
                             labelWidth: 80,
                             width: 230,
                             colspan: 1,
@@ -2144,7 +2402,7 @@ Ext.define('August.view.production.style.edit.Form',{
                         },{                                                        
                             name: 'reference2',
                             fieldLabel: 'Reference 2',                                                     
-                            margin: '9 0 3 0',
+                            //margin: '9 0 3 0',
                             labelWidth: 80,
                             width: 230,
                             colspan: 1,

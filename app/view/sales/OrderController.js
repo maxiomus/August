@@ -19,7 +19,6 @@ Ext.define('August.view.sales.OrderController', {
 
     init: function(){
         var me = this;
-
         me.mv = August.app.getMainView();
 
         Ext.Ajax.request({
@@ -54,9 +53,7 @@ Ext.define('August.view.sales.OrderController', {
 
             }
         });
-    },
-
-        
+    },        
 
     onAfterGridRender: function(p){
 
@@ -239,8 +236,7 @@ Ext.define('August.view.sales.OrderController', {
 
             }, me);
         });
-    },
-
+    },    
 
     showWindow: function(rec, xtype, callback){
         var me = this,
@@ -317,7 +313,7 @@ Ext.define('August.view.sales.OrderController', {
     onFilterItemChange: function(combo, j, g, l){
         var topbar = combo.up("topbar"),
            m = topbar.down("searchgrid"),
-           n = topbar.down("searchnumber"),            
+           n = topbar.down("searchtextlist"),            
            j = combo.getValue();
 
         switch(j){

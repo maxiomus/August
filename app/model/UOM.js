@@ -18,11 +18,15 @@ Ext.define('August.model.UOM', {
 
     proxy: {
         type: "rest",
-        url: "/api/UOM/",
+        url: "/WebApp/api/Uoms/",
 
         pageParam: '',
         startParam: '',
         limitParam: '',
+
+        headers: {
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        },
 
         reader: {
             type: "json",

@@ -55,7 +55,7 @@ Ext.define("Ext.ux.form.MultiUpload",{
                 iconCls: 'fa fa-plus'
             },
             multiselect: true,
-            //url: '/api/Files/upload',
+            //url: '/WebApp/api/Files/upload',
             method: 'POST',
             listeners: {
                 render: function(field){

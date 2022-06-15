@@ -9,7 +9,7 @@ Ext.define('August.store.Settings', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Settings',
+        url: '/WebApp/api/Settings',
 
         pageParam: '',
         startParam: '',

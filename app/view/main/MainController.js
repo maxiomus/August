@@ -5,6 +5,10 @@
 Ext.define('August.view.main.MainController', {
     extend: 'Ext.app.ViewController',
 
+    mixins: [
+        'Ext.app.route.Base'
+    ],
+
     alias: 'controller.main',    
 
     initViewModel: function(b) {
@@ -20,7 +24,7 @@ Ext.define('August.view.main.MainController', {
         /*
         Ext.Ajax.request({
             //url: "/security/logout.ashx",
-            url: '/api/Sessions/logout',
+            url: '/WebApp/api/Sessions/logout',
             method: "GET",
             scope: me,
             success: me.onLogoutSuccess,
@@ -117,17 +121,22 @@ Ext.define('August.view.main.MainController', {
                             route[2] = vm.get('theOrder').id;
                         }
                     }
-                    /*
-                    if(tab.isXType("sales-edit-form")){
-                        if(vm.get('srcPowhId') != null){
-                            route[2] = vm.get('srcPowhId');
-                        }
-                    }
-                    */
 
                     if(tab.isXType("pi-form")){
                         if(vm.get('thePhysical').id > 0) {
                             route[2] = vm.get('thePhysical').id;
+                        }
+                    }
+
+                    if(tab.isXType("payment-receiveForm")){
+                        if(vm.get('thePayment') != null){
+                            route[2] = vm.get('thePayment').id;
+                        }
+                    }
+
+                    if(tab.isXType("transfer-form")){
+                        if(vm.get('theTransfer').id > 0) {
+                            route[2] = vm.get('theTransfer').id;
                         }
                     }
                 }
@@ -153,7 +162,7 @@ Ext.define('August.view.main.MainController', {
             nav = refs.navigationTreeList,
             wrap = refs.mainContainerWrap,
             collapsing = !nav.getMicro(),
-            newWidth = collapsing ? 64 : 280;
+            newWidth = collapsing ? 64 : 250;
 
         if(Ext.isIE9m||!Ext.os.is.Desktop){
             Ext.suspendLayouts();

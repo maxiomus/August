@@ -185,7 +185,7 @@ Ext.define('August.view.TopBar', {
             },"->",{
                 xtype: "segmentedbutton",
                 reference: "viewselection",
-                hidden: false,
+                hidden: true,
                 value: 1,
                 items: [{
                     tooltip: "Default",

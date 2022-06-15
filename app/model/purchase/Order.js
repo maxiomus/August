@@ -162,6 +162,7 @@ Ext.define('August.model.purchase.Order', {
         { name: 'user30', type: 'string'},        
         { name: 'styles', type: 'auto', defaultValue: [], persist: false },
         { name: 'totalUnits', type: 'int', defaultValue: 0, persist: false },
+        { name: 'rowguid', type: 'string', persist: false }
     ],
 
     idProperty: 'pono',
@@ -192,12 +193,13 @@ Ext.define('August.model.purchase.Order', {
                 associated: true
             },
             partialDataOptions: {
-                changes: false,
+                changes: true,
                 critical: true,
                 associated: true
             },
             //clientIdProperty: 'clientId',
-            //writeAllFields: true,
+            writeAllFields: false,
+            
             allowSingle: false // set false to send a single record in array
         },
 

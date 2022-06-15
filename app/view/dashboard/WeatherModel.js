@@ -15,7 +15,7 @@ Ext.define('August.view.dashboard.WeatherModel', {
             storeId: 'cities',
             proxy: {
                 type: 'ajax',
-                url: '/api/Cities',
+                url: '/WebApp/api/Cities',
                 reader: {
                     type: 'json',
                     rootProperty: 'data'

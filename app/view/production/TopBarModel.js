@@ -15,7 +15,7 @@ Ext.define('August.view.production.TopBarModel', {
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/api/Combos/departments",
+                url: "/WebApp/api/List/departments",
 
                 reader: {
                     type: "json",
@@ -30,7 +30,7 @@ Ext.define('August.view.production.TopBarModel', {
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/api/Combos/customers",
+                url: "/WebApp/api/List/customers",
 
                 reader: {
                     type: "json",
@@ -57,7 +57,7 @@ Ext.define('August.view.production.TopBarModel', {
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/api/Combos/ordertypes",
+                url: "/WebApp/api/List/ordertypes",
 
                 reader: {
                     type: "json",
@@ -73,7 +73,7 @@ Ext.define('August.view.production.TopBarModel', {
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/api/Combos/divisions",
+                url: "/WebApp/api/List/divisions",
 
                 reader: {
                     type: "json",

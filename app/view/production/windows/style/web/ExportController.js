@@ -28,19 +28,9 @@ Ext.define('August.view.production.windows.style.web.ExportController', {
         
         //console.log(me, topbar, field.getValue(), vm.get('selected').get('style'));
         //store.removeAll();
-        var siteId = field.getValue();
-        console.log(field.getValue())
-        switch (siteId) {            
-            case '10':
-            case '11':
-            case '12':
-            case '13':            
-            case '16':
-            case '99':
-                siteId = 16;
-                break;
-
-        }
+        var siteId = field.getValue() <= 5 ? field.getValue() : 16;
+        //console.log(field.getValue())
+                
         Ext.apply(store.getProxy().extraParams, {
             style: encodeURIComponent(vm.get('selected').data.style),
             siteid: siteId
@@ -51,8 +41,7 @@ Ext.define('August.view.production.windows.style.web.ExportController', {
         var me =this,
             store = me.getViewModel().getStore('styleAttributes');
 
-        store.load();
-        console.log(store);        
+        store.load();        
     },
 
     onSiteChange: function(combo, nValue, oValue){

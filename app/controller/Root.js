@@ -185,6 +185,7 @@
                 routeId: hashTag
             });            
 
+            console.log('setCurrentView - new', newView);
             /*
             var newVM = newView.getViewModel();
             if(newVM){
@@ -266,7 +267,7 @@
             //settings = null,
             store = null;
         
-        if(cvm != null) {                                    
+        if(cvm != null) {                                             
             store = cvm.getStore(hashTag.replace('-', '')+'s');            
         }
 
@@ -594,7 +595,7 @@
             prefix = node + '-',
             xf = Ext.util.Format;
         
-        console.log(store, store.isLoaded(), store.isLoading())
+        console.log('onRouteTab',store);
         switch(node) {
             case 'dal':
                 var title = rec.data.Title;
@@ -884,7 +885,7 @@
 
         view.suspendEvents(false);
         view.setActiveTab(item);
-        item.tab.focus(100);
+        //item.tab.focus(100);
         view.resumeEvents(true);
     },
 
@@ -897,7 +898,7 @@
             mainCard = refs.mainCardPanel,
             view = mainCard.child('component[routeId=' + node + ']');
             //viewModel = view.getViewModel(),
-        console.log('onRouteOp', node, op, id);
+        //console.log('onRouteOp', node, op, id);
 
         var title = Ext.String.capitalize(op),
             //title = (!id ? 'New' : 'Edit'),
@@ -917,6 +918,10 @@
                 title += ' Style';
                 alias = 'style-edit-form';
                 break;
+            case 'customer-invoice':
+                title += ' Invoice';
+                alias = 'invoice-form';
+                break;
             case 'payment-receive':
                 title += ' Payment Receive';
                 alias = 'payment-receiveForm';
@@ -924,6 +929,10 @@
             case 'physical':
                 title += ' P.I';
                 alias = 'pi-form';
+                break;
+            case 'transfer':
+                title += ' Warehouse Transfer';
+                alias = 'transfer-form';
                 break;
         }
 
@@ -1006,12 +1015,20 @@
             case 'sample':
                 this.processProducts(fvm, node, op, id);
                 break;     
+            case 'customer-invoice':
+                console.log('onRouteEdit', node, op, id);
+                this.processInvoices(fvm, node, op, id);
+                break;
             case 'payment-receive':       
                 this.processPayments(fvm, node, op, id);
                 break;
             case 'physical':
                 this.processPIs(fvm, node, op, id);
                 break;
+            case 'transfer':
+                this.processTransfers(fvm, node, op, id);
+                break;
+            
         }
         /*
         Ext.Ajax.on('beforerequest', function (con, opt) {
@@ -1039,13 +1056,16 @@
             //multiview = view.lookupReference('multiview'),
             //store = view.getViewModel().getStore(node.replace('-','')+'s');
 
-        console.log('onRoute', node, sub)
+        //console.log('onRoute', node, sub)
         switch(node){
             case 'receiving':
                 this.inventoryReceiving(view, node, sub);
                 break;
             case 'allocation':
                 this.inventoryAllocation(view, node, sub);
+                break;
+            case 'reports':
+                this.navigateReports(view, node, sub);
                 break;
             case 'settings':
                 this.navigateSettings(view, node, sub);
@@ -1065,10 +1085,11 @@
 
         var binding = null;
 
-        if(id){
-            August.model.purchase.Order.getProxy().setHeaders({
-                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-            });
+        August.model.purchase.Order.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });
+
+        if(id){            
 
             vm.linkTo('thePO', {
                 type: 'purchase.Order',
@@ -1112,23 +1133,22 @@
     },
 
     processSales: function(vm, node, op, id){
-        var session = vm.getSession();        
-
-        console.log('processSales', vm);
+        var session = vm.getSession();                
 
         var cRec = vm.get('theOrder');
         if(!Ext.isEmpty(session.data['sales.Order']) && !session.data['sales.Order'].hasOwnProperty(id)){
             //console.log(session.data)
             session.data['sales.Order'] = null;
-            session.data['sales.OrderItem'] = null;            
+            session.data['sales.OrderDetail'] = null;            
         }
 
         var binding = null;
         
-        if(id){
-            August.model.sales.Order.getProxy().setHeaders({
-                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-            });
+        August.model.sales.Order.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });
+
+        if(id){            
 
             vm.linkTo('theOrder', {
                 type: 'sales.Order',
@@ -1156,14 +1176,19 @@
         //var stores = vm.getStore('stores');
 
         binding = vm.bind('{theOrder}', function(rec){
+            
+            var grid = vm.getView().lookupReference('so-grid');
+            if(grid){
+                var columns = grid.getColumns();
+                Ext.each(columns, function(col, idx){                        
+                
+                    if(idx > 5 && idx < 17) {
+                        index = idx - 5;  
+                        col.setText('');             
+                    }                        
+                });
+            }
 
-            /*
-            customers.load({
-                callback: function(recs, op){
-                    stores.load();
-                }
-            });       
-            */
             vm.getView().setLoading(false);
             binding.destroy();
         });
@@ -1384,9 +1409,15 @@
             //console.log('after clear', session.data, session.data["style.Product"])
         }
 
-        console.log('processProducts', vm);            
+        //console.log('processProducts', vm);            
 
         var binding = null;
+
+        August.model.style.Product.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });
+        
+
         if(id){
             /*
             August.model.Product.load(parseInt(id,10), {
@@ -1399,11 +1430,7 @@
             });
             */            
 
-            if(op == 'edit'){
-
-                August.model.style.Product.getProxy().setHeaders({
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                });
+            if(op == 'edit'){                
 
                 vm.linkTo('theProduct', {
                     type: 'style.Product',
@@ -1595,10 +1622,10 @@
                     rawMatType: 'Style',
                     division: 'MISSY',
                     status: 'ACTIVE',
-                    color: node == 'sample' ? '00' : '',
-                    season: node == 'sample' ? 'E' : '',
-                    processtype: node == 'sample' ? 'DS SAMPLE' : '',
-                    sizeCat: node == 'sample' ? 'ONESIZE' : '',
+                    //color: node == 'sample' ? '00' : '',
+                    //season: node == 'sample' ? 'E' : '',
+                    //processtype: node == 'sample' ? 'DS SAMPLE' : '',
+                    //sizeCat: node == 'sample' ? 'ONESIZE' : '',
                     userName: August.loggedInUser.userId,
                     lowestno: 1
                 }
@@ -1607,6 +1634,201 @@
         }
 
         binding = vm.bind('{theProduct}', function(rec){
+            if(id > 0){
+
+                var invStore = vm.getStore('inventories'),
+                    onhandStore = vm.getStore('onhands'),
+                    onorderStore = vm.getStore('onorders'),
+                    wipStore = vm.getStore('wips'),
+                    form = vm.getView(),
+                    tab = form.lookupReference('editproducttabs'),
+                    combo = tab.down('combo[name="warehouse"]');
+
+                Ext.apply(invStore.getProxy().extraParams, {
+                    style: rec.get('style').trim(),
+                    color: rec.get('color').trim()
+                });                                                   
+
+                Ext.apply(onhandStore.getProxy().extraParams, {
+                    style: rec.get('style').trim(),
+                    color: rec.get('color').trim()
+                });
+
+                Ext.apply(onorderStore.getProxy().extraParams, {
+                    style: rec.get('style').trim(),
+                    color: rec.get('color').trim()
+                });
+
+                Ext.apply(wipStore.getProxy().extraParams, {
+                    style: rec.get('style').trim(),
+                    color: rec.get('color').trim()
+                });
+
+                onhandStore.load({
+                    callback: function(recs, op, success){                        
+                        
+                    }                    
+                });
+
+                onorderStore.load({
+                    callback: function(recs, op, success){
+
+                    }
+                }),
+
+                wipStore.load({
+                    callback: function(recs, op, success){
+
+                    }
+                });
+
+                invStore.load({
+                    callback: function(recs, op, success){
+                        var ots = Ext.create('August.model.style.Inventories', {
+                            style: rec.get('style'),
+                            color: rec.get('color'),
+                            warehouse: 'All',
+                            season: rec.get('season'),
+                            grp: rec.get('grp'),
+                            descript: rec.get('descript'),
+                            price: rec.get('price'),
+                            //dt: rec.get(''),
+                            division: rec.get('division'),
+                            oh1: rec.get('oh1'),
+                            oh2: rec.get('oh2'),
+                            oh3: rec.get('oh3'),
+                            oh4: rec.get('oh4'),
+                            oh5: rec.get('oh5'),
+                            oh6: rec.get('oh6'),
+                            oh7: rec.get('oh7'),
+                            oh8: rec.get('oh8'),
+                            oh9: rec.get('oh9'),
+                            oh10: rec.get('oh10'),
+                            wip1: rec.get('po1'),
+                            wip2: rec.get('po2'),
+                            wip3: rec.get('po3'),
+                            wip4: rec.get('po4'),
+                            wip5: rec.get('po5'),
+                            wip6: rec.get('po6'),
+                            wip7: rec.get('po7'),
+                            wip8: rec.get('po8'),
+                            wip9: rec.get('po9'),
+                            wip10: rec.get('po10'),
+                            order1: rec.get('order1'),
+                            order2: rec.get('order2'),
+                            order3: rec.get('order3'),
+                            order4: rec.get('order4'),
+                            order5: rec.get('order5'),
+                            order6: rec.get('order6'),
+                            order7: rec.get('order7'),
+                            order8: rec.get('order8'),
+                            order9: rec.get('order9'),
+                            order10: rec.get('order10'),
+                            ats1: rec.get('oh1') + rec.get('po1') - rec.get('order1'),
+                            ats2: rec.get('oh2') + rec.get('po2') - rec.get('order2'),
+                            ats3: rec.get('oh3') + rec.get('po3') - rec.get('order3'),
+                            ats4: rec.get('oh4') + rec.get('po4') - rec.get('order4'),
+                            ats5: rec.get('oh5') + rec.get('po5') - rec.get('order5'),
+                            ats6: rec.get('oh6') + rec.get('po6') - rec.get('order6'),
+                            ats7: rec.get('oh7') + rec.get('po7') - rec.get('order7'),
+                            ats8: rec.get('oh8') + rec.get('po8') - rec.get('order8'),
+                            ats9: rec.get('oh9') + rec.get('po9') - rec.get('order9'),
+                            ats10: rec.get('oh10') + rec.get('po10') - rec.get('order10'), 
+                            ots1: rec.get('oh1') - rec.get('order1'),
+                            ots2: rec.get('oh2')- rec.get('order2'),
+                            ots3: rec.get('oh3')- rec.get('order3'),
+                            ots4: rec.get('oh4')- rec.get('order4'),
+                            ots5: rec.get('oh5')- rec.get('order5'),
+                            ots6: rec.get('oh6')- rec.get('order6'),
+                            ots7: rec.get('oh7')- rec.get('order7'),
+                            ots8: rec.get('oh8')- rec.get('order8'),
+                            ots9: rec.get('oh9')- rec.get('order9'),
+                            ots10: rec.get('oh10')- rec.get('order10'),
+                            size1: rec.get('Size').size1,             
+                            size2: rec.get('Size').size2,
+                            size3: rec.get('Size').size3,             
+                            size4: rec.get('Size').size4,             
+                            size5: rec.get('Size').size5,             
+                            size6: rec.get('Size').size6,             
+                            size7: rec.get('Size').size7,             
+                            size8: rec.get('Size').size8,             
+                            size9: rec.get('Size').size9,             
+                            size10: rec.get('Size').size10    
+                        });
+
+                        this.insert(0, ots);
+
+                        this.filter('warehouse', combo.getValue());
+                    }
+                });
+            } 
+
+            vm.getView().setLoading(false);
+            binding.destroy();
+        });
+
+        if(binding){
+            vm.getView().setLoading(false);
+        }
+    },
+
+    processInvoices: function(vm, node, op, id){
+        var session = vm.getSession();                
+
+        var cRec = vm.get('theInvoice');
+        if(!Ext.isEmpty(session.data['invoice.Header']) && !session.data['invoice.Header'].hasOwnProperty(id)){
+            //console.log(session.data)
+            session.data['invoice.Header'] = null;
+            session.data['invoice.Detail'] = null;            
+        }
+
+        var binding = null;
+        
+        August.model.sales.Order.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });
+
+        if(id){            
+
+            vm.linkTo('theInvoice', {
+                type: 'invoice.Header',
+                //reference: 'August.model.sales.Order',
+                id: parseInt(id,10)
+            });                                    
+        }
+        else {
+            if(vm.get('theInvoice') != null){
+                vm.set('theInvoice', null);
+            }
+
+            vm.linkTo('theInvoice', {
+                type: 'invoice.Header',
+                create: {
+                    startDate: new Date().toDateString(),
+                    status: 'Open',
+                    //warehouse: '00',
+                    userName: August.loggedInUser.userId
+                }
+            });
+        }
+
+        //var customers = vm.getStore('customers');
+        //var stores = vm.getStore('stores');
+
+        binding = vm.bind('{theInvoice}', function(rec){
+            
+            var grid = vm.getView().lookupReference('inv-grid');
+            if(grid){
+                var columns = grid.getColumns();
+                Ext.each(columns, function(col, idx){                        
+                
+                    if(idx > 4 && idx < 16) {
+                        index = idx - 4;  
+                        col.setText('');             
+                    }                        
+                });
+            }
+            
             vm.getView().setLoading(false);
             binding.destroy();
         });
@@ -1624,20 +1846,23 @@
             //console.log(session.data)
             session.data['payment.Header'] = null;
             session.data['payment.Detail'] = null;            
+            //session.data['payment.PaymentD'] = null;   
         }
 
         var binding = null;
         
+        August.model.payment.Header.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });   
+
         if(id){
-            August.model.payment.Header.getProxy().setHeaders({
-                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-            });            
-                
+                                     
             vm.linkTo('thePayment', {
                 type: 'payment.Header',
                 //reference: 'August.model.sales.Order',
                 id: parseInt(id,10)
-            });                                    
+            });          
+                                                
         }
         else {
             if(vm.get('thePayment') != null){
@@ -1658,13 +1883,36 @@
                 }
             });
         }
-
-        //var customers = vm.getStore('customers');
-        //var stores = vm.getStore('stores');
         
-        binding = vm.bind('{thePayment}', function(rec){
+        //var customers = vm.getStore('customers');
+        //var stores = vm.getStore('stores');        
 
-            console.log('processPayment - Binding', vm);
+        binding = vm.bind('{thePayment}', function(rec){                              
+            
+            if(id > 0){
+                vm.getStore('Paymentdetails').setData(rec.details().getRange());                
+                //console.log('binding', vm.getStore('Paymentdetails'));
+
+                var customer = rec.get('customer'),
+                    creditStore = vm.getStore('credits');
+
+                Ext.apply(creditStore.getProxy().extraParams, {
+                    customer: customer != null ? customer.trim() : ''                    
+                });
+                            
+                creditStore.load({
+                    callback: function(recs, op, success){
+                        var total = 0;
+                        Ext.Array.each(recs, function(r){
+                            
+                            total += r.get('balance');
+                        });
+    
+                        rec.set('available_credit', -1 * total);
+                    }
+                });
+            }            
+            
             vm.getView().setLoading(false);
             binding.destroy();
         });
@@ -1676,38 +1924,27 @@
 
     processPIs: function(vm, node, op, id){
         var session = vm.getSession();
-        //boms = vm.getView().lookupReference('boms'),
-        //store = boms.getViewModel().getStore('boms'),
-        //bomStore = vm.getStore('boms'),
-        //center = boms.lookupReference('center');
-
+                
         var cRec = vm.get('thePhysical');
-        if(!Ext.isEmpty(session.data.PIH) && !session.data.PIH.hasOwnProperty(id)){
-            //console.log(session.data)
-            session.data.PIH = null;
-            session.data.PI = null;
-            session.data.PIRoll = null;
+        if(!Ext.isEmpty(session.data['inventory.PIH']) && !session.data['inventory.PIH'].hasOwnProperty(id)){            
+            session.data['inventory.PIH'] = null;
+            session.data['inventory.PI'] = null;            
         }
 
+        August.model.inventory.PIH.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        }); 
+
         var binding = null;
-        if(id){
+        if(id){            
+
             vm.linkTo('thePhysical', {
-                type: 'PIH',
+                type: 'inventory.PIH',
                 //reference: 'August.model.Powh',
                 id: parseInt(id,10)
             });
-
-            //console.log(vm.linkData.thePhysical)
-            //var piStore = vm.linkData.thePhysical;
-            binding = vm.bind('{thePhysical}', function(rec){
-
-                vm.getView().setLoading(false);
-                binding.destroy();
-            });
-
-            if(binding){
-                vm.getView().setLoading(false);
-            }
+            
+            //var piStore = vm.linkData.thePhysical;            
         }
         else {
             if(vm.get('thePhysical') != null){
@@ -1715,17 +1952,89 @@
             }
 
             vm.linkTo('thePhysical', {
-                type: 'PIH',
+                type: 'inventory.PIH',
                 create: {
                     pidate: new Date().toDateString(),
                     status: 'Closed',
-                    warehouse: '00',
-                    createUser: August.user.get('Userid')
+                    warehouse: 'WH',
+                    createUser: August.loggedInUser.userId
                 }
             });
         }
 
-        binding = vm.bind('{theSample}', function(rec){
+        binding = vm.bind('{thePhysical}', function(rec){
+
+            vm.getView().setLoading(false);
+            binding.destroy();
+        });
+
+        if(binding){
+            vm.getView().setLoading(false);
+        }
+    },
+
+    processTransfers: function(vm, node, op, id){
+        var view = vm.getView(),
+            grid = view.lookupReference('transfer-grid'),
+            session = vm.getSession();
+                
+        //var cRec = vm.get('theTransfer');
+        if(!Ext.isEmpty(session.data['inventory.TransferH']) && !session.data['inventory.TransferH'].hasOwnProperty(id)){            
+            session.data['inventory.TransferH'] = null;
+            session.data['inventory.TransferD'] = null;            
+        }
+
+        August.model.inventory.TransferH.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        }); 
+
+        var binding = null;
+        if(id){
+            
+
+            vm.linkTo('theTransfer', {
+                type: 'inventory.TransferH',
+                //reference: 'August.model.Powh',
+                id: parseInt(id,10)
+            });
+            
+            //var piStore = vm.linkData.thePhysical;            
+        }
+        else {
+            if(vm.get('theTransfer') != null){
+                vm.set('theTransfer', null);
+            }
+
+            vm.linkTo('theTransfer', {
+                type: 'inventory.TransferH',
+                create: {
+                    transferdate: Ext.Date.format(new Date(), 'Y-m-d'),
+                    status: 'Hold',
+                    //warehouse: 'WH',
+                    createUser: August.loggedInUser.userId,
+                    createTime: new Date(),
+                    confirmdate: new Date(),
+                    receivedate: new Date()
+                }
+            });
+        }
+
+        binding = vm.bind('{theTransfer}', function(rec){
+            //console.log('binding', rec.transferdetails());                          
+            //var override = grid.getPlugin('rowExpander');
+            //override.expandAll(); 
+
+            var grid = vm.getView().lookupReference('transfer-grid');
+            if(grid){
+                var columns = grid.getColumns();
+                Ext.each(columns, function(col, idx){                        
+                
+                    if(idx > 5 && idx < 17) {
+                        index = idx - 5;  
+                        col.setText('');             
+                    }                        
+                });
+            }
 
             vm.getView().setLoading(false);
             binding.destroy();
@@ -1830,14 +2139,43 @@
 
     },
 
+    navigateReports: function(view, node, sub){
+        
+        var vm = view.getViewModel(),
+            //vc = view.getController(),
+            store = vm.get('areas'),
+            item = view.lookupReference(node + '-' + sub),
+            center = view.lookupReference('centerBase'),
+            navi = view.lookupReference('navigateMenu');
+
+        //console.log('navigateReports', view, node, sub);
+
+        if(navi.getStore() == null){
+            navi.setStore(store);
+        }
+
+        var nd = store.findNode('routeId', sub);
+        //Breadcrumb setSelection only accept Node not Record...
+        navi.setSelection(nd);
+
+        if (!item) {
+            item = Ext.widget(sub, {
+                reference: node+ '-' + sub
+            });
+        }
+
+        center.getLayout().setActiveItem(item);
+        //console.log('navigateSetting', view, node, id);
+    },
+
     navigateSettings: function(view, node, sub){
         //console.log('navigateSettings', view, node, sub);
         var vm = view.getViewModel(),
             //vc = view.getController(),
             store = vm.get('areas'),
             item = view.lookupReference(node+'-'+sub),
-            center = view.lookupReference('center-base'),
-            navi = view.lookupReference('navigate-menu');
+            center = view.lookupReference('centerBase'),
+            navi = view.lookupReference('navigateMenu');
 
         if(navi.getStore() == null){
             navi.setStore(store);

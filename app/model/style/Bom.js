@@ -93,7 +93,7 @@ Ext.define('August.model.style.Bom', {
     ],
 
     //idProperty: 'bomId',
-    //identifier: 'negative',
+    identifier: 'negative',
 
     autoLoad: false,
 

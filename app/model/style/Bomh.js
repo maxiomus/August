@@ -62,8 +62,7 @@ Ext.define('August.model.style.Bomh', {
                 return (data.colorCompTotal * 100 + data.processtotal * 100) / 100;
             },
             persist: false
-        }
-        /*
+        },        
         {
             name: 'productId',
             reference: {
@@ -74,12 +73,11 @@ Ext.define('August.model.style.Bomh', {
                 field: 'id',
                 inverse: 'bomhs'
             }
-        }
-        */
+        }        
     ],
 
-    //idProperty: 'bomhId',
-    //identifier: 'negative',
+    idProperty: 'ID',
+    identifier: 'negative',
 
     validators: {
         //style: 'presence',

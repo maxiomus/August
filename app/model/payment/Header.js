@@ -41,32 +41,28 @@ Ext.define('August.model.payment.Header', {
         { name: 'voiddate', type: 'date', dateFormat: 'c' },
         { name: 'chkDeposit', type: 'string' },
         { name: 'cancelReason', type: 'string' },
-        { name: 'cancelReasonDate', type: 'date', dateFormat: 'c' }
-  
-        //{ name: "sms_marketing_consent", type: 'auto' }        
+        { name: 'cancelReasonDate', type: 'date', dateFormat: 'c' },
+        { name: 'available_credit', type: 'number', persist: false }               
     ],
 
     idProperty:  'paymentNo',
     identifier: 'negative',
-
-    /*
+    
     validators: {
         paymentNo: 'presence',
-        customer: 'presence',
-        //rawMatType: 'presence',
-        //season: 'presence',
-        division: 'presence'
-        //fabcontent: 'presence',
-        //fabricType: 'presence'
+        customer: 'presence',        
+        division: 'presence'        
         
-         ordertype: { type: 'length', min: 2 },
-         gender: { type: 'inclusion', list: ['Male', 'Female'] },
+         //ordertype: { type: 'length', min: 2 },
+         //gender: { type: 'inclusion', list: ['Male', 'Female'] },
+         /*
          username: [
-         { type: 'exclusion', list: ['Admin', 'Operator'] },
-         { type: 'format', matcher: /([a-z]+)[0-9]{2,3}/i }
-         ]    
+            { type: 'exclusion', list: ['Admin', 'Operator'] },
+            { type: 'format', matcher: /([a-z]+)[0-9]{2,3}/i }
+         ] 
+         */   
     },    
-    */
+    
     proxy: {
         type: 'rest',
         url: '/WebApp/api/Payments',
@@ -97,7 +93,7 @@ Ext.define('August.model.payment.Header', {
                 associated: true
             },
             //clientIdProperty: 'clientId',
-            //writeAllFields: true,
+            writeAllFields: false,
             allowSingle: false // set false to send a single record in array
         },
 

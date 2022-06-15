@@ -1,0 +1,12 @@
+{
+    "success": true,
+    "stores": {              
+      "categories": [
+        { "label": "Invoice #", "field": "invoiceno" },
+        { "label": "Division", "field": "division" },
+        { "label": "Store", "field": "shipTo" },
+        { "label": "Customer", "field": "customer" },
+        { "label": "S.O #", "field": "SoNo" }
+      ]  
+    }
+  }

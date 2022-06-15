@@ -17,7 +17,7 @@ Ext.define('August.view.sales.OrderFormModel', {
             //trailingBufferZone: 100,
             //leadingBufferZone: 100,
             autoLoad: true,
-            remoteFilter: true,
+            //remoteFilter: true,
 
             proxy: {
                 type: 'ajax',
@@ -40,12 +40,12 @@ Ext.define('August.view.sales.OrderFormModel', {
             fields: ['label', 'value'],
             // allow the grid to interact with the paging scroller by buffering
             //buffered: true,
+            autoLoad: true,            
             pageSize: 0,
             //numFromEdge: 5,
             //trailingBufferZone: 100,
-            //leadingBufferZone: 100,
-            autoLoad: true,
-            remoteFilter: true,
+            //leadingBufferZone: 100,            
+            //remoteFilter: false,
 
             proxy: {
                 type: 'ajax',
@@ -262,7 +262,7 @@ Ext.define('August.view.sales.OrderFormModel', {
             }
         },
         */
-        stores: {
+        customerStores: {
             fields: ['label', 'value'],
             // allow the grid to interact with the paging scroller by buffering
             //buffered: true,
@@ -271,7 +271,7 @@ Ext.define('August.view.sales.OrderFormModel', {
             //trailingBufferZone: 100,
             //leadingBufferZone: 100,
             autoLoad: false,
-            remoteFilter: true,
+            //remoteFilter: true,
 
             proxy: {
                 type: 'ajax',

@@ -149,7 +149,7 @@ Ext.define('August.model.Poh', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Poh',
+        url: '/WebApp/api/Poh',
 
         pageParam: '',
         startParam: '',

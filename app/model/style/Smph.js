@@ -67,7 +67,7 @@ Ext.define('August.model.style.Smph', {
     proxy: {
         type: "rest",
         batchActions: true, // default false when rest proxy.
-        url: "/api/Photos",
+        url: "/WebApp/api/Photos",
         //true to have any request parameters sent as jsonData where they can be parsed from the raw request
         //paramsAsJson: true,
 

@@ -99,17 +99,45 @@
         me.dockedItems = [{
             xtype: 'toolbar',
             dock: 'top',
-            items: [{
+            defaults: {
+                ui:  'default'
+            },
+            items: [
+            /*
+                {
+                xtype: "searchtextlist",
+                name: 'style',
+                reference: 'searchtextlist',
+                width: 480,              
+                bind: {
+                    store: '{products}',
+                    value: '{selected.style}'
+                },  
+                
+                paramName: "style"
+            },
+            {
+                xtype: 'button',
+                text: 'Reset',
+                action: 'reset',
+                iconCls: 'x-fa fa-redo',
+                handler: function(btn) {
+                    me.fireEvent('resetclick', btn, me);
+                }
+            }, 
+            */
+            {
                 xtype: 'textfield',
                 fieldLabel: 'Style',
                 labelWidth: 40,
+                width: 300,
                 name: 'style',
                 bind: {
                     value: '{selected.style}'
                 },
-                readOnly: true,
+                readOnly: false,
                 selectOnFocus: false
-            },
+            },            
             {
                 xtype: 'button',
                 //text: 'Search',
@@ -117,7 +145,7 @@
                 handler: function(btn) {
     
                 }
-            },
+            },            
             '-',
             { xtype: 'tbspacer', width: 10 }, 
             {

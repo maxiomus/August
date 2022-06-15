@@ -42,7 +42,7 @@ Ext.define('Ext.ux.view.Upload', {
                 iconCls: 'x-fa fa-plus'
             },
             multiselect: true,
-            //url: '/api/Files/notice/upload',
+            //url: '/WebApp/api/Files/notice/upload',
             //method: 'POST',
             listeners: {
                 render: function(field){

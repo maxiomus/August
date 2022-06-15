@@ -1,4 +1,3 @@
-
 Ext.define('August.view.purchase.OrderForm',{
     extend: 'Ext.form.Panel',
 
@@ -24,27 +23,19 @@ Ext.define('August.view.purchase.OrderForm',{
     style: {
         borderTop: '1px solid #cfcfcf'
     },
-
-    /*
+    
     layout: {
         type: 'vbox',
         pack: 'start',
         align: 'stretch'
-    },
-    */
+    },    
 
     listeners: {
 
     },
 
     initComponent: function() {
-        var me = this;
-
-        var tpl = new Ext.ux.CTemplate(
-            '<tpl for=".">',
-            '<div class="item">{button}</div>',
-            '</tpl>'
-        );        
+        var me = this;        
 
         var addressTpl = new Ext.XTemplate(
             '<div class="item-boxer">',
@@ -224,7 +215,8 @@ Ext.define('August.view.purchase.OrderForm',{
             handler: 'onDeleteItemClick',
             scope: this.controller
         };
-        var btnsConfig = [btnNew, btnCopy, btnEdit, btnDelete];
+        
+        var btnsConfig = [btnNew, btnCopy, btnEdit, btnDelete];        
 
         me.dockedItems = [{
             xtype: 'toolbar',
@@ -234,6 +226,13 @@ Ext.define('August.view.purchase.OrderForm',{
                 ui: 'default'
             },
             items: [{
+                iconCls: 'x-fa fa-sync-alt',
+                text: 'Refresh',
+                ui: 'default',
+                //glyph:'xf0c7@FontAwesome',
+                tooltip: 'Refresh View',
+                handler: 'onRefresh'
+            },{
                 iconCls: 'x-fa fa-save',
                 //reference: 'save',
                 text: 'Save',
@@ -378,11 +377,9 @@ Ext.define('August.view.purchase.OrderForm',{
                         name: 'warehouse',
                         fieldLabel: 'Warehouse',
                         displayField: 'label',
-                        valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
+                        valueField: 'value',                        
+                        //selectOnFocus: true,                        
+                        forceSelection: false,
                         //msgTarget: 'side',
                         minChars: 1,
                         queryMode: 'local',
@@ -392,7 +389,15 @@ Ext.define('August.view.purchase.OrderForm',{
                         bind: {
                             store: '{warehouses}',
                             value: '{thePO.warehouse}'
-                        }
+                        },
+                        listConfig: {
+                            loadindText: 'Searching...',
+                            emptyText: 'No matching items found.',
+                            width: 340
+                        },                        
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
                     },{
                         xtype: 'datefield',
                         name: 'orderDate',
@@ -534,11 +539,9 @@ Ext.define('August.view.purchase.OrderForm',{
                         name: 'paymentcode',
                         fieldLabel: 'PMT Method',
                         displayField: 'label',
-                        valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
+                        valueField: 'value',                        
+                        //selectOnFocus: true,                        
+                        forceSelection: false,
                         //msgTarget: 'side',
                         minChars: 1,
                         queryMode: 'local',
@@ -548,7 +551,10 @@ Ext.define('August.view.purchase.OrderForm',{
                         bind: {
                             store: '{paymentcodes}',
                             value: '{thePO.paymentcode}'
-                        }
+                        },
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
                     },
                     {
                         xtype: 'combo',
@@ -556,10 +562,9 @@ Ext.define('August.view.purchase.OrderForm',{
                         fieldLabel: 'CXL Reason',
                         displayField: 'label',
                         valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
+                        //selectOnFocus: true,                        
+                        forceSelection: false,
+                        matchFieldWidth: false,
                         //msgTarget: 'side',
                         minChars: 1,
                         queryMode: 'local',
@@ -569,17 +574,23 @@ Ext.define('August.view.purchase.OrderForm',{
                         bind: {
                             store: '{cxlreasons}',
                             value: '{thePO.cancelreason}'
-                        }
+                        },
+                        listConfig: {
+                            loadindText: 'Searching...',
+                            emptyText: 'No matching items found.',
+                            width: 280
+                        },
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
                     },  
                     {
                         xtype: 'combo',
                         name: 'memocode',
                         fieldLabel: 'Memo Code',
                         displayField: 'label',
-                        valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
+                        valueField: 'value',                        
+                        //selectOnFocus: true,                        
                         forceSelection: true,
                         //msgTarget: 'side',
                         minChars: 1,
@@ -590,17 +601,18 @@ Ext.define('August.view.purchase.OrderForm',{
                         bind: {
                             store: '{memocodes}',
                             value: '{thePO.memocode}'
-                        }
+                        },
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
                     },                     
                     {
                         xtype: 'combo',
-                        name: 'term',
+                        name: 'terms',
                         fieldLabel: 'Term',
                         displayField: 'label',
-                        valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
+                        valueField: 'value',                        
+                        //selectOnFocus: true,                        
                         forceSelection: true,
                         //msgTarget: 'side',
                         minChars: 1,
@@ -610,8 +622,11 @@ Ext.define('August.view.purchase.OrderForm',{
                         //store: ['00', 'OS', 'SA'],
                         bind: {
                             store: '{terms}',
-                            value: '{thePO.term}'
-                        }
+                            value: '{thePO.terms}'
+                        },
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
                     },
                     {
                         xtype: 'datefield',
@@ -647,6 +662,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'SONo',
                             fieldLabel: 'S.O #',
+                            fieldCls: 'emphasized',
                             readOnly: true,
                             selectOnFocus: false,
                             //flex: 1,
@@ -658,8 +674,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'user1',
                             width: 250,
-                            fieldLabel: 'Main Label',
-                            readOnly: true,
+                            fieldLabel: 'Main Label',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -670,8 +685,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'user6',
                             width: 160,
-                            fieldLabel: 'Price Ticket',
-                            readOnly: true,
+                            fieldLabel: 'Price Ticket',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -684,8 +698,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             name: 'user11',
                             width: 140,
                             labelWidth: 60,
-                            fieldLabel: 'Hanger',
-                            readOnly: true,
+                            fieldLabel: 'Hanger',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -698,6 +711,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             name: 'createUser',
                             width: 230,
                             fieldLabel: 'Created by',
+                            fieldCls: 'emphasized',
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
@@ -710,6 +724,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'so_customer',
                             fieldLabel: 'Customer',
+                            fieldCls: 'emphasized',
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
@@ -738,8 +753,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'user7',
                             width: 160,
-                            fieldLabel: 'Size Label',
-                            readOnly: true,
+                            fieldLabel: 'Size Label',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -752,8 +766,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             name: 'user12',
                             width: 140,
                             labelWidth: 60,
-                            fieldLabel: 'Polybag',
-                            readOnly: true,
+                            fieldLabel: 'Polybag',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -765,7 +778,8 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'datefield',
                             name: 'createDate',
                             width: 230,
-                            fieldLabel: 'Created on',                            
+                            fieldLabel: 'Created on',     
+                            fieldCls: 'emphasized',                       
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
@@ -779,6 +793,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'so_store',
                             fieldLabel: 'Store',
+                            fieldCls: 'emphasized',
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
@@ -816,8 +831,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'user8',
                             width: 160,
-                            fieldLabel: 'Care Label',
-                            readOnly: true,
+                            fieldLabel: 'Care Label',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -830,8 +844,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             name: 'user13',
                             width: 140,
                             labelWidth: 60,
-                            fieldLabel: 'Sizer',
-                            readOnly: true,
+                            fieldLabel: 'Sizer',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -844,6 +857,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             name: 'updateUser',
                             width: 230,
                             fieldLabel: 'Updated by',
+                            fieldCls: 'emphasized',
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
@@ -856,6 +870,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'so_po',
                             fieldLabel: 'Cust P.O #',
+                            fieldCls: 'emphasized',
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
@@ -868,8 +883,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'user4',
                             width: 250,
-                            fieldLabel: 'Pack',
-                            readOnly: true,
+                            fieldLabel: 'Pack',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -881,8 +895,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'user9',
                             width: 160,
-                            fieldLabel: 'Hang Tag',
-                            readOnly: true,
+                            fieldLabel: 'Hang Tag',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -895,8 +908,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             name: 'user14',
                             width: 140,
                             labelWidth: 60,
-                            fieldLabel: 'Barcode',
-                            readOnly: true,
+                            fieldLabel: 'Barcode',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -909,6 +921,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             name: 'updateDate',
                             width: 230,
                             fieldLabel: 'Updated on',
+                            fieldCls: 'emphasized',
                             //labelWidth: 85,
                             readOnly: true,
                             selectOnFocus: false,
@@ -923,6 +936,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'parent_pono',
                             fieldLabel: 'Parent P.O #',
+                            fieldCls: 'emphasized',
                             readOnly: true,
                             selectOnFocus: false,
                             //editable: false,
@@ -935,8 +949,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             xtype: 'textfield',
                             name: 'user5',
                             width: 250,
-                            fieldLabel: 'TECH TEAM',
-                            readOnly: true,
+                            fieldLabel: 'TECH TEAM',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -949,8 +962,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             name: 'user10',
                             colspan: 3,
                             width: 160,
-                            fieldLabel: 'COO Label',
-                            readOnly: true,
+                            fieldLabel: 'COO Label',                            
                             selectOnFocus: false,
                             //editable: false,
                             bind: {
@@ -992,11 +1004,9 @@ Ext.define('August.view.purchase.OrderForm',{
                         name: 'vendor',
                         fieldLabel: 'Vendor',
                         displayField: 'label',
-                        valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
+                        valueField: 'value',                        
+                        //selectOnFocus: true,                        
+                        forceSelection: false,
                         //msgTarget: 'side',
                         minChars: 1,
                         queryMode: 'local',
@@ -1006,10 +1016,20 @@ Ext.define('August.view.purchase.OrderForm',{
                         bind: {
                             store: '{vendors}',
                             value: '{thePO.vendor}'
-                        },
+                        },                        
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }],
                         listeners: {
                             change: {
                                 fn: 'onVendorChanged',
+                                scope: this.controller
+                            }, 
+                            beforequery: function(q){
+                                delete q.combo.lastQuery;
+                            }, 
+                            triggerClear: {
+                                fn: 'onTriggerClear',
                                 scope: this.controller
                             }
                         }
@@ -1108,7 +1128,206 @@ Ext.define('August.view.purchase.OrderForm',{
                         //fieldLabel: 'Memo'
                     }]
                 }]
-            },            
+            },  
+            {
+                xtype: 'grid',
+                reference: 'po-grid',
+                tools: [
+                    { 
+                        type: 'refresh',
+                        tooltip: 'Refresh data'
+                    }
+                ],
+
+                header: {
+                    title: 'Detail',
+                    iconCls: 'x-fa fa-list',  
+                    titlePosition: 2,
+                    titleAlign: 'left',
+                    items: [{
+                        xtype: 'button',
+                        //text: 'Expand all',
+                        iconCls: 'x-fa fa-expand',
+                        pressed: true,
+                        enableToggle: true,
+                        toggleHandler: function(button, pressed) {
+                            var grid = button.up('grid');
+                            var override = grid.getPlugin('poRowExpander');
+                    
+                            //console.log('toggle', this, override);
+                            if (!pressed) {
+                                    //button.setText('Collapse all');                             
+                                    override.expandAll();                            
+                            } else {
+                                //button.setText('Expand all');     
+                                override.collapseAll();
+                            }
+                        }
+                    },{
+                        xtype: 'tbspacer',
+                        width: 10
+                    }]
+                },
+
+                flex: 1,
+                columnLines: true,
+
+                bind: {
+                    selection: '{selection}',
+                    store: '{thePO.purchaseorderitems}'
+                },
+
+                listeners: {                                                
+                    itemcontextmenu: 'onItemContextMenu',
+                    selectionchange: {
+                        fn: 'onSelectionChanged',
+                        scope: this.controller
+                    },
+                    edit: {
+                        fn: 'onRowEditing',
+                        scope: this.controller
+                    }
+                },
+
+                columns: me.buildGridColumns(),
+
+                selModel: {
+                    //type: 'checkboxmodel',                    
+                    //mode: 'MULTI',
+                    pruneRemoved: false
+                },
+
+                viewConfig: {
+                    loadMask: true,
+                    stripeRows: true,
+                    trackOver: true,
+                    preserveScrollOnRefresh: true,
+                    preserveScrollOnReload: true,
+                    deferInitialRefresh: true,
+                    emptyText: '<h1 style="margin: 20px">No matching results</h1>',
+                    getRowClass: function(a, g, f, h){
+                        return "custom-row-style";
+                    },
+                    listeners: {
+                        refresh: function(view, e){
+                            var expander = view.ownerCt.getPlugin('poRowExpander');
+                            expander.expandAll();
+                        }
+                    }
+                },
+
+                features: [{
+                    ftype: 'summary'
+                }],
+
+                plugins: [{
+                    ptype: 'rowediting',
+                    pluginId: 'poGridRowEdit',
+                    clicksToMoveEditor: 1,                    
+                    //errorSummary: false,
+                    autoCancel: false,
+                    listeners: {
+                        /*
+                        edit: {
+                            fn: 'onRowEdit',
+                            scope: this.controller
+                        }
+                        */
+                    }
+                },{
+                    ptype: 'allrowexpander',
+                    //bodyBefore: true,
+                    expandOnDblClick: false,
+                    pluginId: 'poRowExpander',                            
+                    
+                    rowBodyTpl: new Ext.XTemplate(
+                        '<div class="item-boxer" >',
+                            '<div class="box-row" style="height:20px">',
+                                //'<div class="box nb center" style="width:40px;"></div>',
+                                '<div class="box ab" style="width:68px;padding-right:10px;">Desc.</div>',
+                                '<div class="box ab" style="width:320px;">{descript}</div>',
+                                '<div class="box ab">',
+                                    '<div class="item-boxer" style="height:20px">',
+                                    '<div class="box rb" style="width:47px;padding-left:10px;">{size1}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size2}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size3}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size4}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size5}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size6}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size7}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size8}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size9}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size10}</div>',
+                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size11}</div>',
+                                    '<div class="box nb" style="width:49px;padding-left:10px;">{size12}</div>',
+                                    //'<div class="box nb center" style="width:82px;"></div>',
+                                    '</div>',
+                                '</div>',
+                                '<div class="box ab" style="width:80px;">{closed_qty}</div>',
+                                '<div class="box ab" style="width:100px;padding-left:10px;">{extPrice:usMoney}</div>',                                
+                                '<div class="box ab">',
+                                    '<div class="item-boxer" style="height:20px">',
+                                        '<div class="box rb" style="width:97px;"></div>',
+                                        '<div class="box rb" style="width:100px;padding-left:10px;"><b>POD ID</b></div>',
+                                        '<div class="box rb" style="width:120px;padding-left:10px;">{id}</div>',
+                                        '<div class="box rb" style="width:120px;padding-left:10px;"><b>STO SOD ID</b></div>', 
+                                        '<div class="box rb" style="width:120px;padding-left:10px;">{sto_invdid}</div>',
+                                        '<div class="box rb" style="width:120px;padding-left:10px;"><b>Line</b></div>', 
+                                        '<div class="box rb" style="width:100px;padding-left:10px;">{line}</div>',
+                                        '<div class="box nb" style="width:120px;"></div>', 
+                                    '</div>',
+                                '</div>',                                
+                            '</div>',
+                            '<div class="box-row" style="height:20px">',
+                                //'<div class="box nb" style="width:40px;"></div>',
+                                '<div class="box ab" style="width:68px;padding-right:10px;">PrePack</div>',
+                                '<div class="box ab">',
+                                    '<div class="item-boxer" style="height:20px">',
+                                        '<div class="box rb" style="width:110px;">{bundle}</div>',
+                                        '<div class="box rb" style="width:100px;padding-left:10px;"><b>Total Qty</b></div>',
+                                        '<div class="box nb" style="width:110px;">{numbFfBundle}</div>',
+                                    '</div>',
+                                '</div>',                                                                
+                                '<div class="box ab">',
+                                    '<div class="item-boxer" style="height:20px">',
+                                        '<div class="box rb" style="width:47px;"></div>',
+                                        '<div id="rex-textfield-memo" class="box rb" style="width:450px;padding-left:10px;"></div>',                                        
+                                        '<div class="box rb" style="width:50px;padding-left:10px;"></div>',
+                                        '<div id="rex-combobox-status" class="box nb" style="width:49px;padding-left:10px;"></div>',
+                                        //'<div class="box nb" style="width:82px;"></div>',
+                                    '</div>',
+                                '</div>',
+                                '<div class="box ab" style="width:80px;padding-left:10px;"></div>',                                
+                                '<div class="box ab" style="width:100px;"></div>',
+                                '<div class="box ab">',
+                                    '<div class="item-boxer" style="height:20px">',
+                                        '<div class="box rb " style="width:97px;"></div>',
+                                        '<div class="box rb " style="width:100px;padding-left:10px;"><b>SO #</b></div>',
+                                        '<div class="box rb " style="width:120px;padding-left:10px;">{SONo}</div>',
+                                        '<div class="box rb " style="width:120px;padding-left:10px;"><b>STO INVD D</b></div>',                                        
+                                        '<div class="box rb " style="width:120px;padding-left:10px;">{sto_sodid}</div>',                                        
+                                        '<div class="box rb " style="width:120px;padding-left:10px;"><b>Season</b></div>',                                        
+                                        '<div class="box rb " style="width:100px;padding-left:10px;">{season}</div>',                                        
+                                        '<div class="box nb " style="width:120px;"></div>',                                        
+                                    '</div>',
+                                '</div>',                                
+                            '</div>',                                                        
+                        '</div>',                        
+                        {
+                            formatChange: function(v) {
+                                var color = v >= 0 ? 'green' : 'red';
+        
+                                return '<span style="color: ' + color + ';">' +
+                                    Ext.util.Format.usMoney(v) + '</span>';
+                            }
+                        })                    
+                },{
+                    ptype: "gridfilters"
+                },{
+                    ptype: 'grid-exporter'
+                }]
+            }
+            /*
             {
                 xtype: 'panel',       
                 title: 'Items',
@@ -1304,21 +1523,10 @@ Ext.define('August.view.purchase.OrderForm',{
                         '</div>',
                     '</tpl>'
                 )
-                /*
-                 itemSelector: 'item',
-                 prepareData: function(data){
-                 //this.callParent(arguments);
-                 data.button = new Ext.button.Button({text: data.text});
-
-                 return data;
-                 },
-                 store: {
-                 autoLoad: true,
-                 data: [{text: 'Red'}, {text: 'Green'}, {text: 'Blue'}],
-                 fields: ['text']
-                 }
-                 */
-            }]
+                
+            }
+            */
+            ]
         });
 
         me.callParent(arguments);
@@ -1328,5 +1536,643 @@ Ext.define('August.view.purchase.OrderForm',{
                 btnEdit, btnCopy, btnDelete
             ]
         });
+    },
+
+    buildGridColumns: function(){
+        return [{
+            //xtype: 'rownumberer',
+            text: 'Line',
+            dataIndex: 'line',
+            width: 55,                        
+            menuDisabled: true,
+            sortable: false
+        },               
+        {
+            text: "id",
+            dataIndex: "id",            
+            locked: false,
+            hidden: true,
+            menuDisabled: true,
+            sortable: false,
+            filter: {
+                type: "number"
+            }
+        },    
+        {
+            text: '',
+            width: 24,
+            menuDisabled: true,
+            sortable: false
+        },       
+        {
+            text: "Style",
+            width: 160, 
+            dataIndex: "style",        
+            menuDisabled: true,
+            sortable: false,    
+            filter: {
+                type: 'string'
+            },
+            editor: {
+                xtype: "combo",
+                name: 'style',                                             
+                fieldCls: 'required',                
+                //publishes: 'value',                               
+                displayField: 'label',
+                valueField: 'value',    
+                remoteStore: 'Styles',
+                store: 'memStyles',
+                //forceSelection: false,
+                selectOnFocus: false,
+                matchFieldWidth: false,
+                autoLoadOnValue: true,
+                minChars: 1,
+                pageSize: 50,
+                queryMode: "local",
+                //triggerAction: 'all',
+                //queryParam: "filter",
+                //queryDelay: 800,
+                lastQuery: '',
+                listConfig: {
+                    loadindText: 'Searching...',
+                    emptyText: 'No matching items found.',
+                    width: 480
+                },
+                tpl: '<tpl for=".">' +
+                '<tpl if="[xindex] == 1">' +
+                    '<table class="cbo-list">' +
+                        '<tr>' +
+                            '<th width="35%">Style #</th>' +
+                            '<th width="65%">Descript</th>' +
+                        '</tr>' +
+                '</tpl>' +
+                        '<tr class="x-boundlist-item">' +
+                            '<td>{value}</td>' +
+                            '<td>{descript}</td>' +
+                        '</tr>' +
+                '<tpl if="[xcount-xindex]==0">' +
+                    '</table>' +
+                '</tpl>' +
+                '</tpl>',
+                plugins: [{
+                    ptype: "cleartrigger"
+                }],
+                listeners: {
+                    beforequery: {
+                        fn: function(qe){
+                            delete qe.combo.lastQuery;
+                        }
+                    },
+                    change: function(c){
+                        c.getStore().load();
+                    },                     
+                    triggerClear: function(c){
+                        c.getStore().load();                                
+
+                        /*
+                        var color = this.ownerCt.ownerCt.query('combo[name="stylecolor"]')[0],
+                            descript = this.ownerCt.ownerCt.query('textfield[name="descript"]')[0];
+                        
+                        color.setValue('');
+                        descript.setValue('');                                    
+                        */
+                    },
+                    select: function(combo, record, e){
+                        /*
+                        var colorCombo = this.ownerCt.ownerCt.query('combo[name="stylecolor"]')[0],
+                            colorStore = colorCombo.getStore();
+
+                        Ext.apply(colorStore.getProxy().extraParams, {
+                            style: combo.getValue().trim()
+                        });
+
+                        colorStore.reload({
+                            callback: function(){
+                                colorCombo.select(colorStore.first());
+                                //colorCombo.fireEvent('select', combo, [store.first()]);
+                            }
+                        });
+                        */                                    
+                    }
+                }
+            }
+        },
+        {
+            text: "Color",
+            width: 160, 
+            dataIndex: "color",       
+            menuDisabled: true,
+            sortable: false,     
+            filter: {
+                type: 'string'
+            },
+            editor: {
+                xtype: "combo",
+                name: 'stylecolor',                                                          
+                fieldCls: 'required',   
+                displayField: "label",
+                valueField: "value",
+                
+                store: 'memStyleColors',
+                remoteStore: 'StyleColors',                                                            
+                //forceSelection: false,
+                //selectOnFocus: true,
+                pageSize: 50,
+                selectOnFocus: false,
+                autoLoadOnValue: true,
+                matchFieldWidth: false,
+                minChars: 1,
+                queryMode: "local",
+                //triggerAction: 'all',
+                //queryParam: "filter",
+                lastQuery: '',
+                listConfig: {
+                    loadindText: 'Searching...',
+                    emptyText: 'No matching items found.',
+                    width: 520
+                },
+                tpl: '<tpl for=".">' +
+                '<tpl if="[xindex] == 1">' +
+                    '<table class="cbo-list">' +
+                        '<tr>' +
+                            '<th width="20%">Color</th>' +
+                            '<th width="50%">Descript</th>' +
+                            '<th width="30%">Style</th>' +
+                        '</tr>' +
+                '</tpl>' +
+                '<tr class="x-boundlist-item">' +
+                '<td>{value}</td>' +
+                '<td>{descript}</td>' +
+                '<td>{style}</td>' +
+                '</tr>' +
+                '<tpl if="[xcount-xindex]==0">' +
+                '</table>' +
+                '</tpl>' +
+                '</tpl>',
+                plugins: [{
+                    ptype: "cleartrigger"
+                }],
+                listeners: {
+                    select: {
+                        fn: 'onStyleComboSelected',
+                        scope: this.controller        
+                    
+                    },
+                    beforequery: {
+                        fn: function(qe){
+                            
+                            var cboStyle = this.prev('combo[name="style"]'),
+                                store = this.getStore();
+
+                            //console.log(cboStyle, cboStyle.getValue())
+
+                            if(!Ext.isEmpty(cboStyle.getValue())){
+                                store.clearFilter();
+
+                                store.filter([{
+                                    property: 'style',
+                                    value: cboStyle.getValue().toUpperCase(),
+                                    operator: '='
+                                }]);
+                            }
+                            
+                            delete qe.combo.lastQuery;
+                        }
+                    },
+                    change: function(c){
+                        c.getStore().load();
+                    },                     
+                    triggerClear: function(c){
+                        c.getStore().load();                                
+                    }
+                }
+            }
+        },           
+        {
+            xtype: 'numbercolumn',
+            //header: "unit1",
+            dataIndex: "unit1",
+            width: 50,                     
+            menuDisabled: true,
+            sortable: false,  
+            format: '0,000',    
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                     
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit2",
+            width: 50,       
+            menuDisabled: true,
+            sortable: false,    
+            format: '0,000',
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true,
+            },                           
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit3",
+            width: 50,   
+            hideTrigger: true,
+            menuDisabled: true,
+            sortable: false,        
+            format: '0,000',   
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true,
+            },                       
+            renderer: function(f, e, a){
+                return f;
+            }
+        }, 
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit4",
+            width: 50,     
+            menuDisabled: true,
+            sortable: false,      
+            format: '0,000',  
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                        
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit5",
+            width: 50,       
+            menuDisabled: true,
+            sortable: false,    
+            format: '0,000',
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                         
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit6",
+            width: 50,    
+            menuDisabled: true,
+            sortable: false,       
+            format: '0,000',
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                          
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit7",
+            width: 50,  
+            menuDisabled: true,
+            sortable: false,         
+            format: '0,000',
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                          
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit8",
+            menuDisabled: true,
+            sortable: false,
+            width: 50,           
+            format: '0,000', 
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                         
+            renderer: function(f, e, a){
+                return f;
+            }
+        }, 
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit9",
+            menuDisabled: true,
+            sortable: false,
+            width: 50,           
+            format: '0,000',
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                          
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit10",
+            menuDisabled: true,
+            sortable: false,
+            width: 50,           
+            format: '0,000', 
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                         
+            renderer: function(f, e, a){
+                return f;
+            }
+        },        
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit11",
+            menuDisabled: true,
+            sortable: false,
+            width: 50,       
+            format: '0,000',     
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                    
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit12",
+            menuDisabled: true,
+            sortable: false,
+            width: 50,           
+            format: '0,000',   
+            editor: {
+                xtype: 'numberfield',
+                hideTrigger: true
+            },                      
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        /*
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit13",
+            menuDisabled: true,
+            sortable: false,
+            width: 50,           
+            hidden: true,    
+            format: '0,000',                         
+            renderer: function(f, e, a){
+                return f;
+            }
+        }, 
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit14",
+            menuDisabled: true,
+            sortable: false,
+            width: 50,           
+            hidden: true,    
+            format: '0,000',                         
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'numbercolumn',
+            header: "",
+            dataIndex: "unit5",
+            menuDisabled: true,
+            sortable: false,
+            width: 50,           
+            hidden: true,    
+            format: '0,000',                         
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        */
+        {
+            xtype: 'numbercolumn',
+            header: "Total Qty",
+            dataIndex: "unitSum",
+            width: 80,           
+            format: '0,000',                         
+            renderer: function(f, e, a){
+                return f;
+            }
+        },              
+        {
+            xtype: 'numbercolumn',
+            text: "Price/E. Price",
+            dataIndex: "price",
+            width: 100,
+            menuDisabled: true,
+            sortable: false,
+            format: '$0,000.00',
+            editor: {
+                xtype: 'numberfield',
+                name: 'price'
+            }
+        },  
+        {
+            xtype: 'numbercolumn',
+            text: "Ext.Price",
+            dataIndex: "extPrice",    
+            hidden: true, 
+            width: 95,  
+            menuDisabled: true,
+            sortable: false,
+            format: '$0,000.00'
+        }, 
+        {            
+            text: "Status",
+            dataIndex: "status",
+            width: 100, 
+            menuDisabled: true,
+            sortable: false,     
+            editor: {
+                xtype: 'combo',                                
+                //displayField: 'label',
+                //valueField: 'value',
+                editable: false,
+                //selectOnFocus: true,
+                allowBlank: false,
+                forceSelection: true,
+                //msgTarget: 'side',
+                //minChars: 1,
+                //queryMode: 'local',
+                //queryParam: 'filter',
+                //triggerAction: 'all',
+                store: ['Open', 'Hold', 'Closed']
+            },                             
+            renderer: function(f, e, a){
+                return f;
+            }
+        },        
+        {
+            text: "WH",
+            dataIndex: "warehouse",  
+            width: 100,          
+            menuDisabled: true,
+            sortable: false,
+            editor: {
+                xtype: 'combo',                                
+                displayField: 'label',
+                valueField: 'value',                
+                //selectOnFocus: true,                
+                forceSelection: false,
+                matchFieldWidth: false,
+                //msgTarget: 'side',
+                minChars: 1,
+                queryMode: 'local',
+                //queryParam: 'filter',
+                //triggerAction: 'all',
+                //store: ['00', 'OS', 'SA'],
+                bind: {
+                    store: '{warehouses}'                    
+                },
+                listConfig: {
+                    loadindText: 'Searching...',
+                    emptyText: 'No matching items found.',
+                    width: 200
+                },                        
+                plugins: [{
+                    ptype: "cleartrigger"
+                }]
+            }
+        },
+        {
+            xtype: 'datecolumn',
+            text: "ETA Date",
+            width: 120,
+            dataIndex: "etadate",
+            format: 'Y-m-d',
+            editor: {
+                xtype: 'datefield',
+                name: 'etadate',                
+                format: 'Y-m-d'                
+            }
+        },                 
+        {
+            text: 'Cancel Reason',
+            dataIndex: 'cancelReason',
+            width: 120,
+            editor: {
+                xtype: 'combo',                                
+                displayField: 'label',
+                valueField: 'value',                
+                //selectOnFocus: true,     
+                matchFieldWidth: false,           
+                forceSelection: false,
+                //msgTarget: 'side',
+                minChars: 1,
+                queryMode: 'local',
+                bind: {
+                    store: '{cxlreasons}',                    
+                },
+                listConfig: {
+                    loadindText: 'Searching...',
+                    emptyText: 'No matching items found.',
+                    width: 220
+                },
+                plugins: [{
+                    ptype: "cleartrigger"
+                }]
+            }
+        },
+        {
+            xtype: 'datecolumn',
+            text: "Cancel R.Date",
+            width: 120,
+            dataIndex: "cancelReasondate",
+            format: 'Y-m-d',
+            editor: {
+                xtype: 'datefield',                
+                format: 'Y-m-d'                
+            }
+        },        
+        {
+            text: "Memo",
+            dataIndex: "memo",
+            width: 480,
+            //flex: 1,
+            menuDisabled: true,
+            sortable: false,  
+            editor: {
+                xtype: 'textfield'
+            }
+        },                
+        /*
+        {
+            text: "To Warehouse",
+            dataIndex: "to_warehouse",            
+            filter: {
+                type: 'string'
+            },
+            renderer: function(value, meta, rec){                
+                return value;
+            }
+        },                    
+        {
+            xtype: 'datecolumn',
+            text: "Transfer Date",
+            dataIndex: "transferdate",            
+            hidden: true,
+            format: 'Y-m-d',
+            filter: {
+                type: "date"
+            }
+        },
+        {
+            text: "Update User",
+            dataIndex: "updateUser",            
+            filter: {
+                type: 'string'
+            },
+            renderer: function(value, meta, rec){                
+                return value;
+            }
+        },  
+        {
+            xtype: 'datecolumn',
+            text: "Update Time",
+            dataIndex: "updateTime",
+            format: 'Y-m-d h:i a',
+            filter: {
+                type: "date"
+            }
+        }        
+    */];
     }
 });

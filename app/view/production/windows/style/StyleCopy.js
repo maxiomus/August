@@ -88,7 +88,7 @@ Ext.define('August.view.production.windows.style.StyleCopy', {
 
             proxy: {
                 type: 'ajax',
-                url: '/api/Options/colors',
+                url: '/WebApp/api/Options/colors',
 
                 reader: {
                     type: 'json',

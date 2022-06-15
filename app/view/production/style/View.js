@@ -46,7 +46,7 @@ Ext.define("August.view.production.style.View", {
 
     initComponent:function(){
         var me = this;
-        this.tpl = this.buildTemplate();
+        me.tpl = me.buildTemplate();
 
         me.callParent(arguments);
     },

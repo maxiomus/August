@@ -42,7 +42,7 @@ Ext.define('August.model.Tnap', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Tnap/',
+        url: '/WebApp/api/Tnap/',
 
         pageParam: '',
         startParam: '',

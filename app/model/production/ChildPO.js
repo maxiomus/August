@@ -64,7 +64,7 @@ Ext.define('August.model.production.ChildPO', {
 
     proxy: {
         type: 'rest',
-        url: '/api/Children/',
+        url: '/WebApp/api/Children/',
 
         //batchActions: true,
 

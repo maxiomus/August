@@ -22,9 +22,9 @@ Ext.define('August.view.shopify.Product', {
 
     listeners: {
         //actnew: 'onActNewClick',
-        actedit: 'onActEditClick',
-        actcopy: 'onActCopyClick',
-        actdelete: 'onActDeleteClick',
+        //actedit: 'onActEditClick',
+        //actcopy: 'onActCopyClick',
+        //actdelete: 'onActDeleteClick',
         actrefresh: 'onActRefreshClick',
         clearall: 'onClearFilters',
         //rowdblclick: 'onActEditClick',
@@ -159,12 +159,10 @@ Ext.define('August.view.shopify.Product', {
             h=g.lookupReference("display"),
             f=g.lookupReference("topbar");                    
         
-        var segmented = f.lookupReference('viewselection');
-        segmented.items.items[1].setHidden(true);
-        segmented.setValue(0);
-
-        f.actEdit.setHidden(false);
-        f.actEdit.setDisabled(true);               
+        var segmented = f.lookupReference('viewselection');        
+        //segmented.items.items[1].setHidden(true);
+        //segmented.setValue(0);
+                            
                 
         f.insert(0,
             [{
@@ -194,14 +192,24 @@ Ext.define('August.view.shopify.Product', {
         f.insert(12,
             [{
                 xtype: 'button',
+                iconCls: 'x-fa fa-sync',
+                text: 'Sync',
+                tooltip: 'Sync with N41 Inventories',
+                action: 'sync',
+                handler: 'onSyncClick',
+                scope: me.controller
+            },{
+                xtype: 'button',
                 iconCls: 'x-fa fa-tag',
-                text: 'Update Photos',
+                text: 'Update',
+                tooltip: 'Update Photos',
                 action: 'updatephotos',
                 handler: 'onUpdatePhotoClick',
                 scope: me.controller
             },{
                 xtype: 'button',
                 iconCls: 'x-fa fa-external-link-alt',
+                tooltip: 'Export Shopify Style List',
                 text: 'Export',
                 handler: function(b){
                     j.saveDocumentAs({
@@ -227,8 +235,8 @@ Ext.define('August.view.shopify.Product', {
         });
 
         f.items.items[1].setHidden(false);
-        f.items.items[2].setHidden(false);
-        f.items.last().setHidden(true);        
+        //f.items.items[2].setHidden(false);
+        //f.items.last().setHidden(true);        
 
         
         this.relayEvents(f, ["actnew", 'actedit', "actrefresh", 'actdelete', "actcomplete", "actactive", "clearall"]);

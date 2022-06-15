@@ -56,7 +56,7 @@ Ext.define('August.view.authenticate.LoginController', {
 
         form.submit({
             clientValidation: true,
-            //url: '/api/Login/',
+            //url: '/WebApp/api/Login/',
             url: '/WebApp/authenticate',
             scope: me,
             success: me.onLoginSuccess,

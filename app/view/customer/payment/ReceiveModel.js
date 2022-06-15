@@ -22,7 +22,7 @@ Ext.define('August.view.customer.payment.ReceiveModel', {
 
             proxy: {
                 type: 'rest',
-                url: '/WebApp/api/Payments/',           
+                url: '/WebApp/api/Payments',           
                    
                 reader: {
                     type: 'json',

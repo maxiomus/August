@@ -117,8 +117,110 @@ Ext.define('August.view.production.style.edit.FormController', {
     },
     */
 
+    onWarehouseStoreLoad: function(store){
+        store.insert(0, {
+            label: 'All',
+            value: 'All'
+        });
+    },
+
+    onBeforeInventoriesStoreLoad: function(store){
+                
+    },
+
+    onWarehouseSelect: function(combo, rec){
+        var me = this,
+            vm = me.getViewModel(),
+            store = vm.getStore('inventories');
+
+        store.filter('warehouse', combo.getValue());
+    },
+
+    onViewRefresh: function(view, selected, e) {
+        var me = this,
+            onhandEl = view.getEl().down('i.dataview-icon-onhand'),
+            onorderEl = view.getEl().down('i.dataview-icon-onorder'),
+            wipEl = view.getEl().down('i.dataview-icon-wip');                        
+
+        //console.log('onViewRefresh', onhandEl);
+
+        if(onhandEl){
+            onhandEl.on('click', function(e, node) {
+                me.showWindow('windows-style-onhand', function(ref){
+                    var grid = me.win.lookupReference('style-onhand-grid'),
+                        store = me.getViewModel().getStore('onhands'),
+                        columns = grid.getColumns(),
+                        rec = store.first();
+                    
+                    //console.log(grid, store, columns, rec);
+                    if(rec != null){
+                        var index = 0;
+                        Ext.each(columns, function(col, idx){                        
+                            
+                            if(idx > 2 && idx < 18) {
+                                index = idx - 2;                            
+                                col.setText(rec.get('size'+index));             
+                            }                        
+                        });
+                    }
+                    
+                });
+    
+            }, view, {                                    
+                stopEvent: true
+            });
+        }        
+
+        if(onorderEl){
+            onorderEl.on('click', function(e, node) {
+                me.showWindow('windows-style-onorder');
+                    var grid = me.win.lookupReference('style-onorder-grid'),
+                    store = me.getViewModel().getStore('onorders'),
+                    columns = grid.getColumns(),
+                    rec = store.first();
+                
+                //console.log(grid, store, columns, rec);
+                if(rec != null){
+                    var index = 0;
+                    Ext.each(columns, function(col, idx){                        
+                        
+                        if(idx > 16 && idx < 32) {
+                            index = idx - 16;                            
+                            col.setText(rec.get('size'+index));             
+                        }                        
+                    });
+                }
+                
+            }, view, {                                    
+                stopEvent: true
+            });
+        }
+
+        if(wipEl){
+            wipEl.on('click', function(e, node) {
+                me.showWindow('windows-style-wip');
+    
+            }, view, {                                    
+                stopEvent: true
+            }); 
+        }
+                
+    },
+
+    onBeforeViewItemClick: function(view, rec, item, idx, e) {                
+
+        var me = this,
+            onhandEl = view.getEl().down('i.dataview-icon-onhand'),
+            onorderEl = view.getEl().down('i.dataview-icon-onorder'),
+            wipEl = view.getEl().down('i.dataview-icon-wip');
+                
+        e.preventDefault();         
+        
+        console.log('onBeforeViewItemClick', onhandEl);
+    },
+
     onPositionChange: function(btn, active){
-        var tabpanel = this.lookupReference('editsampletabs'),
+        var tabpanel = this.lookupReference('editproducttabs'),
             tabBar = tabpanel.tabBar,
             vertical = active.itemId == 'left' || active.itemId == 'right';
 
@@ -600,7 +702,7 @@ Ext.define('August.view.production.style.edit.FormController', {
         });
     },
 
-    onSaveCostClick: function(){onMenuRefreshClick
+    onSaveCostClick: function(){
         // Save the changes pending in the win's child session back to the
         // parent session.
         var me = this,
@@ -627,11 +729,11 @@ Ext.define('August.view.production.style.edit.FormController', {
                 // Use the id of that child record to find the phantom in the parent session,
                 // we can then use it to insert the record into our store
 
-                grid.getStore().add(session.getRecord('sample.Bomh', id));
+                grid.getStore().add(session.getRecord('style.Bomh', id));
             }
             /*
              else {
-             rec = session.peekRecord('sample.Bomh', id);
+             rec = session.peekRecord('style.Bomh', id);
              }
              */
 
@@ -897,6 +999,57 @@ Ext.define('August.view.production.style.edit.FormController', {
 
     onGridRowSelect: function(sm, selected, idx){
 
+    },    
+
+    showWindow: function(xtype, callback){
+        var me = this,
+            view = me.getView();
+
+        //console.log(window.innerWidth, window.innerHeight)        
+
+        me.win = view.add({
+            xtype: xtype,
+            reference: xtype,
+
+            //alignTarget: '',
+            //width: window.innerWidth < 1360 ? (view.getWidth() * 0.98) : 1480,
+            //maxWidth: 1366,
+            //height: window.innerHeight < 760 ? (view.getHeight() * 0.94) : 600,
+            session: true,               
+
+            viewModel: {
+                data: {
+                    
+                },
+
+                links: {
+                    // If we are passed a record, a copy of it will be created in the newly spawned session.
+                    // Otherwise, create a new phantom customer in the child.                    
+                }
+            },            
+
+            renderTo: Ext.getBody(),
+            // Creates a child session that will spawn from the current session
+            // of this view.       
+            buttons: [{
+                text: 'Close',
+                handler: function(b){
+                    me.win.close();
+                }
+            }]              
+        });        
+                
+        me.win.show('', function(){
+            me.mv.unmask();            
+        });
+
+        me.win.on('close', function(p){
+            me.mv.mask();            
+        });
+
+        if(typeof callback === "function"){
+            callback(xtype);
+        }
     },
 
     showCosting: function(rec){
@@ -2411,7 +2564,7 @@ Ext.define('August.view.production.style.edit.FormController', {
                                     if(field1 && field1.getFilesQueue().length > 0){
 
                                         field1.send({
-                                            url: '/api/Files/Photos/upload',
+                                            url: '/WebApp/api/Files/Photos/upload',
                                             success: function(response){
                                                 //console.log(response);
                                                 Ext.Msg.alert('Success', response);
@@ -2431,7 +2584,7 @@ Ext.define('August.view.production.style.edit.FormController', {
                                     if(field2 && field2.getFilesQueue().length > 0){
 
                                         field2.send({
-                                            url: '/api/Files/Sample/upload',
+                                            url: '/WebApp/api/Files/Sample/upload',
                                             success: function(response){
                                                 //console.log(response);
                                                 Ext.Msg.alert('Success', response);
@@ -2511,8 +2664,8 @@ Ext.define('August.view.production.style.edit.FormController', {
 
     sendEmails: function(){
         Ext.Ajax.request({
-            //url: '/api/Sessions',
-            url: '/api/SendEmail',
+            //url: '/WebApp/api/Sessions',
+            url: '/WebApp/api/SendEmail',
             method: 'POST',
             jsonData: '',
             success: function(response, options) {

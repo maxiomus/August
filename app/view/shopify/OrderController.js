@@ -221,7 +221,7 @@ Ext.define('August.view.shopify.OrderController', {
 
             proxy: {
                 type: 'ajax',
-                url: '/api/Options/colors',
+                url: '/WebApp/api/Options/colors',
 
                 reader: {
                     type: 'json',
@@ -359,8 +359,8 @@ Ext.define('August.view.shopify.OrderController', {
         if(!sm.isSelected(g)){
             sm.select(g);
         }
-                
-        me.view.contextmenu.items.items[3].setDisabled(!Ext.isEmpty(grid.getSelection()[0].get('note')));
+                                
+        me.view.contextmenu.items.items[3].setDisabled(grid.getSelection()[0].get('note').indexOf("N41 SO#") != -1);
 
         me.view.contextmenu.showAt(l.getXY());
     }
