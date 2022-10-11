@@ -15,7 +15,8 @@ Ext.define("August.view.production.style.Product", {
         'August.view.production.windows.style.Labeltag',
         'August.view.production.windows.style.StyleCopy',
         'August.view.production.windows.style.web.Template',
-        'August.view.production.windows.style.web.Export'
+        'August.view.production.windows.style.web.Export',
+        'August.view.production.windows.style.web.ColorMapping'
         //'August.view.production.sample.LineSheet',
         //'August.store.StyleColors'
     ],
@@ -146,6 +147,13 @@ Ext.define("August.view.production.style.Product", {
 
         f.insert(15,
             [{
+                xtype: 'button',
+                iconCls: 'x-fa fa-map-signs',
+                text: 'Color Map',
+                action: 'mapping',
+                handler: 'onOpenMappingClick',
+                scope: me.controller
+            },{
                 xtype: 'button',
                 iconCls: 'x-fa fa-file-export',
                 text: 'Template',

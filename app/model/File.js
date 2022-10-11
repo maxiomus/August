@@ -1,17 +1,17 @@
-/**
- * Created by tech on 8/20/2015.
- */
 Ext.define('August.model.File', {
-    extend: 'August.model.Base',    
+    extend: 'August.model.Base',
 
-    fields: [
-        { name: 'fileId' },             
-        { name: 'name', type: 'string' },
-        { name: 'type', type: 'string', allowNull: true },
-        { name: 'size', type: 'string', allowNull: true },
-        { name: 'path', type: 'string', allowNull: true },
-        { name: 'order', type: 'int', allowNull: true },        
-        { name: 'tag', type: 'string', allowNull: true }, 
+    fields: ['fileId',
+        {
+            name: 'file',
+            type: 'auto',
+            persist: false
+        },
+        {   name: 'name', mapping: 'file.name'},
+        {   name: 'type', mapping: 'file.type'},
+        {   name: 'size', mapping: 'file.size'},
+        {   name: 'created', mapping: 'file.created'},
+        {   name: 'lastmod', mapping: 'file.lastmod'}
         /*
         {
             name: 'label', type: 'string', allowNull: true
@@ -27,20 +27,8 @@ Ext.define('August.model.File', {
         },
         {
             name: 'active', type: 'boolean', defaultValue: true, allowNull: true
-        },
-        */
-        {
-            name: 'id',
-            reference: {
-                parent: 'style.Product',
-
-                //type: 'sales.Powd',
-                //association: 'MaterialsByStyle',
-                //role: 'powd',
-                field: 'id',
-                inverse: 'filesInProducts'
-            }
         }
+        */       
     ],
 
     idProperty: 'fileId',
@@ -48,7 +36,7 @@ Ext.define('August.model.File', {
 
     proxy: {
         type: "rest",
-        url: "/WebApp/api/Files/Product",
+        url: "/WebApp/api/Files/Style",
 
         isUpload: true,
 

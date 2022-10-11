@@ -234,7 +234,7 @@ Exception information:
 =======================
 C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\plugin.xml:333: The following error occurred while executing this line:
 C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\build-impl.xml:387: The following error occurred while executing this line:
-C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.sencha.exceptions.ExBuild: Failed to find any files for C:\Ext7Work\August\app\view\settings\product\Size.js::ClassRequire::August.model.Size
+C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.sencha.exceptions.ExBuild: Failed to find any files for C:\Ext7Work\August\app\view\reports\inventory\Warehouseasof.js::ClassRequire::August.view.reports.inventory.WarehouseasofController
      at com.sencha.ant.AntScript.execute(AntScript.java:121)
      at com.sencha.command.plugin.PluginManager.execute(PluginManager.java:104)
      at com.sencha.command.plugin.PluginManager.executeReverseFirst(PluginManager.java:145)
@@ -262,7 +262,7 @@ C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.senc
      at com.install4j.runtime.launcher.WinLauncher.main(WinLauncher.java:25)
    Caused by: The following error occurred while executing this line:
 C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\build-impl.xml:387: The following error occurred while executing this line:
-C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.sencha.exceptions.ExBuild: Failed to find any files for C:\Ext7Work\August\app\view\settings\product\Size.js::ClassRequire::August.model.Size
+C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.sencha.exceptions.ExBuild: Failed to find any files for C:\Ext7Work\August\app\view\reports\inventory\Warehouseasof.js::ClassRequire::August.view.reports.inventory.WarehouseasofController
      at org.apache.tools.ant.ProjectHelper.addLocationToBuildException(ProjectHelper.java:551)
      at org.apache.tools.ant.taskdefs.Ant.execute(Ant.java:444)
      at org.apache.tools.ant.UnknownElement.execute(UnknownElement.java:291)
@@ -318,7 +318,7 @@ C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.senc
      at com.exe4j.runtime.WinLauncher.main(WinLauncher.java:94)
      at com.install4j.runtime.launcher.WinLauncher.main(WinLauncher.java:25)
    Caused by: The following error occurred while executing this line:
-C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.sencha.exceptions.ExBuild: Failed to find any files for C:\Ext7Work\August\app\view\settings\product\Size.js::ClassRequire::August.model.Size
+C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.sencha.exceptions.ExBuild: Failed to find any files for C:\Ext7Work\August\app\view\reports\inventory\Warehouseasof.js::ClassRequire::August.view.reports.inventory.WarehouseasofController
      at org.apache.tools.ant.ProjectHelper.addLocationToBuildException(ProjectHelper.java:551)
      at org.apache.tools.ant.taskdefs.Ant.execute(Ant.java:444)
      at org.apache.tools.ant.taskdefs.CallTarget.execute(CallTarget.java:105)
@@ -387,7 +387,7 @@ C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.senc
      at com.exe4j.runtime.LauncherEngine.launch(LauncherEngine.java:84)
      at com.exe4j.runtime.WinLauncher.main(WinLauncher.java:94)
      at com.install4j.runtime.launcher.WinLauncher.main(WinLauncher.java:25)
-   Caused by: com.sencha.exceptions.ExBuild: Failed to find any files for C:\Ext7Work\August\app\view\settings\product\Size.js::ClassRequire::August.model.Size
+   Caused by: com.sencha.exceptions.ExBuild: Failed to find any files for C:\Ext7Work\August\app\view\reports\inventory\Warehouseasof.js::ClassRequire::August.view.reports.inventory.WarehouseasofController
      at org.apache.tools.ant.dispatch.DispatchUtils.execute(DispatchUtils.java:116)
      at org.apache.tools.ant.Task.perform(Task.java:348)
      at org.apache.tools.ant.Target.execute(Target.java:392)
@@ -462,7 +462,7 @@ C:\Users\admin\bin\Sencha\Cmd\7.4.0.45\ant\build\app\init-impl.xml:436: com.senc
      at com.exe4j.runtime.LauncherEngine.launch(LauncherEngine.java:84)
      at com.exe4j.runtime.WinLauncher.main(WinLauncher.java:94)
      at com.install4j.runtime.launcher.WinLauncher.main(WinLauncher.java:25)
-   Caused by: Failed to find any files for C:\Ext7Work\August\app\view\settings\product\Size.js::ClassRequire::August.model.Size
+   Caused by: Failed to find any files for C:\Ext7Work\August\app\view\reports\inventory\Warehouseasof.js::ClassRequire::August.view.reports.inventory.WarehouseasofController
      at com.sencha.tools.compiler.sources.SymbolCache.resolveDependencies(SymbolCache.java:718)
      at com.sencha.tools.compiler.sources.SymbolCache.resolveDependencies(SymbolCache.java:653)
      at com.sencha.tools.compiler.sources.SymbolCache.resolveDependencies(SymbolCache.java:648)

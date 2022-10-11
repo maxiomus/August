@@ -22,31 +22,28 @@ Ext.define('August.view.sales.windows.PriceTagController', {
             view = me.getView(),
             //memStore = view.memStylesInLines,
             binding = vm.bind({
-            bindTo: '{thePriceTag}',
-            deep: true,
-            single: true
-        }, function(rec){
-            //console.log('root binding - callback', rec);
-
-            var store = rec.stylesInLines(),
-                proxy = store.getProxy();
-
-            //store.setPageSize(8);            
-
-            view.setLoading(true);            
-
-            store.on('load', function(s){
-
-                //memStore.getProxy().setData(s.getRange());                
-                //memStore.load();
-
-                view.setLoading(false);
-            },{
+                bindTo: '{thePriceTag}',
+                deep: true,
                 single: true
-            });
+            }, function(rec){
+                //console.log('root binding - callback', rec);
 
-            //rec.samplesInLines().load()
-            binding.destroy();
+                var store = rec.stylesInLines(),
+                    proxy = store.getProxy();
+
+                //store.setPageSize(8);            
+
+                view.setLoading(true);            
+
+                store.on('load', function(s){                    
+
+                    view.setLoading(false);
+                },{
+                    single: true
+                });
+
+                //rec.samplesInLines().load()
+                binding.destroy();
 
         }, this);
     },
@@ -112,6 +109,7 @@ Ext.define('August.view.sales.windows.PriceTagController', {
         store.reload();
     },
 
+    /*
     onItemClickPrint: function(panel, widget){
         var me = this,
             store = me.getViewModel().getStore('pricetags'),
@@ -196,6 +194,7 @@ Ext.define('August.view.sales.windows.PriceTagController', {
             mv.mask();
         });
     },
+    */
 
     onShowPriceChanged: function(field, nv, ov){
         var me = this,

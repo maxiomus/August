@@ -66,7 +66,7 @@ Ext.define('August.view.production.TopBar',{
                 hidden: true,     
                 grid: "grid",
                 paramName: "style"
-            },
+            },            
             {
                 xtype: "searchtextlist",
                 reference: 'searchtextlist',
@@ -76,7 +76,53 @@ Ext.define('August.view.production.TopBar',{
                 },  
                 
                 paramName: "style"
-            }]
+            }
+            /*
+            {
+                xtype: 'textfield',
+                name: 'searchtextlist',
+                reference: 'searchtextlist',
+                width: 300,
+                hidden: false,
+                enableKeyEvents: true,
+                triggers: {
+                    clear: {
+                        weight: 0,
+                        cls: Ext.baseCSSPrefix + 'form-clear-trigger',
+                        tooltip: 'Clear',
+                        hidden: true,
+                        handler: function(c, a){                     
+                            // c - searchtextlist
+                            // a - trigger           
+                            c.fireEvent('triggerclear', this);
+                        }
+                    },
+                    search: {
+                        weight: 1,
+                        cls: Ext.baseCSSPrefix + 'form-search-trigger',
+                        tooltip: 'Search',
+                        handler: function(c){
+                            c.fireEvent('triggersearch', this);
+                        }
+                    }
+                },
+                listeners: {
+                    triggerclear: {
+                        fn: 'onClearClick',
+                        scope: this.controller
+                    },
+                    triggersearch: {
+                        fn: 'onSearchClick',
+                        scope: this.controller
+                    },
+                    specialkey: {
+                        fn: 'onSpecialKey',
+                        scope: this.controller
+                    }                    
+                }
+            }
+            */
+        ]
         );
     }
 });

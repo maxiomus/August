@@ -82,7 +82,23 @@ Ext.define('August.model.shopify.Order', {
         { name: "current_total_price_set", type: "auto" },
         { name: "current_total_tax", type: "number" },
         { name: "current_total_tax_set", type: "auto" },
-        { name: "payment_terms", type: "auto" }
+        { name: "payment_terms", type: "auto" },
+        { name: 'customerName', type: 'string', persist: false,
+            mapping: function(data){
+                return data.customer != null ? data.customer.first_name + " " + data.customer.last_name : "";
+            }    
+        },
+        { name: 'itemsCount', type: 'int', persist: false,
+            mapping: function(data){
+                return data.line_items.length;
+            }    
+        },
+        { name: 'deliveryMethod', type: 'string', persist: false,
+            mapping: function(data){
+                return data.shipping_lines.length > 0 ? data.shipping_lines[0].title : "";
+            }    
+        }
+
     ],
 
     identifier: 'negative',

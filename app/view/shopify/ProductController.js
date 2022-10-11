@@ -123,6 +123,57 @@ Ext.define('August.view.shopify.ProductController', {
         });
     },
 
+    onActAddPhotoClick: function(b, e) {
+        var me = this,
+            multiview = me.getView().lookupReference('multiview'),
+            grid = multiview.lookupReference('shopify-product-grid'),
+            topbar = multiview.lookupReference("topbar"),
+            combo = topbar.down('combo[name=sites]'),
+            rec = grid.getSelectionModel().selected.items[0];        
+        
+        me.showWindow(rec, 'shopify-windows-photoupdate', b, function(type){
+
+            var win = me.win,
+                wvm = win.getViewModel(),
+                store = wvm.getStore('options'),
+                //btnSave = win.getDockedItems('toolbar[dock="bottom"] > button[action="save"]')[0];
+                selectedStore = combo.getSelection(),
+                btnUpdate = win.down('button[action="update"]');            
+            
+            var colors = rec.options().first().get('values'),
+                images = rec.images(),
+                //src = images.first().get('src'),                
+                //idx = src.indexOf('/products/'),
+                //locationSrc = src.substring(0, idx);
+                locationSrc = "https://s3.us-west-1.wasabisys.com/web-images/" + selectedStore.get('imageSrc') + "/"
+            
+                        
+            wvm.setData({ title: rec.get('title') });
+            wvm.setData({ store: selectedStore.get('name') });
+            wvm.setData({ source: locationSrc });                        
+
+            colors.forEach(color => {
+                var ctr = 0;
+                images.each(function(image) {                                        
+                    if(image.get('src').toLowerCase().includes(color.replace(/\/+/g,'').replace(/\s+/g,'').toLowerCase())){
+                        ctr = ctr + 1;
+                    }
+                });
+
+                store.add({ color: color, qty: ctr, total: 5 })
+            });            
+            /*
+            wvm.getStore('photos').on('datachanged', function(store){
+                btnUpdate.setDisabled(store.getCount() == 0);
+                
+                //console.log('publishes - store datachanged', store.first());
+            });
+            */            
+            
+            win.on('updateclick', me.onUpdateProductImage, me);
+        });    
+    },
+
     onTagSelected: function(tag, rec) {
         var vm = this.getViewModel();
 
@@ -234,38 +285,44 @@ Ext.define('August.view.shopify.ProductController', {
         processMask.show();
     },
 
-    onUpdatePhotoClick: function(b, e){
+    onUploadPhotoClick: function(b, e){
         var me = this,
             multiview = me.getView().lookupReference('multiview'),
             grid = multiview.lookupReference('shopify-product-grid'),
+            topbar = multiview.lookupReference("topbar"),
+            combo = topbar.down('combo[name=sites]'),
             rec = grid.getSelectionModel().selected.items[0];        
-
+        
         me.showWindow(rec, 'shopify-windows-photoupdate', b, function(type){
 
             var win = me.win,
                 wvm = win.getViewModel(),
                 store = wvm.getStore('options'),
                 //btnSave = win.getDockedItems('toolbar[dock="bottom"] > button[action="save"]')[0];
+                selectedStore = combo.getSelection(),
                 btnUpdate = win.down('button[action="update"]');            
             
             var colors = rec.options().first().get('values'),
                 images = rec.images(),
-                src = images.first().get('src'),                
-                idx = src.indexOf('/products/'),
-                locationSrc = src.substring(0, idx);
+                //src = images.first().get('src'),                
+                //idx = src.indexOf('/products/'),
+                //locationSrc = src.substring(0, idx);
+                locationSrc = "https://s3.us-west-1.wasabisys.com/web-images/" + selectedStore.get('imageSrc') + "/"
             
-                console.log(images);
-            wvm.setData({ source: locationSrc + '/files/'});                        
+                        
+            wvm.setData({ title: rec.get('title') });
+            wvm.setData({ store: selectedStore.get('name') });
+            wvm.setData({ source: locationSrc });                        
 
             colors.forEach(color => {
                 var ctr = 0;
-                images.each(function(image) {
-                    if(image.get('src').includes(color)){
+                images.each(function(image) {                                        
+                    if(image.get('src').toLowerCase().includes(color.replace(/\/+/g,'').replace(/\s+/g,'').toLowerCase())){
                         ctr = ctr + 1;
                     }
                 });
 
-                store.add({ color: color, qty: ctr, total: 7 })
+                store.add({ color: color, qty: ctr, total: 5 })
             });            
             /*
             wvm.getStore('photos').on('datachanged', function(store){
@@ -303,7 +360,7 @@ Ext.define('August.view.shopify.ProductController', {
             colorQty[rec.data.color] = rec.data.total;    
         });
 
-        console.log(wvm.get('source'), wvm.get('total'));
+        //console.log(wvm.get('source'), wvm.get('total'));
 
         Ext.Ajax.request({
             url: '/WebApp/api/ShopifyProducts/' + rec.get('id') + "/ImageUpdate",            

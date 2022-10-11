@@ -4,8 +4,8 @@ Ext.define('August.view.shopify.Product', {
     requires: [
         'August.view.shopify.ProductController',
         'August.view.shopify.ProductModel',
-        'August.plugin.grid.Exporter',
-        'Ext.ux.CTemplate'
+        'August.plugin.grid.Exporter'
+        //'Ext.ux.CTemplate'
     ],
 
     alias: "widget.shopify-product",
@@ -26,6 +26,7 @@ Ext.define('August.view.shopify.Product', {
         //actcopy: 'onActCopyClick',
         //actdelete: 'onActDeleteClick',
         actrefresh: 'onActRefreshClick',
+        actaddphoto: 'onActAddPhotoClick',
         clearall: 'onClearFilters',
         //rowdblclick: 'onActEditClick',
         //itemdblclick: "onActEditClick",
@@ -200,11 +201,12 @@ Ext.define('August.view.shopify.Product', {
                 scope: me.controller
             },{
                 xtype: 'button',
-                iconCls: 'x-fa fa-tag',
-                text: 'Update',
-                tooltip: 'Update Photos',
-                action: 'updatephotos',
-                handler: 'onUpdatePhotoClick',
+                iconCls: 'x-fa fa-camera',
+                text: 'Upload',
+                tooltip: ' Upload Photos',
+                //action: 'updatephotos',
+                //handler: 'onUploadPhotoClick',
+                handler: 'onActAddPhotoClick',
                 scope: me.controller
             },{
                 xtype: 'button',
@@ -223,6 +225,14 @@ Ext.define('August.view.shopify.Product', {
 
         var mnuItems = [f.actEdit, f.actDelete, f.actRefresh,
             {
+                text: "Add Photos",
+                iconCls: "x-fa fa-camera",
+                action: "actaddphoto",
+                handler: function(item, e){                                      
+                    me.fireEvent('actaddphoto', item, me);
+                }
+            },
+            {
                 text: "Print",
                 iconCls: "x-fa fa-print",
                 action: "printlabel",
@@ -239,7 +249,7 @@ Ext.define('August.view.shopify.Product', {
         //f.items.last().setHidden(true);        
 
         
-        this.relayEvents(f, ["actnew", 'actedit', "actrefresh", 'actdelete', "actcomplete", "actactive", "clearall"]);
+        this.relayEvents(f, ["actnew", 'actedit', "actrefresh", 'actdelete', 'actaddphoto', "clearall"]);
         this.relayEvents(j, ["itemcontextmenu", "afterrender", "rowdblclick"]);        
     },
 
@@ -283,7 +293,7 @@ Ext.define('August.view.shopify.Product', {
         {
             text: "Handle",
             dataIndex: "handle",
-            //width: 100,
+            width: 200,
             hidden: false,
             filter: {type: "string"},
             renderer: function(i, h, a){
@@ -418,9 +428,9 @@ Ext.define('August.view.shopify.Product', {
                 width: 76,
                 store: new Ext.data.ArrayStore({
                     fields: ["id"],
-                    data: [["15"], ["25"], ["50"], ["100"], ["250"], ["500"]]
+                    data: [["15"], ["25"], ["50"], ["100"], ["250"]]
                 }),
-                value: "250",
+                //value: "250",
                 displayField: "id",
                 valueField: "id",
                 editable: false,

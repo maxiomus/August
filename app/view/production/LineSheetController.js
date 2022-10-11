@@ -110,6 +110,7 @@ Ext.define('August.view.production.LineSheetController', {
             line = me.getViewModel().get('theLineSheet'),
             store = line.stylesInLines(),
             showCost = me.getView().down('toggleslidefield').getValue(),
+            template = me.getView().down('combo[name=templates]'),
             mv = August.app.getMainView(),
             xf = Ext.util.Format;
 
@@ -127,6 +128,11 @@ Ext.define('August.view.production.LineSheetController', {
 
         if(Object.keys(data).length > 0){
             url = Ext.String.urlAppend(url, Ext.Object.toQueryString(data));
+        }
+
+        if(template){
+            console.log(template.getValue());
+            url = Ext.String.urlAppend(url, xf.format('template={0}', template.getValue()));
         }
 
         if(showCost){
@@ -192,6 +198,15 @@ Ext.define('August.view.production.LineSheetController', {
     },
 
     /**
+     * 
+     * @param {Ext.form.field.ComboBox} c 
+     * @param {Ext.data.Model} rec ComboBox Selection Record
+     */
+    onTemplateSelect: function(c, rec) {
+        console.log(c, rec);
+    },
+
+    /**
      *
      * @param {Ext.form.field.ComboBox} c
      * @param {String} v ComboBox Value
@@ -211,7 +226,8 @@ Ext.define('August.view.production.LineSheetController', {
 
         filters.add(filterSub);
         */       
-
+        
+        // page size change... 
         var me = this,            
             toolbar = me.getView().getDockedItems()[1],
             paging = toolbar.down('combo[name="perpage"]'),
@@ -221,6 +237,7 @@ Ext.define('August.view.production.LineSheetController', {
         
         store.setPageSize(paging.getValue());
         store.load();
+        
     },
 
     onTriggerClearClicked: function(c,trigger){

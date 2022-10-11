@@ -5,7 +5,7 @@ Ext.define('August.view.settings.GridController', {
 
     init: function(c){
 
-    },
+    },            
 
     onRowSelect: function(rm, rec, idx){
         var me = this,
@@ -19,7 +19,7 @@ Ext.define('August.view.settings.GridController', {
         });
     },
 
-    onItemContextMenu:function(h, j, k, g, l){
+    onItemContextMenu: function(h, j, k, g, l){
         l.stopEvent();
 
         var sm = h.getSelectionModel();
@@ -43,7 +43,7 @@ Ext.define('August.view.settings.GridController', {
             grid = me.getView(),
             column = grid.getColumns()[cIdx],
             topbar = me.lookupReference('topbar'),
-            search = topbar.lookupReference('searchfield');
+            search = topbar.lookupReference('searchgrid');
 
         search.paramName = column.dataIndex;
 
@@ -112,6 +112,17 @@ Ext.define('August.view.settings.GridController', {
         store.reload();
     },
 
+    onToolbarExportClick: function(b, e){
+        var me = this,
+            grid = me.getView();        
+                                
+        grid.saveDocumentAs({
+            type: 'csv',
+            title: 'Product ' + grid.getTitle(),
+            fileName: 'Product ' + grid.getTitle() + ' ' + Ext.Date.format(new Date(), 'Y-m-d')
+        });
+    },
+
     onToolbarSaveClick: function(b, e){
         var me = this,
             vm = me.getViewModel(),
@@ -128,18 +139,18 @@ Ext.define('August.view.settings.GridController', {
             });
 
             batch.on({
-                operationcomplete: function(batch, op){
-                    //console.log(op, op.getResultSet());
+                operationcomplete: function(batch, op){                    
                     var objResp = op.getResponse();
+                    
                     if(!Ext.isEmpty(objResp)){
-                        var response = JSON.parse(objResp.responseText);
+                        
                     }
                 },
-                complete: function(batch, op){
-                    //console.log(op, op.getResponse());
+                complete: function(batch, op){                    
                     var objResp = op.getResponse();
+                    
                     if(!Ext.isEmpty(objResp)){
-                        var response = JSON.parse(objResp.responseText);
+                        console.log(objResp.responseJson);    
                     }
 
                     processMask.hide('', function() {
@@ -153,7 +164,7 @@ Ext.define('August.view.settings.GridController', {
                         var objResp = op.error.response;
                         //console.log(objResp)
                         if(!Ext.isEmpty(objResp)){
-                            var response = JSON.parse(objResp.responseText);
+                            //var response = JSON.parse(objResp.responseText);
                             Ext.Msg.alert(objResp.statusText, objResp.responseText);
                         }
 
@@ -169,5 +180,5 @@ Ext.define('August.view.settings.GridController', {
         else {
             Ext.Msg.alert('No Changes', 'There are no changes to the session.');
         }
-    }
+    }    
 });

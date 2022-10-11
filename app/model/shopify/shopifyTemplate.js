@@ -13,7 +13,7 @@ Ext.define('August.model.shopify.shopifyTemplate', {
         { name: 'standard_product_type', type: 'string' },
         { name: 'custom_product_type', type: 'string' },
         { name: 'tags', type: 'string' },
-        { name: 'published', type: 'bool' },
+        { name: 'published', type: 'string' },
         { name: 'option1_name', type: 'string' },
         { name: 'option1_value', type: 'string' },
         { name: 'option2_name', type: 'string' },
@@ -23,16 +23,16 @@ Ext.define('August.model.shopify.shopifyTemplate', {
         { name: 'variant_SKU', type: 'string' },
         { name: 'variant_grams', type: 'string' },
         { name: 'variant_inventory_tracker', type: 'string' },
-        { name: 'variant_inventory_qty', type: 'number' },
+        { name: 'variant_inventory_qty', type: 'string' },
         { name: 'variant_inventory_policy', type: 'string' },
         { name: 'variant_fulfillment_service', type: 'string' },
-        { name: 'variant_price', type: 'number' },
-        { name: 'variant_compare_at_price', type: 'number' },
-        { name: 'variant_requires_shipping', type: 'bool' },
-        { name: 'variant_taxable', type: 'bool' },
+        { name: 'variant_price', type: 'string' },
+        { name: 'variant_compare_at_price', type: 'string' },
+        { name: 'variant_requires_shipping', type: 'string' },
+        { name: 'variant_taxable', type: 'string' },
         { name: 'variant_barcode', type: 'string' },
         { name: 'image_src', type: 'string' },
-        { name: 'image_position', type: 'number' },
+        { name: 'image_position', type: 'string' },
         { name: 'image_alt_text', type: 'string' },
         { name: 'gift_card', type: 'string' },
         { name: 'seo_title', type: 'string' },
@@ -69,7 +69,7 @@ Ext.define('August.model.shopify.shopifyTemplate', {
     proxy: {
         type: 'rest',
         
-        url: '/WebApp/api/ProductTemplates/',
+        url: '/WebApp/api/ProductTemplates',
 
         actionMethods: {
             read: 'POST'

@@ -913,6 +913,10 @@
                 title += ' Sales Order';
                 alias = 'sales-orderForm';
                 break;
+            case 'pick-ticket':
+                title += ' Pick Ticket';
+                alias = 'pick-ticketForm';
+                break;
             case 'sample':
             case 'product':
                 title += ' Style';
@@ -1002,6 +1006,9 @@
             case 'sales-order':
                 this.processSales(fvm, node, op, id);
                 break;
+            case 'pick-ticket':                
+            this.processPickTickets(fvm, node, op, id);
+            break;
             case 'product':
                 var tabs = form.lookupReference('editproducttabs'),
                     photos = form.lookupReference('photos'),
@@ -1015,8 +1022,7 @@
             case 'sample':
                 this.processProducts(fvm, node, op, id);
                 break;     
-            case 'customer-invoice':
-                console.log('onRouteEdit', node, op, id);
+            case 'customer-invoice':                
                 this.processInvoices(fvm, node, op, id);
                 break;
             case 'payment-receive':       
@@ -1120,6 +1126,10 @@
         var shiptos = vm.getStore('shiptos');
         binding = vm.bind('{thePO}', function(rec){                                                
             
+            var store = vm.get('thePO').purchaseorderitems();
+                
+            store.setRemoteFilter(false);
+
             vendors.load();
             shiptos.load();
 
@@ -1136,6 +1146,7 @@
         var session = vm.getSession();                
 
         var cRec = vm.get('theOrder');
+        
         if(!Ext.isEmpty(session.data['sales.Order']) && !session.data['sales.Order'].hasOwnProperty(id)){
             //console.log(session.data)
             session.data['sales.Order'] = null;
@@ -1176,8 +1187,12 @@
         //var stores = vm.getStore('stores');
 
         binding = vm.bind('{theOrder}', function(rec){
+                        
+            var grid = vm.getView().lookupReference('so-grid'),
+                store = vm.get('theOrder').salesorderitems();
+                
+            store.setRemoteFilter(false);
             
-            var grid = vm.getView().lookupReference('so-grid');
             if(grid){
                 var columns = grid.getColumns();
                 Ext.each(columns, function(col, idx){                        
@@ -2036,6 +2051,72 @@
                 });
             }
 
+            vm.getView().setLoading(false);
+            binding.destroy();
+        });
+
+        if(binding){
+            vm.getView().setLoading(false);
+        }
+    },
+
+    processPickTickets: function(vm, node, op, id){
+        var session = vm.getSession();                
+
+        var cRec = vm.get('thePickTicket');
+        if(!Ext.isEmpty(session.data['pick.Header']) && !session.data['pick.Header'].hasOwnProperty(id)){
+            //console.log(session.data)
+            session.data['pick.Header'] = null;
+            session.data['pick.Detail'] = null;            
+        }
+
+        var binding = null;
+        
+        August.model.sales.Order.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });
+
+        if(id){            
+
+            vm.linkTo('thePickTicket', {
+                type: 'pick.Header',
+                //reference: 'August.model.sales.Order',
+                id: parseInt(id,10)
+            });                                    
+        }
+        else {
+            if(vm.get('thePickTicket') != null){
+                vm.set('thePickTicket', null);
+            }
+
+            vm.linkTo('thePickTicket', {
+                type: 'pick.Header',
+                create: {
+                    startDate: new Date().toDateString(),
+                    status: 'Open',
+                    //warehouse: '00',
+                    userName: August.loggedInUser.userId
+                }
+            });
+        }
+
+        //var customers = vm.getStore('customers');
+        //var stores = vm.getStore('stores');
+
+        binding = vm.bind('{thePickTicket}', function(rec){
+            
+            var grid = vm.getView().lookupReference('pickGrid');
+            if(grid){
+                var columns = grid.getColumns();
+                Ext.each(columns, function(col, idx){                        
+                
+                    if(idx > 4 && idx < 16) {
+                        index = idx - 4;  
+                        col.setText('');             
+                    }                        
+                });
+            }
+            
             vm.getView().setLoading(false);
             binding.destroy();
         });

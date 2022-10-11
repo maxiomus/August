@@ -57,12 +57,41 @@ Ext.define('August.view.shopify.ProductModel', {
         },
         
         shopifyStores: {
-            fields: ['label', 'value', 'name'],
+            fields: ['label', 'value', 'name', 'imageSrc'],
             autoLoad: true,
             
             proxy: {
                 type: 'ajax',
                 url: 'resources/data/shopify/shopifyStores.json', 
+
+                pageParam: '',
+                startParam: '',
+                limitParam: '',
+
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            },
+            
+            listeners: {
+                load: function(store){
+                    store.each(function(rec, idx){
+                        if(rec.get('value') > 99){
+                            rec.drop();
+                        }
+                    });
+                }
+            }
+        },
+
+        storeImageSources: {
+            fields: ['name', 'value'],
+            autoLoad: true,
+            
+            proxy: {
+                type: 'ajax',
+                url: 'resources/data/shopify/storeImageSources.json', 
 
                 pageParam: '',
                 startParam: '',

@@ -50,7 +50,7 @@ Ext.define('August.model.shopify.lordTaylorTemplate', {
     proxy: {
         type: 'rest',
         
-        url: '/WebApp/api/ProductTemplates/',
+        url: '/WebApp/api/ProductTemplates',
 
         actionMethods: {
             read: 'POST'

@@ -33,11 +33,11 @@ Ext.define('August.view.shopify.windows.PhotoUpdate',{
     bind: {
         title: '{title}'
     },
-
-    width: 720,
-    height: 480,
-    minWidth: 720,
+    
+    session: true,
+            
     minHeight: 480,
+    maximized: false,
 
     //modal: true,
     monitorResize: true,
@@ -54,14 +54,16 @@ Ext.define('August.view.shopify.windows.PhotoUpdate',{
 
         // Calculating the textfield height...
         var field = new Ext.form.field.Text({
-                renderTo: document.body
-            }), fieldHeight = field.getHeight(),
-            padding = 5,
-            remainingHeight;
+            renderTo: document.body
+        }), fieldHeight = field.getHeight(),
+        padding = 5,
+        remainingHeight;
 
         field.destroy();
+        remainingHeight = padding + fieldHeight * 3;
 
-        remainingHeight = padding + fieldHeight * 5;       
+        me.width = document.body.clientWidth - 660;
+        me.height = document.body.clientHeight - 320;       
 
         Ext.applyIf(me, {
 
@@ -75,14 +77,13 @@ Ext.define('August.view.shopify.windows.PhotoUpdate',{
                     anchor: '100%',
                     allowBlank: false,
                     msgTarget: 'side',
-                    labelWidth: 70
+                    labelWidth: 100
                 },
                 items: [{
-                    xtype: 'displayfield',
-                    name: 'title',
-                    fieldLabel: 'Title',
+                    xtype: 'textfield',                    
+                    fieldLabel: 'Product Title',
                     bind: {
-                        value: '{selected.title}'
+                        value: '{title}'
                     }
                 },{
                     xtype: 'textfield',
@@ -97,10 +98,11 @@ Ext.define('August.view.shopify.windows.PhotoUpdate',{
                         store: '{options}'
                     },
                     columns: [
-                        { header: 'Color', dataIndex: 'color', flex: 2 },
-                        { header: '# of Photos', dataIndex: 'qty', flex: 1 },
+                        /*{ header: 'Product', dataIndex: 'handle', flex: 2 },*/
+                        { header: 'Variant Color', dataIndex: 'color', flex: 1 },
+                        { header: '# of Photos', dataIndex: 'qty' },
                         { 
-                            header: 'Total Qty', dataIndex: 'total', flex: 1,
+                            header: 'Total #', dataIndex: 'total',
                             editor: {
                                 completeOnEnter: false,
                                 field: {

@@ -33,7 +33,37 @@
       "label": "Verishop",
       "name": "VS", 
       "value": "16"
+    },    
+    {
+      "label": "2.7 August Apparel",
+      "name": "AA", 
+      "value": "17"
     },
+    {
+      "label": "Amazon Shopify",
+      "name": "AM", 
+      "value": "18"
+    },
+    {
+      "label": "Kohl's Shopify",
+      "name": "KL", 
+      "value": "19"
+    },
+    {
+      "label": "Walmart Shopify",
+      "name": "WM", 
+      "value": "20"
+    },    
+    {
+      "label": "Belk Shopify",
+      "name": "BK", 
+      "value": "21"
+    }, 
+    {
+      "label": "SPO Shopify",
+      "name": "SPO",       
+      "value": "98"
+    }, 
     {
       "label": "Lord & Taylor",
       "name": "LT", 
@@ -43,10 +73,46 @@
       "label": "HBC",
       "name": "HB", 
       "value": "101"
-    },    
+    },        
     {
-      "label": "BELK",
-      "name": "BK", 
+      "label": "BELK - OLD",
+      "name": "BKO", 
       "value": "102"
+    },        
+    {
+      "label": "Nordstrom",
+      "name": "NS", 
+      "value": "103"
+    },
+    {
+      "label": "Kohl's MP",
+      "name": "KLM", 
+      "value": "104"
+    },
+    {
+      "label": "Walmart MP",
+      "name": "WMM", 
+      "value": "105"
+    },
+    {
+      "label": "Belk MP",
+      "name": "BKM", 
+      "value": "106"
+    },
+    {
+      "label": "SPO ER",
+      "name": "SPOER", 
+      "value": "107"
+    },
+    {
+      "label": "SPO EF",
+      "name": "SPOEF", 
+      "value": "108"
+    },
+    {
+      "label": "Amazon MP",
+      "name": "AMM", 
+      "url": "",
+      "value": "109"
     }
 ]

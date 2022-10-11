@@ -1,0 +1,50 @@
+[ 
+  {   
+    "name": "shopify", 
+    "value": "99"
+  },
+  {    
+    "name": "objectrare", 
+    "value": "3"
+  },
+  {    
+    "name": "ER", 
+    "value": "10"
+  },
+  {    
+    "name": "EF", 
+    "value": "11"
+  },
+  {    
+    "name": "GL", 
+    "value": "12"
+  },
+  {    
+    "name": "FR", 
+    "value": "13"
+  },
+  {    
+    "name": "verishop", 
+    "value": "16"
+  },    
+  {    
+    "name": "27August", 
+    "value": "17"
+  },
+  {    
+    "name": "amazon", 
+    "value": "18"
+  },
+  {    
+    "name": "kohls", 
+    "value": "19"
+  },
+  {    
+    "name": "walmart", 
+    "value": "20"
+  },    
+  {    
+    "name": "belk", 
+    "value": "21"
+  }
+]

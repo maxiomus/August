@@ -88,6 +88,11 @@ Ext.define('August.view.settings.DefaultModel', {
                             },
                             {
                                 leaf: true,
+                                text: 'Color Mapping',
+                                routeId: 'product-colormapping'
+                            },
+                            {
+                                leaf: true,
                                 text: 'Component Type',
                                 routeId: 'product-rawmattype'
                             },
@@ -146,6 +151,7 @@ Ext.define('August.view.settings.DefaultModel', {
             }
         },
 
+        /*
         coordinators: {
             fields: ["id", "text"],
             //storeId: 'customer',
@@ -164,7 +170,7 @@ Ext.define('August.view.settings.DefaultModel', {
                 }
             }
         },
-
+        */
         customers: {
             fields: ["id", "text"],
             autoLoad: true,

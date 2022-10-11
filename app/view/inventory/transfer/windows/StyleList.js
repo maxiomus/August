@@ -308,7 +308,7 @@
                 {
                     xtype: 'numbercolumn',
                     text: "Price",
-                    dataIndex: "price1",
+                    dataIndex: "price",
                     width: 70,
                     menuDisabled: true,
                     sortable: false,

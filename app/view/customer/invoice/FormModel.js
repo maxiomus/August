@@ -29,9 +29,7 @@ Ext.define('August.view.customer.invoice.FormModel', {
             proxy: {
                 type: 'ajax',
                 url: '/WebApp/api/List/stores',
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },
+                
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -63,9 +61,7 @@ Ext.define('August.view.customer.invoice.FormModel', {
             proxy: {
                 type: 'ajax',
                 url: '/WebApp/api/List/warehouses',
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },
+                
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -91,9 +87,7 @@ Ext.define('August.view.customer.invoice.FormModel', {
             proxy: {
                 type: 'ajax',
                 url: '/WebApp/api/List/divisions',
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },
+                
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -119,9 +113,7 @@ Ext.define('August.view.customer.invoice.FormModel', {
             proxy: {
                 type: 'ajax',
                 url: '/WebApp/api/List/paymentcodes',
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },
+               
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -147,9 +139,7 @@ Ext.define('August.view.customer.invoice.FormModel', {
             proxy: {
                 type: 'ajax',
                 url: '/WebApp/api/List/shipvias',
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },
+                
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -175,9 +165,7 @@ Ext.define('August.view.customer.invoice.FormModel', {
             proxy: {
                 type: 'ajax',
                 url: '/WebApp/api/List/salesreps',
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },
+                
                 reader: {
                     type: 'json',
                     rootProperty: 'data'
@@ -202,10 +190,7 @@ Ext.define('August.view.customer.invoice.FormModel', {
 
             proxy: {
                 type: 'ajax',
-                url: '/WebApp/api/List/memocodes',
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },
+                url: '/WebApp/api/List/memocodes',                
 
                 reader: {
                     type: 'json',
@@ -231,10 +216,7 @@ Ext.define('August.view.customer.invoice.FormModel', {
 
             proxy: {
                 type: 'ajax',
-                url: '/WebApp/api/List/terms',
-                headers: {
-                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                },
+                url: '/WebApp/api/List/terms',                
                 reader: {
                     type: 'json',
                     rootProperty: 'data'

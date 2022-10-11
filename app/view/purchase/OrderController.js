@@ -7,6 +7,16 @@ Ext.define('August.view.purchase.OrderController', {
 
     alias: 'controller.purchase-order',
 
+    listen: {
+        component: {
+            'window': {
+                close: function(w){
+
+                }
+            }
+        }
+    },
+
     init: function(){
         var me = this;
 
@@ -86,6 +96,10 @@ Ext.define('August.view.purchase.OrderController', {
                 }
             }
         });
+    },
+
+    onActionPrint: function(b, c){
+        
     },
 
     onContextMenuEditClick: function(d, c){

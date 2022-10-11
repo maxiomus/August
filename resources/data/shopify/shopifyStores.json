@@ -1,63 +1,153 @@
 [
-    {
-      "label": "Shopify",
-      "name": "shopify", 
-      "value": "99"
-    },
-    {
-      "label": "Objectrare",
-      "name": "OR", 
-      "value": "3"
-    },
-    {
-      "label": "Endlesss Rose",
-      "name": "ER", 
-      "value": "10"
-    },
-    {
-      "label": "English Factory",
-      "name": "EF", 
-      "value": "11"
-    },
-    {
-      "label": "Grey Lab",
-      "name": "GL", 
-      "value": "12"
-    },
-    {
-      "label": "Free The Rose",
-      "name": "FR", 
-      "value": "13"
-    },
-    {
-      "label": "Verishop",
-      "name": "VS", 
-      "value": "16"
-    },
-    {
-      "label": "2.7 August Apparel",
-      "name": "AA", 
-      "value": "17"
-    },
-    {
-      "label": "2.7 Sales Channel",
-      "name": "AM", 
-      "value": "18"
-    },
-    {
-      "label": "Lord & Taylor",
-      "name": "LT", 
-      "value": "100"
-    },
-    {
-      "label": "HBC",
-      "name": "HB", 
-      "value": "101"
-    },
-    {
-      "label": "BELK",
-      "name": "BK", 
-      "value": "102"
-    }
-    
+  {
+    "label": "Shopify",
+    "name": "shopify", 
+    "imageSrc": "shopify",
+    "url": "testing-27august.myshopify.com",
+    "value": "99"
+  },
+  {
+    "label": "Objectrare",
+    "name": "OR", 
+    "imageSrc": "objectrare",
+    "url": "shop-jirho.myshopify.com",
+    "value": "3"
+  },
+  {
+    "label": "Endlesss Rose",
+    "name": "ER", 
+    "imageSrc": "er",
+    "url": "endless-rose-2.myshopify.com",
+    "value": "10"
+  },
+  {
+    "label": "English Factory",
+    "name": "EF", 
+    "imageSrc": "ef",
+    "url": "english-factory-1.myshopify.com",
+    "value": "11"
+  },
+  {
+    "label": "Grey Lab",
+    "name": "GL", 
+    "imageSrc": "gl",
+    "url": "grey-lab.myshopify.com",
+    "value": "12"
+  },
+  {
+    "label": "Free The Rose",
+    "name": "FR", 
+    "imageSrc": "fr",
+    "url": "free-the-roses.myshopify.com",
+    "value": "13"
+  },
+  {
+    "label": "Verishop",
+    "name": "VS", 
+    "imageSrc": "verishop",
+    "url": "27-dropships.myshopify.com",
+    "value": "16"
+  },    
+  {
+    "label": "2.7 August Apparel",
+    "name": "AA", 
+    "imageSrc": "27August",
+    "url": "2-7-august-apparel.myshopify.com",
+    "value": "17"
+  },
+  {
+    "label": "Amazon Shopify",
+    "name": "AM", 
+    "imageSrc": "amazon",
+    "url": "27-sales-channels.myshopify.com",
+    "value": "18"
+  },
+  {
+    "label": "Kohl's Shopify",
+    "name": "KL", 
+    "imageSrc": "kohls",
+    "url": "27-kohls-marketplace.myshopify.com",
+    "value": "19"
+  },
+  {
+    "label": "Walmart Shopify",
+    "name": "WM", 
+    "imageSrc": "walmart",
+    "url": "27-walmart-marketplace.myshopify.com",
+    "value": "20"
+  },    
+  {
+    "label": "Belk Shopify",
+    "name": "BK", 
+    "imageSrc": "belk",
+    "url": "belk-marketplace.myshopify.com",
+    "value": "21"
+  }, 
+  {
+    "label": "SPO Shopify",
+    "name": "SPO", 
+    "imageSrc": "spo",
+    "url": "",
+    "value": "98"
+  }, 
+  {
+    "label": "Lord & Taylor",
+    "name": "LT", 
+    "url": "",
+    "value": "100"
+  },
+  {
+    "label": "HBC",
+    "name": "HB", 
+    "url": "",
+    "value": "101"
+  },        
+  {
+    "label": "BELK - OLD",
+    "name": "BKO", 
+    "url": "",
+    "value": "102"
+  },        
+  {
+    "label": "Nordstrom",
+    "name": "NS", 
+    "url": "",
+    "value": "103"
+  },
+  {
+    "label": "Kohl's MP",
+    "name": "KLM", 
+    "url": "",
+    "value": "104"
+  },
+  {
+    "label": "Walmart MP",
+    "name": "WMM", 
+    "url": "",
+    "value": "105"
+  },
+  {
+    "label": "Belk MP",
+    "name": "BKM", 
+    "url": "",
+    "value": "106"
+  },
+  {
+    "label": "SPO ER",
+    "name": "SPOER", 
+    "url": "",
+    "value": "107"
+  },
+  {
+    "label": "SPO EF",
+    "name": "SPOEF", 
+    "url": "",
+    "value": "108"
+  },
+  {
+    "label": "Amazon MP",
+    "name": "AMM", 
+    "url": "",
+    "value": "109"
+  }
 ]

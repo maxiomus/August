@@ -37,7 +37,7 @@ Ext.define('August.model.shopify.BelkTemplate', {
     proxy: {
         type: 'rest',
         
-        url: '/WebApp/api/ProductTemplates/',
+        url: '/WebApp/api/ProductTemplates',
 
         actionMethods: {
             read: 'POST'

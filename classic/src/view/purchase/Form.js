@@ -19,15 +19,15 @@ Ext.define('August.view.purchase.OrderForm',{
 
     session: true,
     trackResetOnLoad: true,
-    scrollable: true,
+    //scrollable: true,
     style: {
         borderTop: '1px solid #cfcfcf'
     },
     
+    waitMsgTarget: true,
+
     layout: {
-        type: 'vbox',
-        pack: 'start',
-        align: 'stretch'
+        type: 'fit'
     },    
 
     listeners: {
@@ -251,1082 +251,1122 @@ Ext.define('August.view.purchase.OrderForm',{
                 margin: -8,
                 hidden: false,
                 items: btnsConfig
+            },'->',{
+                iconCls: 'x-fa fa-print',
+                text: 'Print',
+                ui: 'default',
+                tooltip: 'Print P.O',
+                handler: 'onPrintClick'
             }]
         }],
 
         Ext.applyIf(me, {
             items: [{
-                xtype: "container",
-                
-                reference: "poheader",
-                //iconCls: "x-fa fa-calculator",
-                layout: {
-                    type: 'responsivecolumn',
-                    states: {
-                        /*
-                         small: 800,
-                         medium: 1200,
-                         large: 0
-                         */
-                    }
+                xtype: 'tabpanel',
+               
+                reference: 'editpotab',
+
+                style: {
+                    borderTop: '1px solid #cfcfcf'
                 },
-                //margin: "0 0 5 0",
-                //bodyPadding: 8,
-                scrollable: true,
-                defaultType: 'container',
-                defaults: {
-                    //margin: "5 0 0 0"
-                },
-                fieldDefaults: {
-                    labelAlign: "left",
-                    margin: 0
-                },
+
+                tabPosition: 'left',
+                //tabRotation: 2,
+                //tabBarHeaderPosition: 0,
+                //minTabWidth: 120,
+
                 items: [{
-                    responsiveCls: 'small-100',
-                    //width: '30%',
+                    tabConfig: {
+                        title: 'PO Info'
+                    },
+
                     layout: {
-                        type: 'table',
-                        columns: 3,
-                        tableAttrs: {
-                            style: {}
-                        }
+                        type: 'vbox',
+                        pack: 'start',
+                        align: 'stretch'
                     },
-                    defaultType: 'textfield',
-                    defaults: {
-                        width: 220,
-                        constrain: true,
-                        margin: '0 10 3 0',
-                        labelWidth: 80
-                        //minHeight: 720,
-                        //padding: '10 10 0 10'
-                    },
+
                     items: [{
-                        xtype: 'combo',
-                        name: 'cut_po',
-                        fieldLabel: 'Selection',
-                        fieldCls: 'required',
-                        displayField: 'label',
-                        valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
-                        readOnly: true,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        store: ['PO', 'CUT'],
-                        bind: {                            
-                            value: '{thePO.cut_po}'
-                        }
-                    },{
-                        xtype: 'datefield',
-                        name: 'startDate',                        
-                        format: 'Y-m-d',
-                        fieldLabel: 'Start Date',
-                        //editable: false,
-                        bind: {
-                            value: '{thePO.startDate}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                    },{
-                        xtype: 'combo',
-                        name: 'division',
-                        fieldLabel: 'Division',
-                        displayField: 'label',
-                        valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        bind: {
-                            store: '{divisions}',
-                            value: '{thePO.division}'
-                        }
-                    },{
-                        xtype: 'textfield',
-                        name: 'pono',
-                        fieldLabel: 'P.O #',
-                        readOnly: true,
-                        selectOnFocus: false,
-                        //flex: 1,
-                        bind: {
-                            value: '{thePO.pono}'
-                        },
-                        allowBlank: true
-                    },{
-                        xtype: 'datefield',
-                        name: 'cancelDate',
-                        format: 'Y-m-d',
-                        fieldLabel: 'Cancel Date',
-                        //editable: false,
-                        bind: {
-                            value: '{thePO.cancelDate}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                    },{
-                        xtype: 'combo',
-                        name: 'warehouse',
-                        fieldLabel: 'Warehouse',
-                        displayField: 'label',
-                        valueField: 'value',                        
-                        //selectOnFocus: true,                        
-                        forceSelection: false,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        bind: {
-                            store: '{warehouses}',
-                            value: '{thePO.warehouse}'
-                        },
-                        listConfig: {
-                            loadindText: 'Searching...',
-                            emptyText: 'No matching items found.',
-                            width: 340
-                        },                        
-                        plugins: [{
-                            ptype: "cleartrigger"
-                        }]
-                    },{
-                        xtype: 'datefield',
-                        name: 'orderDate',
-                        format: 'Y-m-d',
-                        fieldLabel: 'Order Date',
-                        //editable: false,
-                        bind: {
-                            value: '{thePO.orderDate}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                    },{
-                        xtype: 'datefield',
-                        name: 'etaDate',
-                        format: 'Y-m-d',
-                        fieldLabel: 'ETA Date',
-                        //editable: false,
-                        bind: {
-                            value: '{thePO.etaDate}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                    },{
-                        xtype: 'combo',
-                        name: 'shipvia',
-                        fieldLabel: 'Shipvia',
-                        displayField: 'label',
-                        valueField: 'value',
-                        //editable: true,
-                        selectOnFocus: false,
-                        //allowBlank: true,
-                        //forceSelection: true,
-                        pageSize: 50,
-                        matchFieldWidth: false,
-                        //msgTarget: 'side',                        
-                        minChars: 1,                        
-                        queryMode: 'local',                        
-                        //queryParam: 'filter',
-                        lastQuery: '',
-                        autoLoadOnValue: true,
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        store: 'memShipvias',
-                        remoteStore: 'shipvias',
-                        listConfig: {
-                            loadindText: 'Searching...',
-                            emptyText: 'No matching items found.',
-                            width: 340
-                        },
-                        bind: {                            
-                            value: '{thePO.shipvia}'
-                        },
-                        plugins: [{
-                            ptype: "cleartrigger"
-                        }],
-                        listeners: {
-                            change: function(c){
-                                c.getStore().load();
-                            },          
-                            beforequery: function(q){
-                                delete q.combo.lastQuery;
-                            },               
-                            triggerClear: function(c){
-                                c.getStore().load();                                
+                        xtype: "container",                    
+                        reference: "poheader",
+                        //iconCls: "x-fa fa-calculator",
+                        layout: {
+                            type: 'responsivecolumn',
+                            states: {
+                                /*
+                                 small: 800,
+                                 medium: 1200,
+                                 large: 0
+                                 */
                             }
-                        }
-                    },{
-                        xtype: 'combo',
-                        name: 'status',
-                        fieldLabel: 'Status',
-                        //displayField: 'label',
-                        //valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
-                        //msgTarget: 'side',
-                        //minChars: 1,
-                        //queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        store: ['Open', 'Hold', 'Closed'],
-                        bind: {                            
-                            value: '{thePO.status}'
-                        }
-                    },{
-                        xtype: 'datefield',
-                        name: 'shipdate',                        
-                        format: 'Y-m-d',
-                        fieldLabel: 'Ship Date',
-                        //editable: false,
-                        bind: {
-                            value: '{thePO.shipdate}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                    },
-                    {
-                        xtype: 'combo',
-                        name: 'type',
-                        fieldLabel: 'Type',
-                        //displayField: 'label',
-                        //valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
-                        //msgTarget: 'side',
-                        //minChars: 1,
-                        //queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        store: ['Estimate', 'Confirmed'],
-                        bind: {                            
-                            value: '{thePO.type}'
-                        }
-                    },
-                    {
-                        xtype: 'combo',
-                        name: 'processType',
-                        fieldLabel: 'Proc. Type',
-                        fieldCls: 'required',
-                        displayField: 'label',
-                        valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        bind: {
-                            store: '{processtypes}',
-                            value: '{thePO.processType}'
-                        }
-                    },   
-                    {
-                        xtype: 'combo',
-                        name: 'paymentcode',
-                        fieldLabel: 'PMT Method',
-                        displayField: 'label',
-                        valueField: 'value',                        
-                        //selectOnFocus: true,                        
-                        forceSelection: false,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        bind: {
-                            store: '{paymentcodes}',
-                            value: '{thePO.paymentcode}'
                         },
-                        plugins: [{
-                            ptype: "cleartrigger"
-                        }]
-                    },
-                    {
-                        xtype: 'combo',
-                        name: 'cancelreason',
-                        fieldLabel: 'CXL Reason',
-                        displayField: 'label',
-                        valueField: 'value',
-                        //selectOnFocus: true,                        
-                        forceSelection: false,
-                        matchFieldWidth: false,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        bind: {
-                            store: '{cxlreasons}',
-                            value: '{thePO.cancelreason}'
+                        //margin: "0 0 5 0",
+                        //bodyPadding: 8,
+                        scrollable: 'y',
+                        defaultType: 'container',
+                        defaults: {
+                            //margin: "5 0 0 0"
                         },
-                        listConfig: {
-                            loadindText: 'Searching...',
-                            emptyText: 'No matching items found.',
-                            width: 280
+                        fieldDefaults: {
+                            labelAlign: "left",
+                            margin: 0
                         },
-                        plugins: [{
-                            ptype: "cleartrigger"
+                        items: [{
+                            responsiveCls: 'small-100',
+                            //width: '30%',
+                            layout: {
+                                type: 'table',
+                                columns: 3,
+                                tableAttrs: {
+                                    style: {}
+                                }
+                            },
+                            defaultType: 'textfield',
+                            defaults: {
+                                width: 210,
+                                constrain: true,
+                                margin: '0 10 3 0',
+                                labelWidth: 80
+                                //minHeight: 720,
+                                //padding: '10 10 0 10'
+                            },
+                            items: [{
+                                xtype: 'combo',
+                                name: 'cut_po',
+                                fieldLabel: 'Selection',
+                                fieldCls: 'required',
+                                displayField: 'label',
+                                valueField: 'value',
+                                editable: false,
+                                //selectOnFocus: true,
+                                allowBlank: false,
+                                forceSelection: true,
+                                readOnly: true,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                store: ['PO', 'CUT'],
+                                bind: {                            
+                                    value: '{thePO.cut_po}'
+                                }
+                            },{
+                                xtype: 'datefield',
+                                name: 'startDate',                        
+                                format: 'Y-m-d',
+                                fieldLabel: 'Start Date',
+                                //editable: false,
+                                bind: {
+                                    value: '{thePO.startDate}'
+                                }
+                                //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                            },{
+                                xtype: 'combo',
+                                name: 'division',
+                                fieldLabel: 'Division',
+                                displayField: 'label',
+                                valueField: 'value',
+                                editable: false,
+                                //selectOnFocus: true,
+                                allowBlank: false,
+                                forceSelection: true,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                bind: {
+                                    store: '{divisions}',
+                                    value: '{thePO.division}'
+                                }
+                            },{
+                                xtype: 'textfield',
+                                name: 'pono',
+                                fieldLabel: 'P.O #',
+                                readOnly: true,
+                                selectOnFocus: false,
+                                //flex: 1,
+                                bind: {
+                                    value: '{thePO.pono}'
+                                },
+                                allowBlank: true
+                            },{
+                                xtype: 'datefield',
+                                name: 'cancelDate',
+                                format: 'Y-m-d',
+                                fieldLabel: 'Cancel Date',
+                                //editable: false,
+                                bind: {
+                                    value: '{thePO.cancelDate}'
+                                }
+                                //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                            },{
+                                xtype: 'combo',
+                                name: 'warehouse',
+                                fieldLabel: 'Warehouse',
+                                displayField: 'label',
+                                valueField: 'value',                        
+                                //selectOnFocus: true,                        
+                                forceSelection: false,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                bind: {
+                                    store: '{warehouses}',
+                                    value: '{thePO.warehouse}'
+                                },
+                                listConfig: {
+                                    loadindText: 'Searching...',
+                                    emptyText: 'No matching items found.',
+                                    width: 340
+                                },                        
+                                plugins: [{
+                                    ptype: "cleartrigger"
+                                }]
+                            },{
+                                xtype: 'datefield',
+                                name: 'orderDate',
+                                format: 'Y-m-d',
+                                fieldLabel: 'Order Date',
+                                //editable: false,
+                                bind: {
+                                    value: '{thePO.orderDate}'
+                                }
+                                //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                            },{
+                                xtype: 'datefield',
+                                name: 'etaDate',
+                                format: 'Y-m-d',
+                                fieldLabel: 'ETA Date',
+                                //editable: false,
+                                bind: {
+                                    value: '{thePO.etaDate}'
+                                }
+                                //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                            },{
+                                xtype: 'combo',
+                                name: 'shipvia',
+                                fieldLabel: 'Shipvia',
+                                displayField: 'label',
+                                valueField: 'value',
+                                //editable: true,
+                                selectOnFocus: false,
+                                //allowBlank: true,
+                                //forceSelection: true,
+                                pageSize: 50,
+                                matchFieldWidth: false,
+                                //msgTarget: 'side',                        
+                                minChars: 1,                        
+                                queryMode: 'local',                        
+                                //queryParam: 'filter',
+                                lastQuery: '',
+                                autoLoadOnValue: true,
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                store: 'memShipvias',
+                                remoteStore: 'shipvias',
+                                listConfig: {
+                                    loadindText: 'Searching...',
+                                    emptyText: 'No matching items found.',
+                                    width: 340
+                                },
+                                bind: {                            
+                                    value: '{thePO.shipvia}'
+                                },
+                                plugins: [{
+                                    ptype: "cleartrigger"
+                                }],
+                                listeners: {
+                                    change: function(c){
+                                        c.getStore().load();
+                                    },          
+                                    beforequery: function(q){
+                                        delete q.combo.lastQuery;
+                                    },               
+                                    triggerClear: function(c){
+                                        c.getStore().load();                                
+                                    }
+                                }
+                            },{
+                                xtype: 'combo',
+                                name: 'status',
+                                fieldLabel: 'Status',
+                                //displayField: 'label',
+                                //valueField: 'value',
+                                editable: false,
+                                //selectOnFocus: true,
+                                allowBlank: false,
+                                forceSelection: true,
+                                //msgTarget: 'side',
+                                //minChars: 1,
+                                //queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                store: ['Open', 'Hold', 'Closed'],
+                                bind: {                            
+                                    value: '{thePO.status}'
+                                }
+                            },{
+                                xtype: 'datefield',
+                                name: 'shipdate',                        
+                                format: 'Y-m-d',
+                                fieldLabel: 'Ship Date',
+                                //editable: false,
+                                bind: {
+                                    value: '{thePO.shipdate}'
+                                }
+                                //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                            },
+                            {
+                                xtype: 'combo',
+                                name: 'type',
+                                fieldLabel: 'Type',
+                                //displayField: 'label',
+                                //valueField: 'value',
+                                editable: false,
+                                //selectOnFocus: true,
+                                allowBlank: false,
+                                forceSelection: true,
+                                //msgTarget: 'side',
+                                //minChars: 1,
+                                //queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                store: ['Estimate', 'Confirmed'],
+                                bind: {                            
+                                    value: '{thePO.type}'
+                                }
+                            },
+                            {
+                                xtype: 'combo',
+                                name: 'processType',
+                                fieldLabel: 'Proc. Type',
+                                fieldCls: 'required',
+                                displayField: 'label',
+                                valueField: 'value',
+                                editable: false,
+                                //selectOnFocus: true,
+                                allowBlank: false,
+                                forceSelection: true,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                bind: {
+                                    store: '{processtypes}',
+                                    value: '{thePO.processType}'
+                                }
+                            },   
+                            {
+                                xtype: 'combo',
+                                name: 'paymentcode',
+                                fieldLabel: 'PMT Method',
+                                displayField: 'label',
+                                valueField: 'value',                        
+                                //selectOnFocus: true,                        
+                                forceSelection: false,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                bind: {
+                                    store: '{paymentcodes}',
+                                    value: '{thePO.paymentcode}'
+                                },
+                                plugins: [{
+                                    ptype: "cleartrigger"
+                                }]
+                            },
+                            {
+                                xtype: 'combo',
+                                name: 'cancelreason',
+                                fieldLabel: 'CXL Reason',
+                                displayField: 'label',
+                                valueField: 'value',
+                                //selectOnFocus: true,                        
+                                forceSelection: false,
+                                matchFieldWidth: false,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                bind: {
+                                    store: '{cxlreasons}',
+                                    value: '{thePO.cancelreason}'
+                                },
+                                listConfig: {
+                                    loadindText: 'Searching...',
+                                    emptyText: 'No matching items found.',
+                                    width: 280
+                                },
+                                plugins: [{
+                                    ptype: "cleartrigger"
+                                }]
+                            },  
+                            {
+                                xtype: 'combo',
+                                name: 'memocode',
+                                fieldLabel: 'Memo Code',
+                                displayField: 'label',
+                                valueField: 'value',                        
+                                //selectOnFocus: true,                        
+                                forceSelection: true,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                bind: {
+                                    store: '{memocodes}',
+                                    value: '{thePO.memocode}'
+                                },
+                                plugins: [{
+                                    ptype: "cleartrigger"
+                                }]
+                            },                     
+                            {
+                                xtype: 'combo',
+                                name: 'terms',
+                                fieldLabel: 'Term',
+                                displayField: 'label',
+                                valueField: 'value',                        
+                                //selectOnFocus: true,                        
+                                forceSelection: true,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                bind: {
+                                    store: '{terms}',
+                                    value: '{thePO.terms}'
+                                },
+                                plugins: [{
+                                    ptype: "cleartrigger"
+                                }]
+                            },
+                            {
+                                xtype: 'datefield',
+                                name: 'cancelReasonDate',                        
+                                format: 'Y-m-d',
+                                fieldLabel: 'CXL R. Date',
+                                //editable: false,
+                                bind: {
+                                    value: '{thePO.cancelReasonDate}'
+                                }
+                                //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                            }]
+                        },{
+                            responsiveCls: 'small-100',
+                            //width: '30%',
+                            layout: {
+                                type: 'table',
+                                columns: 5,
+                                tableAttrs: {
+                                    style: {}
+                                }
+                            },
+                            defaultType: 'textfield',
+                            defaults: {
+                                width: 220,
+                                constrain: true,
+                                margin: '0 10 3 0',                        
+                                labelWidth: 80
+                                //minHeight: 720,
+                                //padding: '10 10 0 10'
+                            },
+                            items: [{
+                                    xtype: 'textfield',
+                                    name: 'SONo',
+                                    fieldLabel: 'S.O #',
+                                    fieldCls: 'emphasized',
+                                    readOnly: true,
+                                    selectOnFocus: false,
+                                    //flex: 1,
+                                    bind: {
+                                        value: '{thePO.SoNo}'
+                                    }
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user1',
+                                    width: 250,
+                                    fieldLabel: 'Main Label',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user1}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },{
+                                    xtype: 'textfield',
+                                    name: 'user6',
+                                    width: 160,
+                                    fieldLabel: 'Price Ticket',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user6}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user11',
+                                    width: 140,
+                                    labelWidth: 60,
+                                    fieldLabel: 'Hanger',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user11}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'createUser',
+                                    width: 230,
+                                    fieldLabel: 'Created by',
+                                    fieldCls: 'emphasized',
+                                    readOnly: true,
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.createUser}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'so_customer',
+                                    fieldLabel: 'Customer',
+                                    fieldCls: 'emphasized',
+                                    readOnly: true,
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.so_customer}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'radiogroup',
+                                    //name: 'user2',
+                                    width: 270,
+                                    fieldLabel: 'Po Type',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    simpleValue: true,
+                                    items: [{
+                                        boxLabel: 'NEW PO', name: 'user2', inputValue: 'NEW PO'
+                                    },{
+                                        boxLabel: 'RE ORDER', name: 'user2', inputValue: 'RE ORDER'
+                                    }],
+                                    bind: '{thePO.user2}'
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user7',
+                                    width: 160,
+                                    fieldLabel: 'Size Label',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user7}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user12',
+                                    width: 140,
+                                    labelWidth: 60,
+                                    fieldLabel: 'Polybag',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user12}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'datefield',
+                                    name: 'createDate',
+                                    width: 230,
+                                    fieldLabel: 'Created on',     
+                                    fieldCls: 'emphasized',                       
+                                    readOnly: true,
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    format: 'Y-m-d h:i a',
+                                    bind: {
+                                        value: '{thePO.createDate}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'so_store',
+                                    fieldLabel: 'Store',
+                                    fieldCls: 'emphasized',
+                                    readOnly: true,
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.so_store}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'combo',
+                                    name: 'user3',
+                                    width: 250,
+                                    fieldLabel: 'Coordinator',
+                                    displayField: 'label',
+                                    valueField: 'value',
+                                    editable: false,
+                                    //selectOnFocus: true,
+                                    allowBlank: true,
+                                    forceSelection: true,
+                                    //msgTarget: 'side',
+                                    minChars: 1,
+                                    queryMode: 'local',
+                                    //queryParam: 'filter',
+                                    //triggerAction: 'all',
+                                    store: ['Irene', 'Jennne', 'Kyna'],
+                                    bind: {
+                                        //store: '{coordinators}',
+                                        value: '{thePO.user3}'
+                                    },
+                                    plugins: [{
+                                        ptype: "cleartrigger"
+                                    }]
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user8',
+                                    width: 160,
+                                    fieldLabel: 'Care Label',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user8}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user13',
+                                    width: 140,
+                                    labelWidth: 60,
+                                    fieldLabel: 'Sizer',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user13}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'updateUser',
+                                    width: 230,
+                                    fieldLabel: 'Updated by',
+                                    fieldCls: 'emphasized',
+                                    readOnly: true,
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.updateUser}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'so_po',
+                                    fieldLabel: 'Cust P.O #',
+                                    fieldCls: 'emphasized',
+                                    readOnly: true,
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.so_po}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user4',
+                                    width: 250,
+                                    fieldLabel: 'Pack',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user4}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user9',
+                                    width: 160,
+                                    fieldLabel: 'Hang Tag',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user9}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user14',
+                                    width: 140,
+                                    labelWidth: 60,
+                                    fieldLabel: 'Barcode',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user14}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },   
+                                {
+                                    xtype: 'datefield',
+                                    name: 'updateDate',
+                                    width: 230,
+                                    fieldLabel: 'Updated on',
+                                    fieldCls: 'emphasized',
+                                    //labelWidth: 85,
+                                    readOnly: true,
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    format: 'Y-m-d h:i a',
+                                    bind: {
+                                        value: '{thePO.updateDate}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },                                                                                                                        
+                                {
+                                    xtype: 'textfield',
+                                    name: 'parent_pono',
+                                    fieldLabel: 'Parent P.O #',
+                                    fieldCls: 'emphasized',
+                                    readOnly: true,
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.parent_pono}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user5',
+                                    width: 250,
+                                    fieldLabel: 'TECH TEAM',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user5}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },
+                                {
+                                    xtype: 'textfield',
+                                    name: 'user10',
+                                    colspan: 3,
+                                    width: 160,
+                                    fieldLabel: 'COO Label',                            
+                                    selectOnFocus: false,
+                                    //editable: false,
+                                    bind: {
+                                        value: '{thePO.user10}'
+                                    }
+                                    //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
+                                },                                                                                                  
+                                {
+                                    xtype: 'container',   
+                                    colspan: 5,                                                     
+                                    style: {
+                                        //border: '1px solid black'
+                                    },
+                                    height: 24
+                                }                                                                                               
+                            ]
+                        },{
+                            responsiveCls: 'small-100',
+                            //width: '30%',
+                            layout: {
+                                type: 'table',
+                                columns: 2,
+                                tableAttrs: {
+                                    style: {
+                                        //border: '1px solid black'
+                                    }
+                                }
+                            },
+                            defaultType: 'combobox',
+                            defaults: {
+                                constrain: true,
+                                margin: '0 10 3 0',
+                                labelWidth: 80
+                                //minHeight: 720,
+                                //padding: '10 10 0 10'
+                            },
+                            items: [{
+                                xtype: 'combo',
+                                name: 'vendor',
+                                fieldLabel: 'Vendor',
+                                displayField: 'label',
+                                valueField: 'value',                        
+                                //selectOnFocus: true,                        
+                                forceSelection: false,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                bind: {
+                                    store: '{vendors}',
+                                    value: '{thePO.vendor}'
+                                },                        
+                                plugins: [{
+                                    ptype: "cleartrigger"
+                                }],
+                                listeners: {
+                                    change: {
+                                        fn: 'onVendorChanged',
+                                        scope: this.controller
+                                    }, 
+                                    beforequery: function(q){
+                                        delete q.combo.lastQuery;
+                                    }, 
+                                    triggerClear: {
+                                        fn: 'onTriggerClear',
+                                        scope: this.controller
+                                    }
+                                }
+                            },
+                            {
+                                xtype: 'combo',
+                                name: 'shipto',
+                                fieldLabel: 'Ship To',
+                                displayField: 'label',
+                                valueField: 'value',
+                                editable: false,
+                                //selectOnFocus: true,
+                                allowBlank: false,
+                                forceSelection: true,
+                                //msgTarget: 'side',
+                                minChars: 1,
+                                queryMode: 'local',
+                                //queryParam: 'filter',
+                                //triggerAction: 'all',
+                                //store: ['00', 'OS', 'SA'],
+                                bind: {
+                                    store: '{shiptos}',
+                                    value: '{thePO.shipto}'
+                                },
+                                listeners: {
+                                    change: {
+                                        fn: 'onShipToChanged',
+                                        scope: this.controller
+                                    }
+                                }
+                            },{
+                                xtype: 'component',
+                                name: 'vendorAddress',                        
+                                //width: 260,                        
+                                height: 93,
+                                style: {
+                                    //border: '1px solid #cfcfcf'
+                                },
+                                tpl: addressTpl,
+                                bind: {
+                                    data: '{theVendor}'
+                                }
+                            },{
+                                xtype: 'component',
+                                name: 'shipToAddress',
+                                //width: 240,
+                                height: 93,
+                                style: {
+                                    //border: '1px solid #cfcfcf'
+                                },
+                                tpl: addressTpl,
+                                bind: {
+                                    data: '{theShipTo}'
+                                }
+                            }]
+                        },{
+                            responsiveCls: 'small-100',
+                            //width: '30%',
+                            layout: {
+                                type: 'table',
+                                columns: 4,
+                                tableAttrs: {
+                                    style: {}
+                                }
+                            },
+                            defaultType: 'textfield',
+                            defaults: {
+                                constrain: true,
+                                margin: '0 10 3 0',
+                                labelWidth: 80
+                                //minHeight: 720,
+                                //padding: '10 10 0 10'
+                            },
+                            items: [{
+                                xtype: 'textarea',
+                                name: 'memo',
+                                emptyText: 'Memo 1:',
+                                colspan: 2,
+                                width: 480,
+                                height: 120,
+                                bind: {
+                                    value: '{thePO.memo}'
+                                }
+                                //fieldLabel: 'Memo'
+                            },
+                            {
+                                xtype: 'textarea',
+                                name: 'trimMemo',
+                                emptyText: 'Memo 2:',
+                                colspan: 2,
+                                width: 480,
+                                height: 120,
+                                bind: {
+                                    value: '{thePO.trimMemo}'
+                                }
+                                //fieldLabel: 'Memo'
+                            }]
                         }]
                     },  
                     {
-                        xtype: 'combo',
-                        name: 'memocode',
-                        fieldLabel: 'Memo Code',
-                        displayField: 'label',
-                        valueField: 'value',                        
-                        //selectOnFocus: true,                        
-                        forceSelection: true,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        bind: {
-                            store: '{memocodes}',
-                            value: '{thePO.memocode}'
-                        },
-                        plugins: [{
-                            ptype: "cleartrigger"
-                        }]
-                    },                     
-                    {
-                        xtype: 'combo',
-                        name: 'terms',
-                        fieldLabel: 'Term',
-                        displayField: 'label',
-                        valueField: 'value',                        
-                        //selectOnFocus: true,                        
-                        forceSelection: true,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        bind: {
-                            store: '{terms}',
-                            value: '{thePO.terms}'
-                        },
-                        plugins: [{
-                            ptype: "cleartrigger"
-                        }]
-                    },
-                    {
-                        xtype: 'datefield',
-                        name: 'cancelReasonDate',                        
-                        format: 'Y-m-d',
-                        fieldLabel: 'CXL R. Date',
-                        //editable: false,
-                        bind: {
-                            value: '{thePO.cancelReasonDate}'
-                        }
-                        //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                    }]
-                },{
-                    responsiveCls: 'small-100',
-                    //width: '30%',
-                    layout: {
-                        type: 'table',
-                        columns: 5,
-                        tableAttrs: {
-                            style: {}
-                        }
-                    },
-                    defaultType: 'textfield',
-                    defaults: {
-                        width: 220,
-                        constrain: true,
-                        margin: '0 10 3 0',                        
-                        labelWidth: 80
-                        //minHeight: 720,
-                        //padding: '10 10 0 10'
-                    },
-                    items: [{
-                            xtype: 'textfield',
-                            name: 'SONo',
-                            fieldLabel: 'S.O #',
-                            fieldCls: 'emphasized',
-                            readOnly: true,
-                            selectOnFocus: false,
-                            //flex: 1,
-                            bind: {
-                                value: '{thePO.SoNo}'
+                        xtype: 'grid',
+                        reference: 'po-grid',
+                        tools: [
+                            { 
+                                type: 'refresh',
+                                tooltip: 'Refresh data'
                             }
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user1',
-                            width: 250,
-                            fieldLabel: 'Main Label',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user1}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },{
-                            xtype: 'textfield',
-                            name: 'user6',
-                            width: 160,
-                            fieldLabel: 'Price Ticket',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user6}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user11',
-                            width: 140,
-                            labelWidth: 60,
-                            fieldLabel: 'Hanger',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user11}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'createUser',
-                            width: 230,
-                            fieldLabel: 'Created by',
-                            fieldCls: 'emphasized',
-                            readOnly: true,
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.createUser}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'so_customer',
-                            fieldLabel: 'Customer',
-                            fieldCls: 'emphasized',
-                            readOnly: true,
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.so_customer}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'radiogroup',
-                            //name: 'user2',
-                            width: 270,
-                            fieldLabel: 'Po Type',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            simpleValue: true,
+                        ],
+        
+                        header: {
+                            title: 'Detail',
+                            iconCls: 'x-fa fa-list',  
+                            titlePosition: 2,
+                            titleAlign: 'left',
                             items: [{
-                                boxLabel: 'NEW PO', name: 'user2', inputValue: 'NEW PO'
+                                xtype: 'button',
+                                //text: 'Expand all',
+                                iconCls: 'x-fa fa-expand',
+                                pressed: true,
+                                enableToggle: true,
+                                toggleHandler: function(button, pressed) {
+                                    var grid = button.up('grid');
+                                    var override = grid.getPlugin('poRowExpander');
+                            
+                                    //console.log('toggle', this, override);
+                                    if (!pressed) {
+                                            //button.setText('Collapse all');                             
+                                            override.expandAll();                            
+                                    } else {
+                                        //button.setText('Expand all');     
+                                        override.collapseAll();
+                                    }
+                                }
                             },{
-                                boxLabel: 'RE ORDER', name: 'user2', inputValue: 'RE ORDER'
-                            }],
-                            bind: '{thePO.user2}'
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user7',
-                            width: 160,
-                            fieldLabel: 'Size Label',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user7}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user12',
-                            width: 140,
-                            labelWidth: 60,
-                            fieldLabel: 'Polybag',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user12}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'datefield',
-                            name: 'createDate',
-                            width: 230,
-                            fieldLabel: 'Created on',     
-                            fieldCls: 'emphasized',                       
-                            readOnly: true,
-                            selectOnFocus: false,
-                            //editable: false,
-                            format: 'Y-m-d h:i a',
-                            bind: {
-                                value: '{thePO.createDate}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'so_store',
-                            fieldLabel: 'Store',
-                            fieldCls: 'emphasized',
-                            readOnly: true,
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.so_store}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'combo',
-                            name: 'user3',
-                            width: 250,
-                            fieldLabel: 'Coordinator',
-                            displayField: 'label',
-                            valueField: 'value',
-                            editable: false,
-                            //selectOnFocus: true,
-                            allowBlank: true,
-                            forceSelection: true,
-                            //msgTarget: 'side',
-                            minChars: 1,
-                            queryMode: 'local',
-                            //queryParam: 'filter',
-                            //triggerAction: 'all',
-                            store: ['Irene', 'Jennne', 'Kyna'],
-                            bind: {
-                                //store: '{coordinators}',
-                                value: '{thePO.user3}'
-                            },
-                            plugins: [{
-                                ptype: "cleartrigger"
+                                xtype: 'tbspacer',
+                                width: 10
                             }]
                         },
-                        {
-                            xtype: 'textfield',
-                            name: 'user8',
-                            width: 160,
-                            fieldLabel: 'Care Label',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user8}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user13',
-                            width: 140,
-                            labelWidth: 60,
-                            fieldLabel: 'Sizer',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user13}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'updateUser',
-                            width: 230,
-                            fieldLabel: 'Updated by',
-                            fieldCls: 'emphasized',
-                            readOnly: true,
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.updateUser}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'so_po',
-                            fieldLabel: 'Cust P.O #',
-                            fieldCls: 'emphasized',
-                            readOnly: true,
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.so_po}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user4',
-                            width: 250,
-                            fieldLabel: 'Pack',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user4}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user9',
-                            width: 160,
-                            fieldLabel: 'Hang Tag',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user9}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user14',
-                            width: 140,
-                            labelWidth: 60,
-                            fieldLabel: 'Barcode',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user14}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },   
-                        {
-                            xtype: 'datefield',
-                            name: 'updateDate',
-                            width: 230,
-                            fieldLabel: 'Updated on',
-                            fieldCls: 'emphasized',
-                            //labelWidth: 85,
-                            readOnly: true,
-                            selectOnFocus: false,
-                            //editable: false,
-                            format: 'Y-m-d h:i a',
-                            bind: {
-                                value: '{thePO.updateDate}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },                                                                                                                        
-                        {
-                            xtype: 'textfield',
-                            name: 'parent_pono',
-                            fieldLabel: 'Parent P.O #',
-                            fieldCls: 'emphasized',
-                            readOnly: true,
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.parent_pono}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user5',
-                            width: 250,
-                            fieldLabel: 'TECH TEAM',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user5}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },
-                        {
-                            xtype: 'textfield',
-                            name: 'user10',
-                            colspan: 3,
-                            width: 160,
-                            fieldLabel: 'COO Label',                            
-                            selectOnFocus: false,
-                            //editable: false,
-                            bind: {
-                                value: '{thePO.user10}'
-                            }
-                            //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
-                        },                                                                                                  
-                        {
-                            xtype: 'container',   
-                            colspan: 5,                                                     
-                            style: {
-                                //border: '1px solid black'
-                            },
-                            height: 24
-                        }                                                                                               
-                    ]
-                },{
-                    responsiveCls: 'small-100',
-                    //width: '30%',
-                    layout: {
-                        type: 'table',
-                        columns: 2,
-                        tableAttrs: {
-                            style: {
-                                //border: '1px solid black'
-                            }
-                        }
-                    },
-                    defaultType: 'combobox',
-                    defaults: {
-                        constrain: true,
-                        margin: '0 10 3 0',
-                        labelWidth: 80
-                        //minHeight: 720,
-                        //padding: '10 10 0 10'
-                    },
-                    items: [{
-                        xtype: 'combo',
-                        name: 'vendor',
-                        fieldLabel: 'Vendor',
-                        displayField: 'label',
-                        valueField: 'value',                        
-                        //selectOnFocus: true,                        
-                        forceSelection: false,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        bind: {
-                            store: '{vendors}',
-                            value: '{thePO.vendor}'
-                        },                        
-                        plugins: [{
-                            ptype: "cleartrigger"
-                        }],
-                        listeners: {
-                            change: {
-                                fn: 'onVendorChanged',
-                                scope: this.controller
-                            }, 
-                            beforequery: function(q){
-                                delete q.combo.lastQuery;
-                            }, 
-                            triggerClear: {
-                                fn: 'onTriggerClear',
-                                scope: this.controller
-                            }
-                        }
-                    },
-                    {
-                        xtype: 'combo',
-                        name: 'shipto',
-                        fieldLabel: 'Ship To',
-                        displayField: 'label',
-                        valueField: 'value',
-                        editable: false,
-                        //selectOnFocus: true,
-                        allowBlank: false,
-                        forceSelection: true,
-                        //msgTarget: 'side',
-                        minChars: 1,
-                        queryMode: 'local',
-                        //queryParam: 'filter',
-                        //triggerAction: 'all',
-                        //store: ['00', 'OS', 'SA'],
-                        bind: {
-                            store: '{shiptos}',
-                            value: '{thePO.shipto}'
-                        },
-                        listeners: {
-                            change: {
-                                fn: 'onShipToChanged',
-                                scope: this.controller
-                            }
-                        }
-                    },{
-                        xtype: 'component',
-                        name: 'vendorAddress',                        
-                        //width: 260,                        
-                        height: 93,
-                        style: {
-                            //border: '1px solid #cfcfcf'
-                        },
-                        tpl: addressTpl,
-                        bind: {
-                            data: '{theVendor}'
-                        }
-                    },{
-                        xtype: 'component',
-                        name: 'shipToAddress',
-                        //width: 240,
-                        height: 93,
-                        style: {
-                            //border: '1px solid #cfcfcf'
-                        },
-                        tpl: addressTpl,
-                        bind: {
-                            data: '{theShipTo}'
-                        }
-                    }]
-                },{
-                    responsiveCls: 'small-100',
-                    //width: '30%',
-                    layout: {
-                        type: 'table',
-                        columns: 4,
-                        tableAttrs: {
-                            style: {}
-                        }
-                    },
-                    defaultType: 'textfield',
-                    defaults: {
-                        constrain: true,
-                        margin: '0 10 3 0',
-                        labelWidth: 80
-                        //minHeight: 720,
-                        //padding: '10 10 0 10'
-                    },
-                    items: [{
-                        xtype: 'textarea',
-                        name: 'memo',
-                        emptyText: 'Memo 1:',
-                        colspan: 2,
-                        width: 480,
-                        height: 120,
-                        bind: {
-                            value: '{thePO.memo}'
-                        }
-                        //fieldLabel: 'Memo'
-                    },
-                    {
-                        xtype: 'textarea',
-                        name: 'trimmemo',
-                        emptyText: 'Memo 2:',
-                        colspan: 2,
-                        width: 480,
-                        height: 120,
-                        bind: {
-                            value: '{thePO.trimmemo}'
-                        }
-                        //fieldLabel: 'Memo'
-                    }]
-                }]
-            },  
-            {
-                xtype: 'grid',
-                reference: 'po-grid',
-                tools: [
-                    { 
-                        type: 'refresh',
-                        tooltip: 'Refresh data'
-                    }
-                ],
-
-                header: {
-                    title: 'Detail',
-                    iconCls: 'x-fa fa-list',  
-                    titlePosition: 2,
-                    titleAlign: 'left',
-                    items: [{
-                        xtype: 'button',
-                        //text: 'Expand all',
-                        iconCls: 'x-fa fa-expand',
-                        pressed: true,
-                        enableToggle: true,
-                        toggleHandler: function(button, pressed) {
-                            var grid = button.up('grid');
-                            var override = grid.getPlugin('poRowExpander');
-                    
-                            //console.log('toggle', this, override);
-                            if (!pressed) {
-                                    //button.setText('Collapse all');                             
-                                    override.expandAll();                            
-                            } else {
-                                //button.setText('Expand all');     
-                                override.collapseAll();
-                            }
-                        }
-                    },{
-                        xtype: 'tbspacer',
-                        width: 10
-                    }]
-                },
-
-                flex: 1,
-                columnLines: true,
-
-                bind: {
-                    selection: '{selection}',
-                    store: '{thePO.purchaseorderitems}'
-                },
-
-                listeners: {                                                
-                    itemcontextmenu: 'onItemContextMenu',
-                    selectionchange: {
-                        fn: 'onSelectionChanged',
-                        scope: this.controller
-                    },
-                    edit: {
-                        fn: 'onRowEditing',
-                        scope: this.controller
-                    }
-                },
-
-                columns: me.buildGridColumns(),
-
-                selModel: {
-                    //type: 'checkboxmodel',                    
-                    //mode: 'MULTI',
-                    pruneRemoved: false
-                },
-
-                viewConfig: {
-                    loadMask: true,
-                    stripeRows: true,
-                    trackOver: true,
-                    preserveScrollOnRefresh: true,
-                    preserveScrollOnReload: true,
-                    deferInitialRefresh: true,
-                    emptyText: '<h1 style="margin: 20px">No matching results</h1>',
-                    getRowClass: function(a, g, f, h){
-                        return "custom-row-style";
-                    },
-                    listeners: {
-                        refresh: function(view, e){
-                            var expander = view.ownerCt.getPlugin('poRowExpander');
-                            expander.expandAll();
-                        }
-                    }
-                },
-
-                features: [{
-                    ftype: 'summary'
-                }],
-
-                plugins: [{
-                    ptype: 'rowediting',
-                    pluginId: 'poGridRowEdit',
-                    clicksToMoveEditor: 1,                    
-                    //errorSummary: false,
-                    autoCancel: false,
-                    listeners: {
-                        /*
-                        edit: {
-                            fn: 'onRowEdit',
-                            scope: this.controller
-                        }
-                        */
-                    }
-                },{
-                    ptype: 'allrowexpander',
-                    //bodyBefore: true,
-                    expandOnDblClick: false,
-                    pluginId: 'poRowExpander',                            
-                    
-                    rowBodyTpl: new Ext.XTemplate(
-                        '<div class="item-boxer" >',
-                            '<div class="box-row" style="height:20px">',
-                                //'<div class="box nb center" style="width:40px;"></div>',
-                                '<div class="box ab" style="width:68px;padding-right:10px;">Desc.</div>',
-                                '<div class="box ab" style="width:320px;">{descript}</div>',
-                                '<div class="box ab">',
-                                    '<div class="item-boxer" style="height:20px">',
-                                    '<div class="box rb" style="width:47px;padding-left:10px;">{size1}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size2}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size3}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size4}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size5}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size6}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size7}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size8}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size9}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size10}</div>',
-                                    '<div class="box rb" style="width:50px;padding-left:10px;">{size11}</div>',
-                                    '<div class="box nb" style="width:49px;padding-left:10px;">{size12}</div>',
-                                    //'<div class="box nb center" style="width:82px;"></div>',
-                                    '</div>',
-                                '</div>',
-                                '<div class="box ab" style="width:80px;">{closed_qty}</div>',
-                                '<div class="box ab" style="width:100px;padding-left:10px;">{extPrice:usMoney}</div>',                                
-                                '<div class="box ab">',
-                                    '<div class="item-boxer" style="height:20px">',
-                                        '<div class="box rb" style="width:97px;"></div>',
-                                        '<div class="box rb" style="width:100px;padding-left:10px;"><b>POD ID</b></div>',
-                                        '<div class="box rb" style="width:120px;padding-left:10px;">{id}</div>',
-                                        '<div class="box rb" style="width:120px;padding-left:10px;"><b>STO SOD ID</b></div>', 
-                                        '<div class="box rb" style="width:120px;padding-left:10px;">{sto_invdid}</div>',
-                                        '<div class="box rb" style="width:120px;padding-left:10px;"><b>Line</b></div>', 
-                                        '<div class="box rb" style="width:100px;padding-left:10px;">{line}</div>',
-                                        '<div class="box nb" style="width:120px;"></div>', 
-                                    '</div>',
-                                '</div>',                                
-                            '</div>',
-                            '<div class="box-row" style="height:20px">',
-                                //'<div class="box nb" style="width:40px;"></div>',
-                                '<div class="box ab" style="width:68px;padding-right:10px;">PrePack</div>',
-                                '<div class="box ab">',
-                                    '<div class="item-boxer" style="height:20px">',
-                                        '<div class="box rb" style="width:110px;">{bundle}</div>',
-                                        '<div class="box rb" style="width:100px;padding-left:10px;"><b>Total Qty</b></div>',
-                                        '<div class="box nb" style="width:110px;">{numbFfBundle}</div>',
-                                    '</div>',
-                                '</div>',                                                                
-                                '<div class="box ab">',
-                                    '<div class="item-boxer" style="height:20px">',
-                                        '<div class="box rb" style="width:47px;"></div>',
-                                        '<div id="rex-textfield-memo" class="box rb" style="width:450px;padding-left:10px;"></div>',                                        
-                                        '<div class="box rb" style="width:50px;padding-left:10px;"></div>',
-                                        '<div id="rex-combobox-status" class="box nb" style="width:49px;padding-left:10px;"></div>',
-                                        //'<div class="box nb" style="width:82px;"></div>',
-                                    '</div>',
-                                '</div>',
-                                '<div class="box ab" style="width:80px;padding-left:10px;"></div>',                                
-                                '<div class="box ab" style="width:100px;"></div>',
-                                '<div class="box ab">',
-                                    '<div class="item-boxer" style="height:20px">',
-                                        '<div class="box rb " style="width:97px;"></div>',
-                                        '<div class="box rb " style="width:100px;padding-left:10px;"><b>SO #</b></div>',
-                                        '<div class="box rb " style="width:120px;padding-left:10px;">{SONo}</div>',
-                                        '<div class="box rb " style="width:120px;padding-left:10px;"><b>STO INVD D</b></div>',                                        
-                                        '<div class="box rb " style="width:120px;padding-left:10px;">{sto_sodid}</div>',                                        
-                                        '<div class="box rb " style="width:120px;padding-left:10px;"><b>Season</b></div>',                                        
-                                        '<div class="box rb " style="width:100px;padding-left:10px;">{season}</div>',                                        
-                                        '<div class="box nb " style="width:120px;"></div>',                                        
-                                    '</div>',
-                                '</div>',                                
-                            '</div>',                                                        
-                        '</div>',                        
-                        {
-                            formatChange: function(v) {
-                                var color = v >= 0 ? 'green' : 'red';
         
-                                return '<span style="color: ' + color + ';">' +
-                                    Ext.util.Format.usMoney(v) + '</span>';
+                        flex: 1,
+                        columnLines: true,
+        
+                        bind: {
+                            selection: '{selection}',
+                            store: '{thePO.purchaseorderitems}'
+                        },
+        
+                        listeners: {                                                
+                            itemcontextmenu: 'onItemContextMenu',
+                            selectionchange: {
+                                fn: 'onSelectionChanged',
+                                scope: this.controller
+                            },
+                            edit: {
+                                fn: 'onRowEditing',
+                                scope: this.controller
                             }
-                        })                    
+                        },
+        
+                        columns: me.buildGridColumns(),
+        
+                        selModel: {
+                            //type: 'checkboxmodel',                    
+                            //mode: 'MULTI',
+                            pruneRemoved: false
+                        },
+        
+                        viewConfig: {
+                            loadMask: true,
+                            stripeRows: true,
+                            trackOver: true,
+                            preserveScrollOnRefresh: true,
+                            preserveScrollOnReload: true,
+                            deferInitialRefresh: true,
+                            emptyText: '<h1 style="margin: 20px">No matching results</h1>',
+                            getRowClass: function(a, g, f, h){
+                                return "custom-row-style";
+                            },
+                            listeners: {
+                                refresh: function(view, e){
+                                    var expander = view.ownerCt.getPlugin('poRowExpander');
+                                    expander.expandAll();
+                                }
+                            }
+                        },
+        
+                        features: [{
+                            ftype: 'summary'
+                        }],
+        
+                        plugins: [{
+                            ptype: 'rowediting',
+                            pluginId: 'poGridRowEdit',
+                            clicksToMoveEditor: 1,                    
+                            //errorSummary: false,
+                            autoCancel: false,
+                            listeners: {
+                                /*
+                                edit: {
+                                    fn: 'onRowEdit',
+                                    scope: this.controller
+                                }
+                                */
+                            }
+                        },{
+                            ptype: 'allrowexpander',
+                            //bodyBefore: true,
+                            expandOnDblClick: false,
+                            pluginId: 'poRowExpander',                            
+                            
+                            rowBodyTpl: new Ext.XTemplate(
+                                '<div class="item-boxer">',
+                                    '<div class="box-row" style="height:20px">',
+                                        //'<div class="box nb center" style="width:40px;"></div>',
+                                        '<div class="box ab" style="width:68px;padding-right:10px;">Desc.</div>',
+                                        '<div class="box ab" style="width:320px;">{descript}</div>',
+                                        '<div class="box ab">',
+                                            '<div class="item-boxer" style="height:20px">',
+                                            '<div class="box rb" style="width:47px;padding-left:10px;">{size1}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size2}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size3}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size4}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size5}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size6}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size7}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size8}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size9}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size10}</div>',
+                                            '<div class="box rb" style="width:50px;padding-left:10px;">{size11}</div>',
+                                            '<div class="box nb" style="width:49px;padding-left:10px;">{size12}</div>',
+                                            //'<div class="box nb center" style="width:82px;"></div>',
+                                            '</div>',
+                                        '</div>',
+                                        '<div class="box ab" style="width:80px;">{closed_qty}</div>',
+                                        '<div class="box ab" style="width:100px;padding-left:10px;">{extPrice:usMoney}</div>',                                
+                                        '<div class="box ab">',
+                                            '<div class="item-boxer" style="height:20px">',
+                                                '<div class="box rb" style="width:97px;"></div>',
+                                                '<div class="box rb" style="width:100px;padding-left:10px;"><b>POD ID</b></div>',
+                                                '<div class="box rb" style="width:120px;padding-left:10px;">{id}</div>',
+                                                '<div class="box rb" style="width:120px;padding-left:10px;"><b>STO SOD ID</b></div>', 
+                                                '<div class="box rb" style="width:120px;padding-left:10px;">{sto_invdid}</div>',
+                                                '<div class="box rb" style="width:120px;padding-left:10px;"><b>Line</b></div>', 
+                                                '<div class="box rb" style="width:100px;padding-left:10px;">{line}</div>',
+                                                '<div class="box nb" style="width:120px;"></div>', 
+                                            '</div>',
+                                        '</div>',                                
+                                    '</div>',
+                                    '<div class="box-row" style="height:20px">',
+                                        //'<div class="box nb" style="width:40px;"></div>',
+                                        '<div class="box ab" style="width:68px;padding-right:10px;">PrePack</div>',
+                                        '<div class="box ab">',
+                                            '<div class="item-boxer" style="height:20px">',
+                                                '<div class="box rb" style="width:110px;">{bundle}</div>',
+                                                '<div class="box rb" style="width:100px;padding-left:10px;"><b>Total Qty</b></div>',
+                                                '<div class="box nb" style="width:110px;">{numbFfBundle}</div>',
+                                            '</div>',
+                                        '</div>',                                                                
+                                        '<div class="box ab">',
+                                            '<div class="item-boxer" style="height:20px">',
+                                                '<div class="box rb" style="width:47px;"></div>',
+                                                '<div id="rex-textfield-memo" class="box rb" style="width:450px;padding-left:10px;"></div>',                                        
+                                                '<div class="box rb" style="width:50px;padding-left:10px;"></div>',
+                                                '<div id="rex-combobox-status" class="box nb" style="width:49px;padding-left:10px;"></div>',
+                                                //'<div class="box nb" style="width:82px;"></div>',
+                                            '</div>',
+                                        '</div>',
+                                        '<div class="box ab" style="width:80px;padding-left:10px;"></div>',                                
+                                        '<div class="box ab" style="width:100px;"></div>',
+                                        '<div class="box ab">',
+                                            '<div class="item-boxer" style="height:20px">',
+                                                '<div class="box rb " style="width:97px;"></div>',
+                                                '<div class="box rb " style="width:100px;padding-left:10px;"><b>SO #</b></div>',
+                                                '<div class="box rb " style="width:120px;padding-left:10px;">{SONo}</div>',
+                                                '<div class="box rb " style="width:120px;padding-left:10px;"><b>STO INVD D</b></div>',                                        
+                                                '<div class="box rb " style="width:120px;padding-left:10px;">{sto_sodid}</div>',                                        
+                                                '<div class="box rb " style="width:120px;padding-left:10px;"><b>Season</b></div>',                                        
+                                                '<div class="box rb " style="width:100px;padding-left:10px;">{season}</div>',                                        
+                                                '<div class="box nb " style="width:120px;"></div>',                                        
+                                            '</div>',
+                                        '</div>',                                
+                                    '</div>',                                                        
+                                '</div>',                        
+                                {
+                                    formatChange: function(v) {
+                                        var color = v >= 0 ? 'green' : 'red';
+                
+                                        return '<span style="color: ' + color + ';">' +
+                                            Ext.util.Format.usMoney(v) + '</span>';
+                                    }
+                                })                    
+                        },{
+                            ptype: "gridfilters"
+                        },{
+                            ptype: 'grid-exporter'
+                        }]
+                    }]
                 },{
-                    ptype: "gridfilters"
+                    title: 'BOM'
                 },{
-                    ptype: 'grid-exporter'
-                }]
-            }
+                    title: 'Receiving'
+                }],
+                
+                listeners: {
+                    //tabchange: 'onTabChange'
+                }
+            }                                            
             /*
             {
                 xtype: 'panel',       
@@ -1544,8 +1584,8 @@ Ext.define('August.view.purchase.OrderForm',{
             text: 'Line',
             dataIndex: 'line',
             width: 55,                        
-            menuDisabled: true,
-            sortable: false
+            menuDisabled: false,
+            sortable: true
         },               
         {
             text: "id",
@@ -1562,14 +1602,15 @@ Ext.define('August.view.purchase.OrderForm',{
             text: '',
             width: 24,
             menuDisabled: true,
+            resizable: false,
             sortable: false
         },       
         {
             text: "Style",
             width: 160, 
             dataIndex: "style",        
-            menuDisabled: true,
-            sortable: false,    
+            menuDisabled: false,
+            sortable: true,    
             filter: {
                 type: 'string'
             },
@@ -1661,8 +1702,8 @@ Ext.define('August.view.purchase.OrderForm',{
             text: "Color",
             width: 160, 
             dataIndex: "color",       
-            menuDisabled: true,
-            sortable: false,     
+            menuDisabled: false,
+            sortable: true,     
             filter: {
                 type: 'string'
             },

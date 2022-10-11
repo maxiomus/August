@@ -116,8 +116,9 @@ Ext.define('August.model.reports.invoice.SummaryBySoType', {
                 return b;
             }
         }
-    ],
+    ]
 
+    /*
     idProperty: 'invoiceno',
     identifier: 'negative',
 
@@ -165,8 +166,5 @@ Ext.define('August.model.reports.invoice.SummaryBySoType', {
             }
         }
     }
+    */
 });
-
-function tr(value, record){
-    return Ext.String.trim(value);
-};

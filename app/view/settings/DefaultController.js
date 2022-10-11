@@ -5,7 +5,7 @@ Ext.define('August.view.settings.DefaultController', {
         'Ext.app.route.Base'
     ],
 
-    alias: 'controller.settings-default',
+    alias: 'controller.settings-default',    
 
     onBreadCrumbChange: function(bc, node, prev){
         //console.log('Default', this.getView(), this.getReferences())

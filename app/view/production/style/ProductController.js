@@ -261,6 +261,55 @@ Ext.define('August.view.production.style.ProductController', {
         }
     },
 
+    onOpenMappingClick: function(b, e){
+        var me = this,
+            multiview = me.getView().lookupReference('multiview'),
+            topbar = multiview.lookupReference("topbar"),
+            searchlist = topbar.down('searchtextlist'),
+            grid = multiview.lookupReference('grid'),
+            rec = grid.getSelectionModel().selected.items[0];        
+
+            //console.log(rec);
+        me.showWindow(rec, 'windows-style-colormapping', function(type){
+
+            var win = me.win,
+                wvm = win.getViewModel(),
+                //btnSave = win.getDockedItems('toolbar[dock="bottom"] > button[action="save"]')[0];
+                //combo = win.down('combo[name="site"]'),
+                //field = win.down('searchtextlist'),
+                grid = win.lookupReference('styleGrid'),                          
+                btnSaveAs = win.down('button[action="saveas"]');
+            
+            /*
+            if (!Ext.isEmpty(searchlist.getValue())) {
+                field.setValue(searchlist.getValue());
+                field.activeFilter = searchlist.activeFilter;      
+                field.getTrigger('clear').setHidden(false);  
+            }                                                                     
+
+            win.on('resetclick', function(b,c) {
+                var store = grid.getStore();  
+
+                //var selected = template.getSelectionModel().selected;
+                field.fireEvent('triggerclear', field);
+                store.removeAll();
+
+            }, me);
+
+            win.on('saveasclick', function(btn, type){
+                var grid = win.lookupReference('styleGrid');
+                                
+                grid.saveDocumentAs({
+                    type: type,
+                    title: 'Color Mapping ',
+                    fileName: 'Color mapping ' + Ext.Date.format(new Date(), 'Y-m-d')
+                });
+                
+            }, me);
+            */
+        });
+    },
+
     onOpenTemplateClick: function(b, e){
         var me = this,
             multiview = me.getView().lookupReference('multiview'),

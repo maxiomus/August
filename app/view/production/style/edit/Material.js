@@ -287,7 +287,7 @@ Ext.define('August.view.production.style.edit.Material',{
                 xtype: 'combo',
                 name: 'rawColor',
                 displayField: 'label',
-                valueField: 'value',
+                valueField: 'label',
                 autoLoadOnValue: true,
                 hideTrigger: false,
                 allowBlank: false,
@@ -296,8 +296,8 @@ Ext.define('August.view.production.style.edit.Material',{
                 matchFieldWidth: false,
                 pageSize: 9999,
                 //minChars: 0,
-                store: 'memColors',
-                remoteStore: 'Colors',
+                store: 'memCompColors',
+                remoteStore: 'compColors',
                 queryMode: 'local',
                 //triggerAction: 'query',
                 //lastQuery: '',
@@ -310,15 +310,15 @@ Ext.define('August.view.production.style.edit.Material',{
                     '<tpl if="[xindex] == 1">' +
                         '<table class="cbo-list">' +
                             '<tr>' +
-                                '<th width="50%">Color</th>' +
-                                '<th width="50%">Code #</th>' +
-                                //'<th width="10%">Cost</th>' +
+                                '<th width="40%">Color</th>' +
+                                '<th width="40%">Code #</th>' +
+                                '<th width="20%">Cost</th>' +
                             '</tr>' +
                     '</tpl>' +
                         '<tr class="x-boundlist-item">' +
                             '<td>{label}</td>' +
                             '<td>{value}</td>' +
-                            //'<td>{descript:this.getCost}</td>' +
+                            '<td>{descript:this.getCost}</td>' +
                         '</tr>' +
                     '<tpl if="[xcount-xindex]==0">' +
                         '</table>' +
@@ -335,7 +335,7 @@ Ext.define('August.view.production.style.edit.Material',{
                 listeners: {
                     beforequery: {
                         fn: function(qe){
-                            /*
+                            
                             var cboStyle = qe.combo.ownerCt.query('combo[name="rawStyle"]')[0],
                                 store = qe.combo.getStore();
 
@@ -349,7 +349,7 @@ Ext.define('August.view.production.style.edit.Material',{
                                     operator: '='
                                 }]);
                             }
-                            */
+                            
                         }
                     },
                     select: function (combo, rec) {

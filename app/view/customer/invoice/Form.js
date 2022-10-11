@@ -1495,9 +1495,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                     
-            renderer: function(f, e, a){
-                return f;
             }
         },
         {
@@ -1511,9 +1508,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true,
-            },                           
-            renderer: function(f, e, a){
-                return f;
             }
         },
         {
@@ -1528,9 +1522,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true,
-            },                       
-            renderer: function(f, e, a){
-                return f;
             }
         }, 
         {
@@ -1544,9 +1535,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                        
-            renderer: function(f, e, a){
-                return f;
             }
         },
         {
@@ -1560,9 +1548,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                         
-            renderer: function(f, e, a){
-                return f;
             }
         },
         {
@@ -1576,9 +1561,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                          
-            renderer: function(f, e, a){
-                return f;
             }
         },
         {
@@ -1592,9 +1574,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                          
-            renderer: function(f, e, a){
-                return f;
             }
         },
         {
@@ -1608,9 +1587,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                         
-            renderer: function(f, e, a){
-                return f;
             }
         }, 
         {
@@ -1624,9 +1600,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                          
-            renderer: function(f, e, a){
-                return f;
             }
         },
         {
@@ -1640,9 +1613,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                         
-            renderer: function(f, e, a){
-                return f;
             }
         },        
         {
@@ -1656,9 +1626,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                    
-            renderer: function(f, e, a){
-                return f;
             }
         },
         {
@@ -1672,9 +1639,6 @@ Ext.define('August.view.customer.invoice.Form',{
             editor: {
                 xtype: 'numberfield',
                 hideTrigger: true
-            },                      
-            renderer: function(f, e, a){
-                return f;
             }
         },
         /*
@@ -1725,10 +1689,7 @@ Ext.define('August.view.customer.invoice.Form',{
             width: 82,  
             menuDisabled: true,
             sortable: false,                     
-            format: '0,000',                         
-            renderer: function(f, e, a){
-                return f;
-            }
+            format: '0,000'
         },
         {
             text: "Price",               
@@ -1760,10 +1721,8 @@ Ext.define('August.view.customer.invoice.Form',{
                 align: 'center',   
                 width: 80, 
                 menuDisabled: true,
-                sortable: false,                 
-                renderer: function(value, meta, rec){                
-                    return value;
-                }
+                sortable: false,   
+                format: '0,000'
             }]
         },  
         {

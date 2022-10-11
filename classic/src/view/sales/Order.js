@@ -6,7 +6,7 @@ Ext.define('August.view.sales.Order',{
         'August.view.sales.OrderController',
         'August.view.sales.OrderModel',
         'August.view.sales.OrderForm',
-        'August.plugin.grid.Exporter'
+        'August.plugin.grid.Exporter'        
     ],
 
     alias: "widget.sales-order",

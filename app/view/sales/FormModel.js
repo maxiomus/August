@@ -8,6 +8,7 @@ Ext.define('August.view.sales.OrderFormModel', {
     },
 
     stores: {
+
         cxlreasons: {
             fields: ['label', 'value'],
             // allow the grid to interact with the paging scroller by buffering
@@ -262,7 +263,42 @@ Ext.define('August.view.sales.OrderFormModel', {
             }
         },
         */
-        customerStores: {
+
+        billToStores: {
+            fields: ['label', 'value', 'descript'],
+            // allow the grid to interact with the paging scroller by buffering
+            //buffered: true,
+            pageSize: 0,
+            //numFromEdge: 5,
+            //trailingBufferZone: 100,
+            //leadingBufferZone: 100,
+            autoLoad: false,
+            //remoteFilter: true,
+
+            proxy: {
+                type: 'ajax',
+                url: '/WebApp/api/List/billtos',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                    /*
+                    totalProperty: 'total',
+                    successProperty: 'success'
+                    */
+                }
+            },
+            listeners: {
+                beforeload: {
+                    fn: 'onBillToBeforeLoad',
+                    scope: this.controller
+                }
+            }
+        },
+
+        shipToStores: {
             fields: ['label', 'value'],
             // allow the grid to interact with the paging scroller by buffering
             //buffered: true,

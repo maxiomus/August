@@ -21,9 +21,7 @@ Ext.define('August.view.customer.payment.receiveFormModel', {
         
         Paymentdetails: {
             model: 'payment.PaymentD',
-
             storeId: 'Paymentdetails',
-
             autoLoad: false,
 
             //session: true,

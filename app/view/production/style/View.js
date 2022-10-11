@@ -57,7 +57,7 @@ Ext.define("August.view.production.style.View", {
                 '<div class="thumb">',
                     //'<tpl if="this.notNull(mp)">',
                     '<tpl if="this.notNull(style)">',
-                        '<img class="x-unselectable" src="http://209.37.126.195:9090/StyleImages/200xImages/{style}_{color}_front.jpg" />',
+                        '<img class="x-unselectable" src="http://209.37.126.195:9090/StyleImages/200xImages/{style}_{color:this.formatColor}_front.jpg" />',
                     '</tpl>',
                 '</div>',
                 /*
@@ -68,14 +68,15 @@ Ext.define("August.view.production.style.View", {
                 '</div>',
                 */
                 '<div>',
-                    '<span style="float: left;">Style #: {style:ellipsis(10)}</span><span> Color: {color:ellipsis(10)}</span>',
+                    '<span style="clear: both;">Style #: {style}</span>',
+                    '<span style="clear: both;">Color: {color}</span>',
                     '<span style="clear: both;">Category: {category:ellipsis(35)}</span>',
-                    '<span style="clear: both;">Division: {division}</span>',
+                    '<span style="clear: both;">Brand: {division}</span>',
                     '<span style="clear: both;">Season: {season}</span>',
                     //'<span style="float: left;width:50%;">Category: {category}</span><span style="width:50%;">Sub Category: {subcategory}</span>',
                     //'<span style="float: left;width:50%;">Division: {division}</span><span style="width:50%;"> Season: {season}</span>',
                     '<span style="float: left;width:50%;">Size: {sizeCat}</span><span style="width:50%;"> COO: {coo}</span>',
-                    '<span style="float: left;width:50%;">Price: {price1:this.formatCost}</span><span style="width:50%;"> Cost: {cost:this.formatCost}</span>',
+                    '<span style="float: left;width:50%;">Price 5: {price5:this.formatCost}</span><span style="width:50%;"> MSRP: {msrp:this.formatCost}</span>',
                     '<div style="clear: both;height:4px;"> </div>',                    
                     //'<div style="font-size:11px;padding:4px;">Size: {memo:this.formatMemo}</div>',
                 '</div>',
@@ -93,6 +94,20 @@ Ext.define("August.view.production.style.View", {
                         //h.tdAttr='data-qtip="'+j+'"';
                         return j;
                     }
+                }
+            },
+            {
+                formatColor: function(v){    
+                    /*
+                    const res = await fetch("http://209.37.126.195:9090/StyleImages/200xImages/{style}_{color}_front.jpg", { method: "HEAD" });
+                    if (res.ok) {
+                      console.log("Image exists.");
+                    } else {
+                      console.log("Image does not exist.");
+                    } 
+                    */     
+                    //var strColor = v.replace(' ', '');
+                    return v.replace('/', '-');                   
                 }
             },
             {

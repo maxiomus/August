@@ -6,7 +6,7 @@ Ext.define("August.view.production.WIP", {
         'August.view.production.WIPController',
         'August.view.production.WIPModel',
         //'August.view.production.windows.request.Form',
-        'Ext.grid.plugin.Exporter'
+        'August.plugin.grid.Exporter'      
     ],
 
     alias: 'widget.prod-wip',
@@ -157,7 +157,7 @@ Ext.define("August.view.production.WIP", {
                     plugins: [{
                         ptype: "gridfilters"
                     },{
-                        ptype: 'gridexporter'
+                        ptype: 'grid-exporter'
                     }],
                     listeners: {
                         render: {
@@ -311,7 +311,7 @@ Ext.define("August.view.production.WIP", {
                     iconCls: 'x-fa fa-file-excel-o',
                     handler: function(b){
                         grid.saveDocumentAs({
-                            type: 'excel',
+                            type: 'xlsx',
                             title: 'Production W.I.P',
                             fileName: 'wip as of ' + Ext.Date.format(new Date(), 'Y-m-d')
                         });

@@ -9,13 +9,15 @@ Ext.define('August.view.purchase.OrderFormController', {
      */
     requires: [
         'August.model.purchase.Order',
-        'August.model.purchase.OrderItem',        
+        'August.model.purchase.OrderItem'   
         //'August.model.purchase.SalesOrderItem',        
-        'August.view.purchase.OrderWindow'
+        //'August.view.purchase.OrderWindow'
     ],
 
     init: function(){
-        var vm = this.getViewModel();
+        var me = this;
+        vm = me.getViewModel(),
+        me.mv = August.app.getMainView();
         //console.log('init', vm.linkData.thePO);
         console.log('init', this.getReferences());
     },
@@ -29,8 +31,8 @@ Ext.define('August.view.purchase.OrderFormController', {
     onItemSelect: function(sm, rec){
         //var sm = view.getSelectionModel();
         //console.log(this.getView(), sm);
-        var view = this.lookupReference('po-view');
-        view.setSelection(rec);
+        //var view = this.lookupReference('po-view');
+        //view.setSelection(rec);
     },
 
     // Items...
@@ -251,6 +253,59 @@ Ext.define('August.view.purchase.OrderFormController', {
         combo.getStore().load();        
     },
 
+    showWindow: function(rec, xtype, callback){
+        var me = this,
+            view = me.getView();        
+
+        me.win = view.add({
+            xtype: xtype,
+
+            viewModel: {
+                
+            },
+            // Create a child session that will spawn from the current session of this view
+            session: true,
+
+            renderTo: Ext.getBody()
+        });
+
+        me.win.show('', function(){
+            me.mv.mask();
+        });
+
+        me.win.on('close', function(p){
+            me.mv.unmask();            
+        });
+
+        if(typeof callback === "function"){
+            callback(xtype);
+        }
+    },
+
+    onPrintClick: function(b, e){
+        var me = this,
+            vm = me.getViewModel(),
+            rec = vm.get('thePO');
+            
+        me.showWindow(rec, 'purchase-windows-printpo', function(type){
+
+            var win = me.win,
+                wvm = win.getViewModel();
+                                      
+            /*            
+            wvm.getStore('shopifytemplates').on('datachanged', function(store){
+                btnTemplate.setDisabled(store.getCount() == 0);
+                
+                console.log('templates - store datachanged', store.first());
+            });
+            */
+            //win.on('templateclick', me.onSaveWebPublish, me);                        
+
+            //btnSave.setDisabled(template.getStore().getCount() == 0);                                                       
+        });
+    },    
+
+    /*
     showWindow: function(record, xtype, callback){
         var me = this,
             view = me.getView(),
@@ -322,6 +377,7 @@ Ext.define('August.view.purchase.OrderFormController', {
             callback(xtype);
         }
     },
+    */
 
     onSaveItemClick: function(b){
         // Save the changes pending in the win's child session back to the

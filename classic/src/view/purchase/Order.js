@@ -28,6 +28,7 @@ Ext.define('August.view.purchase.Order',{
         actedit: 'onActionEdit',
         actdelete: 'onActionDelete',
         actrefresh: 'onActionRefresh',
+        actprint: 'onActionPrint',
         clearall: 'onClearFilters',
         gridafterrender: 'onAfterGridRender',
         gridrowdblclick: 'onActionEdit',
@@ -153,14 +154,7 @@ Ext.define('August.view.purchase.Order',{
         f.actEdit.setHidden(false);
         //f.actEdit.setDisabled(true);
 
-        var mnuItems = [f.actEdit, f.actDelete, f.actRefresh,
-            {
-                text: "Print",
-                iconCls: "x-fa fa-print",
-                action: "printlabel",
-                //handler: 'onOpenLabeltagClick',
-                scope: this.controller
-            }];
+        var mnuItems = [f.actEdit, f.actDelete, f.actRefresh,f.actPrint];
 
         me.contextmenu = Ext.create("Ext.menu.Menu", {
             items: mnuItems
@@ -232,7 +226,7 @@ Ext.define('August.view.purchase.Order',{
         );
 
         this.relayEvents(j, ["itemcontextmenu", "afterrender", "rowdblclick"], 'grid');
-        this.relayEvents(f, ["actnew", 'actedit', "actrefresh", 'actdelete', "actcomplete", "actactive", "clearall"]);
+        this.relayEvents(f, ["actnew", 'actedit', "actrefresh", 'actdelete', "actprint", "actactive", "clearall"]);
     },
 
     buildGridColumns: function(){

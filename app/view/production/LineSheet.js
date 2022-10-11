@@ -16,7 +16,8 @@
         "August.view.production.LineSheetModel",
         'Ext.ux.toggleslide.ToggleSlide',
         'Ext.ux.form.field.ToggleSlide',
-        'Ext.ux.BoxReorderer'
+        'Ext.ux.BoxReorderer',        
+        'August.plugin.grid.Exporter'
     ],
 
     alias: 'widget.linesheet',
@@ -213,13 +214,14 @@
             me.actRemove, '-',
             {
                 xtype: "combo",
+                name: 'templates',
                 reference: 'cboSubCat',
                 //width: 100,
-                valueField: 'field',
+                valueField: 'value',
                 displayField: 'label',
                 fieldLabel: 'Templates',
                 labelWidth: 65,
-                //value: 1,
+                value: "L8-4-2",
                 emptyText: 'Select...',
                 forceSelection: true,
                 //matchFieldWidth: false,
@@ -231,13 +233,19 @@
                     store: '{templates}'
                 },                
                 listeners: {
-                    select: function(c, rec){
-                        c.fireEvent('triggersearch', c, c.getSelection());
-                    },
+                    select: {
+                        fn: 'onTemplateSelect',
+                        scope: this.controller
+                        /*
+                        function(c, rec){
+                            //c.fireEvent('triggersearch', c, c.getSelection());
+                        },
+                        */
+                    },                    
                     render: function(c){
                         c.on('specialkey', function(f, e){
                             if (e.getKey() == e.ENTER) {
-                                c.fireEvent('triggersearch', c, c.getSelection());
+                                //c.fireEvent('triggersearch', c, c.getSelection());
                             }
                         }, c, {
                             buffer: 10
@@ -353,13 +361,13 @@
             width: 76,
             store: new Ext.data.ArrayStore({
                 fields: ["id"],
-                data: [["2"], ["3"], ["4"], ["8"]]
+                data: [["8"], ["48"], ["96"], ["240"]]
             }),
             value: "8",
             displayField: "id",
             valueField: "id",
             editable: false,
-            disabled: true,
+            disabled: false,
             forceSelection: true,
             matchFieldWidth: true,
             queryMode: "local"
@@ -372,7 +380,7 @@
             
             //var store = me.memStylesInLines;
             //console.log('afterrender', c.getValue())
-            c.setValue(store.getPageSize());
+            //c.setValue(store.getPageSize());
         }, this);
 
         b.on("select", function(e, a){

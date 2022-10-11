@@ -4,7 +4,8 @@ Ext.define('August.view.settings.Grid',{
 
     requires: [
         'August.view.settings.GridController',
-        'August.view.settings.GridModel'
+        'August.view.settings.GridModel',
+        'August.plugin.grid.Exporter'
     ],
 
     alias: 'widget.settings-grid',
@@ -38,7 +39,8 @@ Ext.define('August.view.settings.Grid',{
         actremove: 'onToolbarRemoveClick',
         actcopy: 'onToolbarCopyClick',
         actrefresh: 'onToolbarRefreshClick',
-        actsave: 'onToolbarSaveClick'
+        actsave: 'onToolbarSaveClick',
+        actexport: 'onToolbarExportClick'
     },
 
     initComponent: function(c){
@@ -70,20 +72,15 @@ Ext.define('August.view.settings.Grid',{
                 clicksToMoveEditor: 1
             },{
                 ptype:"gridfilters"
+            },{
+                ptype: 'grid-exporter'
             }]
         });
 
-        me.callParent(arguments);
+        me.callParent(arguments);        
 
         var topbar = me.lookupReference('topbar');
-        topbar.insert(0, {
-            xtype: "searchgrid",
-            reference: 'searchgrid',
-            width: 300,
-            grid: me,
-            paramName: "code"
-        });
-
+        
         me.contextmenu = Ext.create("Ext.menu.Menu", {
             items: [
                 topbar.actions.edit,
@@ -93,7 +90,7 @@ Ext.define('August.view.settings.Grid',{
             ]
         });
 
-        me.relayEvents(topbar, ['actadd', 'actedit', 'actremove', 'actcopy', 'actrefresh', 'actsave']);
+        me.relayEvents(topbar, ['actadd', 'actedit', 'actremove', 'actcopy', 'actrefresh', 'actsave', 'actexport']);
     },
 
     buildColumns: function(){

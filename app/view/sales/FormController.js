@@ -19,13 +19,14 @@ Ext.define('August.view.sales.OrderFormController', {
         vm = me.getViewModel(),
         me.mv = August.app.getMainView();        
         //console.log('init', vm.linkData.theOrder);
-        console.log('init', this.getReferences());
+        //console.log('init', this.getReferences());
     },
 
     initViewModel: function(vm) {
 
-        var rec = vm.linkData.theOrder;
-        //console.log('initViewModel', vm.linkData);
+        //var rec = vm.linkData.theOrder;
+        //console.log('initViewModel', vm.getData(), vm.get('theOrder'));        
+
     },
 
     /*
@@ -54,16 +55,20 @@ Ext.define('August.view.sales.OrderFormController', {
 
         rowEdit.cancelEdit();
 
-        var rec = store.insert(0, {            
-            line: store.getCount() + 1,
+        console.log('onAddItemClick', store);
+
+        store.insert(0, {            
+            line: store.getTotalCount() + 1,
             status: 'Open',
             warehouse: form.down('combo[name="warehouse"]').getValue(),
             salesrep1: form.down('combo[name="salesrep1"]').getValue(),
             salesrep2: form.down('combo[name="salesrep2"]').getValue()            
         });
-
+                
         var override = grid.getPlugin('soRowExpander');                             
-        override.expandAll(); 
+        if(override.isCollapsed(0) == true) {
+            override.toggleRow(0, store.getAt(0));
+        }        
 
         rowEdit.startEdit(0, 0);
     },
@@ -325,16 +330,30 @@ Ext.define('August.view.sales.OrderFormController', {
         }   
     },
 
+    onBillToBeforeLoad: function(s){
+        var me = this,
+            combo = me.getView().down('combo[name="customer"]'),
+            vm = me.getViewModel();
+        
+        Ext.apply(s.getProxy().extraParams, {                        
+            type: combo.getValue()
+        });
+        
+    },
+
     onCustomerChanged: function(c, nv, ov) {
         //console.log('Customer changed', nv, ov, c.getSelection());
         var me = this,
             vm = me.getViewModel(),
+            sorder = vm.get('theOrder'),
             storeCombo = c.nextSibling('combo'),
             select = c.getSelection(),
             cmp = me.getView().down('component[name="customerAddress"]');
 
+        August.model.Billto.getProxy().setUrl('/WebApp/api/billtos/' + c.getValue());
+
         if(select != null){
-            August.model.Customer.load(nv, {
+            August.model.Billto.load(sorder.get('billTo'), {
                 success: function(rec, op){                        
                     vm.set('theCustomer', rec);          
                     storeCombo.getStore().load();
@@ -515,6 +534,10 @@ Ext.define('August.view.sales.OrderFormController', {
         });
     },
 
+    onPrintClick: function() {
+
+    },
+
     onSaveItemClick: function(b){
         // Save the changes pending in the win's child session back to the
         // parent session.
@@ -668,8 +691,8 @@ Ext.define('August.view.sales.OrderFormController', {
             }
         });        
 
-    },
-        
+    },            
+
     onClose: function(btn, e){
         var me = this,
             viewer = me.getView().up('viewer');

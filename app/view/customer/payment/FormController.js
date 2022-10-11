@@ -25,6 +25,17 @@ Ext.define('August.view.customer.payment.receiveFormController', {
         console.log('initViewModel', vm.linkData);
     },
 
+    onExportClick: function(btn, owner){                
+        var me = this,
+            grid = me.lookupReference('payment-detail-grid');
+
+        grid.saveDocumentAs({
+            type: 'xlsx',
+            title: 'Payment Detail List',
+            fileName: 'Payment Details ' + Ext.Date.format(new Date(), 'Y-m-d')
+        });        
+    },
+
     onItemSelect: function(sm, rec){
         //var sm = view.getSelectionModel();
         //console.log(this.getView(), sm);

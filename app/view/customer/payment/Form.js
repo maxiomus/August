@@ -5,7 +5,8 @@ Ext.define('August.view.customer.payment.receiveForm',{
 
     requires: [
         'August.view.customer.payment.receiveFormController',
-        'August.view.customer.payment.receiveFormModel'
+        'August.view.customer.payment.receiveFormModel',
+        'August.plugin.grid.Exporter'
     ],
 
     alias: 'widget.payment-receiveForm',
@@ -634,6 +635,13 @@ Ext.define('August.view.customer.payment.receiveForm',{
                     },{
                         xtype: 'tbspacer',
                         width: 10
+                    },{
+                        xtype: 'button',
+                        iconCls: 'x-fa fa-external-link-alt',
+                        text: 'Export',
+                        handler: function(b){                            
+                            me.fireEvent('export', b, me);    
+                        }
                     }]
                 },
 
@@ -655,6 +663,10 @@ Ext.define('August.view.customer.payment.receiveForm',{
                     */
                     edit: {
                         fn: 'onRowEditing',
+                        scope: this.controller
+                    },
+                    export: {
+                        fn: 'onExportClick',
                         scope: this.controller
                     }
                 },
@@ -738,6 +750,11 @@ Ext.define('August.view.customer.payment.receiveForm',{
         });
 
         me.callParent(arguments);        
+
+
+        var detailGrid = me.lookupReference('payment-detail-grid');
+        
+        detailGrid.relayEvents(me, ['export']);
     },          
         
     buildGridColumns: function(){

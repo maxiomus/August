@@ -126,7 +126,7 @@ Ext.define('August.model.Customer', {
 
     proxy: {
         type: 'rest',
-        url: '/WebApp/api/Customers/',
+        url: '/WebApp/api/Customers',
 
         pageParam: '',
         startParam: '',

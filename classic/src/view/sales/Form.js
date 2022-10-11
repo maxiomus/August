@@ -5,6 +5,7 @@ Ext.define('August.view.sales.OrderForm',{
     requires: [
         'August.view.sales.OrderFormController',
         'August.view.sales.OrderFormModel',
+        'August.plugin.grid.Exporter',
         'Ext.ux.grid.plugin.AllRowExpander',
         'Ext.ux.view.Upload'    
     ],
@@ -227,6 +228,12 @@ Ext.define('August.view.sales.OrderForm',{
                 ui: 'default',
                 tooltip: 'Price Tag by S.O',
                 handler: 'onPriceTagClick'
+            },{
+                iconCls: 'x-fa fa-print',
+                text: 'Print',
+                ui: 'default',
+                tooltip: 'Print S.O',
+                handler: 'onPrintClick'
             }]
         },
 
@@ -247,7 +254,7 @@ Ext.define('August.view.sales.OrderForm',{
 
                 items: [{
                     tabConfig: {
-                        title: 'Style Info'
+                        title: 'SO Info'
                     },
 
                     layout: {
@@ -258,8 +265,7 @@ Ext.define('August.view.sales.OrderForm',{
 
                     items: [{
                         xtype: 'container',                                                                        
-                        reference: "soheader",
-                        scrollable: 'y',
+                        reference: "soheader",                        
                         //iconCls: "x-fa fa-calculator",
                         layout: {
                             type: 'responsivecolumn',
@@ -273,6 +279,7 @@ Ext.define('August.view.sales.OrderForm',{
                         },
                         //margin: "0 0 5 0",
                         //bodyPadding: 8,
+                        scrollable: 'y',
                         defaultType: 'container',
                         defaults: {
                             //margin: "5 0 0 0"
@@ -296,7 +303,7 @@ Ext.define('August.view.sales.OrderForm',{
             
                             defaultType: 'textfield',
                             defaults: {
-                                width: 220,
+                                width: 210,
                                 constrain: true,
                                 margin: '0 10 3 0',
                                 labelWidth: 80
@@ -309,7 +316,7 @@ Ext.define('August.view.sales.OrderForm',{
                                 name: 'orderno',
                                 fieldLabel: 'S.O #',
                                 fieldCls: 'emphasized',    
-                                width: 210,
+                                //width: 210,
                                 labelWidth: 70,
                                 readOnly: true,
                                 allowBlank: false,
@@ -323,7 +330,7 @@ Ext.define('August.view.sales.OrderForm',{
                                 xtype: 'combo',
                                 name: 'status',
                                 fieldLabel: 'Status',
-                                width: 210,
+                                //width: 210,
                                 labelWidth: 70,
                                 //displayField: 'label',
                                 //valueField: 'value',
@@ -355,7 +362,7 @@ Ext.define('August.view.sales.OrderForm',{
                                 name: 'orderDate',                        
                                 format: 'Y-m-d',
                                 fieldLabel: 'S.O Date',
-                                width: 210,
+                                //width: 210,
                                 labelWidth: 70,                            
                                 //editable: false,
                                 bind: {
@@ -367,7 +374,7 @@ Ext.define('August.view.sales.OrderForm',{
                                 name: 'startDate',                        
                                 format: 'Y-m-d',
                                 fieldLabel: 'Ship Date',
-                                width: 210,
+                                //width: 210,
                                 labelWidth: 70, 
                                 //editable: false,
                                 bind: {
@@ -765,7 +772,8 @@ Ext.define('August.view.sales.OrderForm',{
                                 xtype: 'combo',
                                 name: 'customer',
                                 fieldLabel: 'Customer',
-                                fieldCls: 'required',                
+                                fieldCls: 'required',         
+                                //disabled: true,       
                                 displayField: 'label',
                                 valueField: 'value',            
                                 //selectOnFocus: false,
@@ -834,7 +842,7 @@ Ext.define('August.view.sales.OrderForm',{
                                     width: 260
                                 },
                                 bind: {
-                                    store: '{customerStores}',
+                                    store: '{shipToStores}',
                                     value: '{theOrder.shipTo}'
                                 },
                                 listeners: {
@@ -939,7 +947,18 @@ Ext.define('August.view.sales.OrderForm',{
                             items: [{
                                 xtype: 'button',
                                 //text: 'Expand all',
-                                iconCls: 'x-fa fa-expand',
+                                iconCls: 'x-fa fa-expand',                                
+                                listeners: {
+                                    click: {
+                                        single: true,
+                                        fn: function(button){
+                                            var grid = button.up('grid'),
+                                                override = grid.getPlugin('soRowExpander');        
+                                            override.expandAll();                            
+                                        }
+                                    }
+                                }
+                                /*
                                 pressed: true,
                                 enableToggle: true,
                                 toggleHandler: function(button, pressed) {
@@ -949,12 +968,13 @@ Ext.define('August.view.sales.OrderForm',{
                                     //console.log('toggle', this, override);
                                     if (!pressed) {
                                             //button.setText('Collapse all');                             
-                                            override.expandAll();                            
+                                        override.expandAll();                            
                                     } else {
                                         //button.setText('Expand all');     
                                         override.collapseAll();
                                     }
                                 }
+                                */
                             },{
                                 xtype: 'tbspacer',
                                 width: 10
@@ -969,7 +989,10 @@ Ext.define('August.view.sales.OrderForm',{
                             store: '{theOrder.salesorderitems}'
                         },
         
-                        listeners: {                                                
+                        listeners: {    
+                            beforeload: function(store, op){
+                                store.setRemoteFilter(false);
+                            },                                         
                             itemcontextmenu: 'onItemContextMenu',
                             selectionchange: {
                                 fn: 'onSelectionChanged',
@@ -986,25 +1009,25 @@ Ext.define('August.view.sales.OrderForm',{
                         selModel: {
                             //type: 'checkboxmodel',                    
                             //mode: 'MULTI',
-                            pruneRemoved: false
+                            //pruneRemoved: false
                         },
         
                         viewConfig: {
                             loadMask: true,
                             stripeRows: true,
                             trackOver: true,
-                            preserveScrollOnRefresh: true,
-                            preserveScrollOnReload: true,
-                            deferInitialRefresh: true,
+                            //preserveScrollOnRefresh: true,
+                            //preserveScrollOnReload: true,
+                            //deferInitialRefresh: true,
                             emptyText: '<h1 style="margin: 20px">No matching results</h1>',
                             getRowClass: function(a, g, f, h){
-                                return "custom-row-style";
+                                //return "custom-row-style";
                             },
-                            listeners: {
+                            listeners: {                                                               
                                 refresh: function(view, e){
                                     var expander = view.ownerCt.getPlugin('soRowExpander');
-                                    expander.expandAll();
-                                }
+                                    expander.expandAll();                                    
+                                }                                
                             }
                         },
         
@@ -1027,7 +1050,7 @@ Ext.define('August.view.sales.OrderForm',{
                                 */
                             }
                         },{
-                            ptype: 'allrowexpander',
+                            ptype: 'rowexpander',
                             //bodyBefore: true,
                             expandOnDblClick: false,
                             pluginId: 'soRowExpander',
@@ -1619,8 +1642,8 @@ Ext.define('August.view.sales.OrderForm',{
             text: 'Line',
             dataIndex: 'line',
             width: 55,                        
-            menuDisabled: true,
-            sortable: false
+            menuDisabled: false,
+            sortable: true
         },               
         {
             text: "ID",
@@ -1637,14 +1660,15 @@ Ext.define('August.view.sales.OrderForm',{
             text: '',
             width: 54,
             menuDisabled: true,
+            resizable: false,
             sortable: false
         },    
         {
             text: "Style",
             width: 160, 
             dataIndex: "style",        
-            menuDisabled: true,
-            sortable: false,    
+            menuDisabled: false,
+            sortable: true,    
             filter: {
                 type: 'string'
             },
@@ -1706,8 +1730,8 @@ Ext.define('August.view.sales.OrderForm',{
             text: "Color",
             width: 160, 
             dataIndex: "color",       
-            menuDisabled: true,
-            sortable: false,     
+            menuDisabled: false,
+            sortable: true,     
             filter: {
                 type: 'string'
             },
@@ -2125,7 +2149,10 @@ Ext.define('August.view.sales.OrderForm',{
                 forceSelection: true,
                 //msgTarget: 'side',
                 minChars: 1,
-                queryMode: 'local'
+                queryMode: 'local',
+                bind: {
+                    store: '{cxlreasons}'
+                }
             }
         },
         {

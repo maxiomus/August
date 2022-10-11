@@ -12,9 +12,7 @@ Ext.define('August.store.Bomnos', {
     proxy: {
         type: 'ajax',
         url: '/WebApp/api/List/bomnos',
-        headers: {
-            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-        },
+        
         reader: {
             type: 'json',
             rootProperty: 'data'

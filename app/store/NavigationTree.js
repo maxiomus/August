@@ -61,6 +61,7 @@ Ext.define('August.store.NavigationTree', {
                     view: 'customer.invoice.List',
                     leaf: true,
                     read: true,
+                    granted: ['account', 'administrators'],
                     iconCls: 'x-far fa-address-book',
                     routeId: 'customer-invoice'
                 },{
@@ -88,16 +89,17 @@ Ext.define('August.store.NavigationTree', {
                     read: true,
                     iconCls: 'x-fa fa-th-large',
                     routeId: 'sales-order'
-                }
-                /*
+                },                
                 {
-                    text: 'P.O.W',
-                    view: 'sales.Pow',
+                    text: 'Pick Ticket',
+                    view: 'sales.pick.Ticket',
                     leaf: true,
                     read: true,
                     iconCls: 'x-fa fa-file-text-o',
-                    routeId: 'pow'
-                },{
+                    routeId: 'pick-ticket'
+                }
+                /*
+                {
                     text: 'REQUEST',
                     view: 'sales.Request',
                     leaf: true,

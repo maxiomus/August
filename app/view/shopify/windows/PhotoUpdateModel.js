@@ -3,8 +3,10 @@ Ext.define('August.view.shopify.windows.PhotoUpdateModel', {
     alias: 'viewmodel.shopify-windows-photoupdate',
     
     data: {
+        title: '',
+        store: '',
         source: '',
-        total: 7
+        addition: 7
     },
 
     stores: {

@@ -2,7 +2,7 @@ Ext.define('August.view.production.windows.style.UploadModel', {
     extend: 'Ext.app.ViewModel',
 
     requires: [
-        'August.model.File'
+        'August.model.style.File'
     ],
 
     alias: 'viewmodel.windows-style-upload',

@@ -5,7 +5,7 @@ Ext.define('August.view.settings.company.users.List', {
         'August.view.settings.company.users.ListModel',
         'August.view.settings.company.users.ListController',
         'August.view.settings.company.users.Window',
-        'Ext.grid.plugin.Exporter'
+        'August.plugin.grid.Exporter'
     ],
 
     alias: 'widget.users-list',
@@ -348,7 +348,7 @@ Ext.define('August.view.settings.company.users.List', {
                 text: 'Export',
                 handler: function(b){
                     me.saveDocumentAs({
-                        type: 'excel',
+                        type: 'xlsx',
                         title: 'User List',
                         fileName: 'user list ' + Ext.Date.format(new Date(), 'Y-m-d') + '.xlsx'
                     });
@@ -409,7 +409,7 @@ Ext.define('August.view.settings.company.users.List', {
             plugins: [{
                 ptype: "gridfilters"
             },{
-                ptype: 'gridexporter'
+                ptype: 'grid-exporter'
             }],
 
             features: [

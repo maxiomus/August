@@ -52,7 +52,7 @@ Ext.define('August.view.shopify.OrderModel', {
         },
         
         shopifyStores: {
-            fields: ['label', 'value', 'name'],
+            fields: ['label', 'name', 'value', 'url'],
             autoLoad: true,
             
             proxy: {

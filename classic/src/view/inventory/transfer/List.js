@@ -202,9 +202,90 @@ Ext.define('August.view.inventory.transfer.List',{
             filter: {
                 type: "date"
             }
+        },        
+        {
+            text: "From Warehouse",
+            dataIndex: "fr_warehouse",
+            width: 140,
+            hidden: false,
+            filter: {type: "string"},
+            renderer: function(i, h, a){
+                return i;
+            }
         },
         {
-            text: "Last Style",
+            text: "To Warehouse",
+            dataIndex: "to_warehouse",
+            width: 140,
+            hidden: false,
+            filter: {type: "string"},
+            renderer: function(i, h, a){
+                return i;
+            }
+        },
+        {
+            text: "Status",
+            dataIndex: "status",
+            filter: {
+                operator: 'st',
+                type: "string"
+            },
+            renderer: function(f, e, a){
+                return f;
+            }
+        },   
+        {
+            text: "Reason",
+            dataIndex: "pireason",
+            width: 140,
+            hidden: false,
+            filter: {type: "string"},
+            renderer: function(i, h, a){
+                return i;
+            }
+        },
+        {
+            xtype: 'datecolumn',
+            text: "Confirm Date",
+            width: 150,
+            dataIndex: "confirmdate",
+            filter: {type: "date"},
+            format: 'Y-m-d H:i a'
+        },
+        {
+            text: "Confirm User",
+            dataIndex: "confirmuser",
+            hidden: false,
+            filter: {
+                operator: 'st',
+                type: "string"
+            },
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            xtype: 'datecolumn',
+            text: "Receive Date",
+            width: 150,
+            dataIndex: "receivedate",
+            filter: {type: "date"},
+            format: 'Y-m-d H:i a'
+        },
+        {
+            text: "Receive User",
+            dataIndex: "receiveuser",
+            hidden: false,
+            filter: {
+                operator: 'st',
+                type: "string"
+            },
+            renderer: function(f, e, a){
+                return f;
+            }
+        },
+        {
+            text: "Styles",
             dataIndex: "style",
             width: 140,
             hidden: false,
@@ -214,17 +295,15 @@ Ext.define('August.view.inventory.transfer.List',{
             }
         },
         {
+            xtype: 'numbercolumn',
             text: "Total Unit",
-            dataIndex: "totalunit",
-            hidden: false,
-            renderer: function(f, e, a){
-                return f;
-            }
+            dataIndex: "totalUnit",
+            format: '0,000'
         },
         {
             text: "Memo",
             dataIndex: "memo",
-            flex: 1,
+            width: 200,
             hidden: false,
             filter: {
                 operator: 'st',
@@ -273,39 +352,10 @@ Ext.define('August.view.inventory.transfer.List',{
             dataIndex: "updateTime",
             filter: {type: "date"},
             format: 'Y-m-d H:i a'
-        },
+        },                     
         {
-            text: "Status",
-            dataIndex: "status",
-            filter: {
-                operator: 'st',
-                type: "string"
-            },
-            renderer: function(f, e, a){
-                return f;
-            }
-        },
-        {
-            text: "P.I Reason",
-            dataIndex: "pireason",
-            width: 140,
-            filter: {type: "string"},
-            renderer: function(f, e, a){
-                return f;
-            }
-        },
-        {
-            text: "Tag #",
-            dataIndex: "tagNumber",
-            width: 140,
-            filter: {type: "string"},
-            renderer: function(f, e, a){
-                return f;
-            }
-        },
-        {
-            text: "WH",
-            dataIndex: "warehouse",
+            text: "WT",
+            dataIndex: "wh_transfer",
             width: 60,
             filter: {
                 operator: 'st',

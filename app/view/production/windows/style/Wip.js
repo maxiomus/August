@@ -152,6 +152,11 @@ Ext.define('August.view.production.windows.style.Wip',{
                     xtype: 'rownumberer', text: '', menuDisabled: true, width: 50,
                 },{
                     text: 'PO/Cut #', dataIndex: 'pono', menuDisabled: true, width: 90,
+                    renderer: function(v, meta, rec){                                        
+                        
+                        var html = "<a href='#purchase-order/edit/{0}'>{1}</a>";
+                        return Ext.String.format(html, v, v);
+                    } 
                 },{
                     text: 'status', dataIndex: 'status', menuDisabled: true, width: 70,
                 },{
@@ -167,7 +172,7 @@ Ext.define('August.view.production.windows.style.Wip',{
                 },{
                     text: 'Warehouse', dataIndex: 'warehouse', menuDisabled: true, width: 100,
                 },{
-                    text: 'Parent PO#', dataIndex: '', menuDisabled: true, width: 70,
+                    text: 'Parent PO#', dataIndex: 'parent_pono', menuDisabled: true, width: 70,
                 },{
                     text: 'Received Qty', dataIndex: 'receiveQty', menuDisabled: true, width: 80,
                 },{
@@ -176,6 +181,10 @@ Ext.define('August.view.production.windows.style.Wip',{
                     text: 'Customer', dataIndex: 'customer', menuDisabled: true, width: 140,
                 },{
                     text: 'Total', dataIndex: 'totalUnit', menuDisabled: true, width: 70,
+                },{
+                    text: 'Ship Via', dataIndex: 'shipvia', menuDisabled: true, width: 100,
+                },{
+                    text: 'Memo', dataIndex: 'memo', menuDisabled: true, width: 200,
                 }]
 
                 //anchor: '100% 60%'

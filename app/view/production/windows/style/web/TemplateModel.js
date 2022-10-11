@@ -105,6 +105,66 @@ Ext.define('August.view.production.windows.style.web.TemplateModel', {
                     type: 'json'
                 }
             }                            
+        },
+
+        closureTypes: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        coatTypes: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        jacketTypes: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        materials: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        sleeveTypes: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        specialTypes: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        dressTypes: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        legStyles: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        pantsFits: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        pantsTypes: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        waists: {
+            fields: ['label', 'value'],
+            autoLoad: true   
+        },
+
+        topTypes: {
+            fields: ['label', 'value'],
+            autoLoad: true   
         }
     }
 

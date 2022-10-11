@@ -8,9 +8,10 @@
         'August.view.production.windows.style.web.TemplateController',
         'August.view.production.windows.style.web.TemplateModel',
         'August.model.shopify.shopifyTemplate',
-        'August.model.shopify.lordTaylorTemplate',
-        'August.model.shopify.HBCTemplate',
-        'August.model.shopify.BelkTemplate',
+        //'August.model.shopify.lordTaylorTemplate',
+        //'August.model.shopify.HBCTemplate',
+        //'August.model.shopify.BelkTemplate',
+        //'August.model.shopify.BelkMp',
         'August.plugin.grid.Exporter'
     ],
 
@@ -190,6 +191,18 @@
                 bind: {
                     store: '{warehouses}'
                 }
+            },
+            {
+                xtype: 'checkbox',
+                name: 'preorder',
+                value: false,
+                boxLabel: 'Pre Order'
+            },
+            {
+                xtype: 'checkbox',
+                name: 'withImages',
+                value: 0,
+                boxLabel: 'With Images'
             },
             { xtype: 'tbspacer', width: 10 },             
             '->',            
@@ -496,6 +509,11 @@
                         
                     },
                     plugins: [{
+                        ptype: 'rowediting',
+                        clicksToEdit: 2,
+                        clicksToMoveEditor: 1,
+                        autoCancel: false
+                    },{
                         ptype: "gridfilters"
                     },{
                         ptype: "grid-exporter"
@@ -903,7 +921,7 @@
             }] 
         },
 
-        BK: {
+        BKO: {
             store: 'buildBelkStore',
             columns: [{
                 text: 'Category', dataIndex: 'category', menuDisabled: true, width: 120
@@ -959,6 +977,813 @@
             {   
                 text: 'Length', dataIndex: 'length', menuDisabled: true, width: 120
             }] 
+        },
+
+        NS: {
+            store: 'buildNordstromStore',
+            columns: [
+                { text: 'ProductID', dataIndex: 'ProductID', menuDisabled: true, width: 120 },
+                { text: 'ProductIDDescEnglish', dataIndex: 'ProductIDDescEnglish', menuDisabled: true, width: 180 },
+                { text: 'GTIN', dataIndex: 'GTIN', menuDisabled: true, width: 120 },
+                { text: 'GTINType', dataIndex: 'GTINType', menuDisabled: true, width: 100 },
+                { text: 'ChangeDate', dataIndex: 'ChangeDate', menuDisabled: true, width: 100 },
+                { text: 'NRFColorCode', dataIndex: 'NRFColorCode', menuDisabled: true, width: 120 },
+                { text: 'ShortColorDescEnglish', dataIndex: 'ShortColorDescEnglish', menuDisabled: true, width: 170 },
+                { text: 'NRFSizeCode', dataIndex: 'NRFSizeCode', menuDisabled: true, width: 120 },
+                { text: 'ShortSizeDescEnglish', dataIndex: 'ShortSizeDescEnglish', menuDisabled: true, width: 160 }
+            ]
+        },
+
+        KLM: {
+            store: 'buildKohlsStore',
+            columns: [
+                { text: 'product_category', dataIndex: 'product_category', menuDisabled: true, width: 200 },
+                { text: 'upc_number', dataIndex: 'upc_number', menuDisabled: true, width: 120 },
+                { text: 'title', dataIndex: 'title', menuDisabled: true, width: 180 },
+                { text: 'brand', dataIndex: 'brand', menuDisabled: true, width: 100 },
+                { text: 'meta_description', dataIndex: 'meta_description', menuDisabled: true, width: 240 },                
+                { text: 'style_number', dataIndex: 'style_number', menuDisabled: true, width: 120 },
+                { text: 'style_description', dataIndex: 'style_description', menuDisabled: true, width: 240 },
+                { text: 'nrf_size', dataIndex: 'nrf_size', menuDisabled: true, width: 80 },
+                { text: 'display_color', dataIndex: 'display_color', menuDisabled: true, width: 120 },
+                { text: 'color_family', dataIndex: 'color_family', menuDisabled: true, width: 120 },
+                { text: 'main_image', dataIndex: 'main_image', menuDisabled: true, width: 120 },
+                { text: 'alt_image_1', dataIndex: 'alt_image_1', menuDisabled: true, width: 120 },
+                { text: 'alt_image_2', dataIndex: 'alt_image_2', menuDisabled: true, width: 120 },
+                { text: 'alt_image_3', dataIndex: 'alt_image_3', menuDisabled: true, width: 120 },
+                { text: 'care', dataIndex: 'care', menuDisabled: true, width: 120 },
+                { text: 'feature_1', dataIndex: 'feature_1', menuDisabled: true, width: 160 },
+                { text: 'feature_2', dataIndex: 'feature_2', menuDisabled: true, width: 160 },
+                { text: 'feature_3', dataIndex: 'feature_3', menuDisabled: true, width: 160 },
+                { text: 'feature_4', dataIndex: 'feature_4', menuDisabled: true, width: 160 },
+                { text: 'fabric_material', dataIndex: 'fabric_material', menuDisabled: true, width: 160 },
+                { text: 'origin', dataIndex: 'origin', menuDisabled: true, width: 100 },
+                { text: 'choking_hazard', dataIndex: 'choking_hazard', menuDisabled: true, width: 80 },
+                { text: 'seller_url', dataIndex: 'seller_url', menuDisabled: true, width: 160 },
+                { text: 'perishable_indicator', dataIndex: 'perishable_indicator', menuDisabled: true, width: 80 },
+                { text: 'sku', dataIndex: 'sku', menuDisabled: true, width: 160 },
+                { text: 'product-id', dataIndex: 'product_id', menuDisabled: true, width: 160 },
+                { text: 'product-id-type', dataIndex: 'product_id_type', menuDisabled: true, width: 160 },
+                { text: 'description', dataIndex: 'description', menuDisabled: true, width: 160 },
+                { text: 'internal-description', dataIndex: 'internal_description', menuDisabled: true, width: 160 },
+                { text: 'price', dataIndex: 'price', menuDisabled: true, width: 160 },
+                { text: 'price-addtional-info', dataIndex: 'price_addtional_info', menuDisabled: true, width: 160 },
+                { text: 'quantity', dataIndex: 'quantity', menuDisabled: true, width: 160 },
+                { text: 'min-quantity-alert', dataIndex: 'min_quantity_alert', menuDisabled: true, width: 160 },
+                { text: 'state', dataIndex: 'state', menuDisabled: true, width: 160 },
+                { text: 'available-start-date', dataIndex: 'available_start_date', menuDisabled: true, width: 160 },
+                { text: 'available-end-date', dataIndex: 'available_end_date', menuDisabled: true, width: 160 },
+                { text: 'discount-start-date', dataIndex: 'discount_start_date', menuDisabled: true, width: 160 },
+                { text: 'discount-end-date', dataIndex: 'discount_end_date', menuDisabled: true, width: 160 },
+                { text: 'update-delete', dataIndex: 'update_delete', menuDisabled: true, width: 160 },
+                { text: 'seller-internal-sku', dataIndex: 'seller_internal_sku', menuDisabled: true, width: 160 }                                
+            ]
+        },
+
+        BKM: {
+            store: 'buildBelkMpStore',
+            columns: [
+                { text: 'Category', dataIndex: 'category', menuDisabled: true, width: 200 },
+                { text: 'Product Id', dataIndex: 'product_id', menuDisabled: true, width: 160 },
+                { text: 'belk.com Product Name', dataIndex: 'product_name', menuDisabled: true, width: 200 },
+                { text: 'NRF Color Code', dataIndex: 'nrf_color_code', menuDisabled: true, width: 160 },
+                { text: 'Brand', dataIndex: 'brand', menuDisabled: true, width: 160 },
+                { text: 'Product Description', dataIndex: 'product_description', menuDisabled: true, width: 240 },                
+                { text: 'Abbreviated Product Name', dataIndex: 'abbr_product_name', menuDisabled: true, width: 200 },
+                { text: 'Style Description', dataIndex: 'style_description', menuDisabled: true, width: 240 },
+                { text: 'Style#', dataIndex: 'style_number', menuDisabled: true, width: 120 },                
+                { text: 'UPC', dataIndex: 'upc', menuDisabled: true, width: 120 },
+                { 
+                    text: 'Length', dataIndex: 'length', menuDisabled: true, width: 120,
+                    editor: {
+                        xtype: 'textfield',
+                        fieldCls: 'required'
+                    }  
+                },                
+                { text: 'Main Image', dataIndex: 'main_image', menuDisabled: true, width: 240 },
+                { text: 'Image B', dataIndex: 'image_b', menuDisabled: true, width: 240 },
+                { text: 'Image C', dataIndex: 'image_c', menuDisabled: true, width: 240 },
+                { text: 'Main Swatch Image', dataIndex: 'main_swatch', menuDisabled: true, width: 240 },
+                { text: 'Vendor Color Description', dataIndex: 'vendor_color', menuDisabled: true, width: 160 },                
+                { text: 'NRF Size Code', dataIndex: 'nrf_size', menuDisabled: true, width: 120 },                
+                { 
+                    text: 'Activewear', dataIndex: 'activewear', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: "combo",                        
+                        valueField: 'value',
+                        displayField: 'label',     
+                        fieldCls: 'required',                                             
+                        store: ['Yes', 'No'],                                                                                                                  
+                        queryMode: 'local'
+                    }
+                },
+                { 
+                    text: 'Closure Type', dataIndex: 'closure_type', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',     
+                        fieldCls: 'required',                
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{closureTypes}'                    
+                        },
+                        listConfig: {
+                            loadindText: 'Searching...',
+                            emptyText: 'No matching items found.',
+                            width: 200
+                        },   
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    } 
+                },
+                { 
+                    text: 'Coat Type', dataIndex: 'coat_type', menuDisabled: true, width: 100,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',     
+                        fieldCls: 'required',                
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{coatTypes}'                    
+                        },                         
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    } 
+                },
+                { 
+                    text: 'Garment Length', dataIndex: 'garment_length', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: 'textfield',
+                        fieldCls: 'required', 
+                        hideTrigger: true
+                    } 
+                },
+                { text: 'Gender', dataIndex: 'gender', menuDisabled: true, width: 120 },
+                { 
+                    text: 'Jacket Type', dataIndex: 'jacket_type', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{jacketTypes}'                    
+                        },                        
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    } 
+                },
+                { 
+                    text: 'Lined', dataIndex: 'lined', menuDisabled: true, width: 100,
+                    editor: {
+                        xtype: "combo",
+                        name: 'lined',                
+                        fieldCls: 'required',                
+                        //labelWidth: 50,
+                        //width: 470,      
+                        store: ['Yes', 'No'],                       
+                        valueField: 'value',
+                        displayField: 'label',                                                                                                                                                           
+                        queryMode: 'local'
+                    } 
+                },
+                { 
+                    text: 'Material', dataIndex: 'material', menuDisabled: true, width: 200,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{materials}'                    
+                        },
+                        listConfig: {
+                            loadindText: 'Searching...',
+                            emptyText: 'No matching items found.',
+                            width: 200
+                        },   
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    }  
+                },
+                { 
+                    text: 'Sleeve Length', dataIndex: 'sleeve_length', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{sleeveTypes}'                    
+                        },                          
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    }  
+                },
+                { 
+                    text: 'Special Sizes', dataIndex: 'special_size', menuDisabled: true, width: 120,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{specialTypes}'                    
+                        },                           
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    }  
+                },
+                { 
+                    text: 'Dress Type', dataIndex: 'dress_type', menuDisabled: true, width: 120,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{dressTypes}'                    
+                        },                           
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    }  
+                },
+                /*
+                { 
+                    text: 'Sleeve Style', dataIndex: 'sleeve_style', menuDisabled: true, width: 120,
+                    editor: {
+                        xtype: 'textfield',
+                        fieldCls: 'required', 
+                        hideTrigger: true
+                    }  
+                },
+                */
+                { 
+                    text: 'Inseam', dataIndex: 'inseam', menuDisabled: true, width: 120,
+                    editor: {
+                        xtype: 'textfield',
+                        fieldCls: 'required', 
+                        hideTrigger: true
+                    }  
+                },
+                { 
+                    text: 'Leg Style', dataIndex: 'leg_style', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{legStyles}'                    
+                        },                          
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    }  
+                },
+                { 
+                    text: 'Pants Fit', dataIndex: 'pants_fit', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{pantsFits}'                    
+                        },                          
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    }  
+                },
+                { 
+                    text: 'Pants Type', dataIndex: 'pants_type', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{pantsTypes}'                    
+                        },
+                        listConfig: {
+                            loadindText: 'Searching...',
+                            emptyText: 'No matching items found.',
+                            width: 200
+                        },   
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    }  
+                },
+                { 
+                    text: 'Pockets', dataIndex: 'pockets', menuDisabled: true, width: 100,
+                    editor: {
+                        xtype: "combo",
+                        name: 'pocket',                
+                        fieldCls: 'required',                
+                        //labelWidth: 50,
+                        //width: 470,      
+                        store: ['Yes', 'No'],                       
+                        valueField: 'value',
+                        displayField: 'label',                                                                                                                                                           
+                        queryMode: 'local'
+                    }  
+                },
+                { 
+                    text: 'Size Length', dataIndex: 'size_length', menuDisabled: true, width: 120,
+                    editor: {
+                        xtype: 'textfield',
+                        fieldCls: 'required'
+                    }  
+                },
+                { 
+                    text: 'Waist Rise', dataIndex: 'waist_raise', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{waists}'                    
+                        },                          
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    }  
+                },
+                { 
+                    text: 'Top Type', dataIndex: 'top_type', menuDisabled: true, width: 160,
+                    editor: {
+                        xtype: 'combo',                                
+                        displayField: 'label',
+                        valueField: 'value',  
+                        fieldCls: 'required',                   
+                        //selectOnFocus: true,                
+                        forceSelection: false,
+                        matchFieldWidth: false,
+                        //msgTarget: 'side',
+                        minChars: 1,
+                        queryMode: 'local',
+                        //queryParam: 'filter',
+                        //triggerAction: 'all',
+                        //store: ['00', 'OS', 'SA'],
+                        bind: {
+                            store: '{topTypes}'                    
+                        },
+                        listConfig: {
+                            loadindText: 'Searching...',
+                            emptyText: 'No matching items found.',
+                            width: 200
+                        },   
+                        plugins: [{
+                            ptype: "cleartrigger"
+                        }]
+                    }  
+                }
+            ]
+        },
+
+        SPOER: {
+            store: 'buildSpoMpStore',
+            columns: [
+                { text: 'Category', dataIndex: 'category', menuDisabled: true, width: 200 },
+                { text: 'SKU', dataIndex: 'sku', menuDisabled: true, width: 160 },
+                { text: 'Title', dataIndex: 'title', menuDisabled: true, width: 200 },
+                { text: 'Description', dataIndex: 'description', menuDisabled: true, width: 240 },  
+                { text: 'Variant ID', dataIndex: 'variantId', menuDisabled: true, width: 120 },
+                { text: 'Designer', dataIndex: 'designer', menuDisabled: true, width: 160 },
+                { text: 'Image Link 1', dataIndex: 'image_link_1', menuDisabled: true, width: 240 },
+                { text: 'MSRP', dataIndex: 'msrp', menuDisabled: true, width: 120 },
+                { text: 'Weight', dataIndex: 'weight', menuDisabled: true, width: 100 },
+                { text: 'UPC', dataIndex: 'upc', menuDisabled: true, width: 120 },
+                { text: 'Handling Time', dataIndex: 'handling_time', menuDisabled: true, width: 120 },
+                { text: 'Model Number', dataIndex: 'model_number', menuDisabled: true, width: 120 },
+                { text: 'Designer Color', dataIndex: 'color', menuDisabled: true, width: 160 },
+                { text: 'Image Link 2', dataIndex: 'image_link_2', menuDisabled: true, width: 240 },
+                { text: 'Image Link 3', dataIndex: 'image_link_3', menuDisabled: true, width: 240 },
+                { text: 'Image Link 4', dataIndex: 'image_link_4', menuDisabled: true, width: 240 },
+                { 
+                    text: 'Final Sale', dataIndex: 'final_sale', menuDisabled: true, width: 100,            
+                    editor: {
+                        xtype: "combo",                        
+                        valueField: 'value',
+                        displayField: 'label',     
+                        fieldCls: 'required',                                             
+                        store: ['True', 'False'],                                                                                                                  
+                        queryMode: 'local'
+                    }
+                },                              
+                { 
+                    text: 'Product Condition', dataIndex: 'product_condition', menuDisabled: true, width: 100,
+                    editor: {
+                        xtype: "combo",                        
+                        valueField: 'value',
+                        displayField: 'label',     
+                        fieldCls: 'required',                                             
+                        store: ['New'],                                                                                                                  
+                        queryMode: 'local'
+                    }
+                },
+                { text: 'Normalized Color', dataIndex: 'normalized_color', menuDisabled: true, width: 120 },
+                { text: 'Womens Clothing Tops Size', dataIndex: 'womens_clothing_tops_size', menuDisabled: true, width: 120 },                
+                { text: 'Womens Clothing Bottoms Size', dataIndex: 'womens_clothing_bottoms_size', menuDisabled: true, width: 120 }                                                            
+            ]
+        },
+
+        SPOEF: {
+            store: 'buildSpoMpStore',
+            columns: [
+                { text: 'Category', dataIndex: 'category', menuDisabled: true, width: 200 },
+                { text: 'SKU', dataIndex: 'sku', menuDisabled: true, width: 160 },
+                { text: 'Title', dataIndex: 'title', menuDisabled: true, width: 200 },
+                { text: 'Description', dataIndex: 'description', menuDisabled: true, width: 240 },  
+                { text: 'Variant ID', dataIndex: 'variantId', menuDisabled: true, width: 120 },
+                { text: 'Designer', dataIndex: 'designer', menuDisabled: true, width: 160 },
+                { text: 'Image Link 1', dataIndex: 'image_link_1', menuDisabled: true, width: 240 },
+                { text: 'MSRP', dataIndex: 'msrp', menuDisabled: true, width: 120 },
+                { text: 'Weight', dataIndex: 'weight', menuDisabled: true, width: 100 },
+                { text: 'UPC', dataIndex: 'upc', menuDisabled: true, width: 120 },
+                { text: 'Handling Time', dataIndex: 'handling_time', menuDisabled: true, width: 120 },
+                { text: 'Model Number', dataIndex: 'model_number', menuDisabled: true, width: 120 },
+                { text: 'Designer Color', dataIndex: 'color', menuDisabled: true, width: 160 },
+                { text: 'Image Link 2', dataIndex: 'image_link_2', menuDisabled: true, width: 240 },
+                { text: 'Image Link 3', dataIndex: 'image_link_3', menuDisabled: true, width: 240 },
+                { text: 'Image Link 4', dataIndex: 'image_link_4', menuDisabled: true, width: 240 },
+                { 
+                    text: 'Final Sale', dataIndex: 'final_sale', menuDisabled: true, width: 100,            
+                    editor: {
+                        xtype: "combo",                        
+                        valueField: 'value',
+                        displayField: 'label',     
+                        fieldCls: 'required',                                             
+                        store: ['true', 'false'],                                                                                                                  
+                        queryMode: 'local'
+                    }
+                },                              
+                { 
+                    text: 'Product Condition', dataIndex: 'product_condition', menuDisabled: true, width: 100,
+                    editor: {
+                        xtype: "combo",                        
+                        valueField: 'value',
+                        displayField: 'label',     
+                        fieldCls: 'required',                                             
+                        store: ['New'],                                                                                                                  
+                        queryMode: 'local'
+                    }
+                },
+                { text: 'Normalized Color', dataIndex: 'normalized_color', menuDisabled: true, width: 120 },
+                { text: 'Womens Clothing Tops Size', dataIndex: 'womens_clothing_tops_size', menuDisabled: true, width: 120 },                
+                { text: 'Womens Clothing Bottoms Size', dataIndex: 'womens_clothing_bottoms_size', menuDisabled: true, width: 120 }                                                            
+            ]
+        },
+
+        AMM: {
+            store: 'buildAmazonMpStore',
+            columns: [
+                { text: 'Product Type', dataIndex: 'product_type', menuDisabled: true, width: 120 },
+                { text: 'Seller SKU', dataIndex: 'seller_sku', menuDisabled: true, width: 120 },
+                { text: 'Brand Name', dataIndex: 'brand_name', menuDisabled: true, width: 120 },
+                { text: 'Product Name', dataIndex: 'product_name', menuDisabled: true, width: 120 },
+                { text: 'Product ID', dataIndex: 'product_id', menuDisabled: true, width: 120 },
+                { text: 'Product ID Type', dataIndex: 'product_id_type', menuDisabled: true, width: 120 },
+                { text: 'Item Type Keyword', dataIndex: 'item_type_keyword', menuDisabled: true, width: 120 },
+                { text: 'Outer Material Type', dataIndex: 'outer_material_type', menuDisabled: true, width: 120 },
+                { text: 'Outer Material Type', dataIndex: 'outer_material_type1', menuDisabled: true, width: 120 },
+                { text: 'Outer Material Type', dataIndex: 'outer_material_type2', menuDisabled: true, width: 120 },
+                { text: 'Outer Material Type', dataIndex: 'outer_material_type3', menuDisabled: true, width: 120 },
+                { text: 'Outer Material Type', dataIndex: 'outer_material_type4', menuDisabled: true, width: 120 },
+                { text: 'Color', dataIndex: 'color', menuDisabled: true, width: 120 },
+                { text: 'Color Map', dataIndex: 'color_map', menuDisabled: true, width: 120 },
+                { text: 'Department', dataIndex: 'department', menuDisabled: true, width: 120 },
+                { text: 'NeckStyle', dataIndex: 'neckstyle', menuDisabled: true, width: 120 },
+                { text: 'pattern-style', dataIndex: 'pattern_style', menuDisabled: true, width: 120 },
+                { text: 'Size', dataIndex: 'size', menuDisabled: true, width: 120 },
+                { text: 'Style', dataIndex: 'style', menuDisabled: true, width: 120 },
+                { text: 'Occasion Lifestyle', dataIndex: 'occasion_lifestyle', menuDisabled: true, width: 120 },
+                { text: 'Product Lifecycle Supply Type', dataIndex: 'product_lifecycle_supply_type', menuDisabled: true, width: 120 },
+                { text: 'Size Map', dataIndex: 'size_map', menuDisabled: true, width: 120 },
+                { text: 'Item Length', dataIndex: 'item_length', menuDisabled: true, width: 120 },
+                { text: 'Fabric Type', dataIndex: 'fabric_type', menuDisabled: true, width: 120 },
+                { text: 'Material/Fabric Regulations', dataIndex: 'material_fabric_regulations', menuDisabled: true, width: 120 },
+                { text: 'Material/Fabric Regulations', dataIndex: 'material_fabric_regulations1', menuDisabled: true, width: 120 },
+                { text: 'Material/Fabric Regulations', dataIndex: 'material_fabric_regulations2', menuDisabled: true, width: 120 },
+                { text: 'Your Price', dataIndex: 'your_price', menuDisabled: true, width: 120 },
+                { text: 'Quantity', dataIndex: 'quantity', menuDisabled: true, width: 120 },
+                { text: 'Main Image URL', dataIndex: 'main_image_url', menuDisabled: true, width: 120 },
+                { text: 'Target Gender', dataIndex: 'target_gender', menuDisabled: true, width: 120 },
+                { text: 'Age Range Description', dataIndex: 'age_range_description', menuDisabled: true, width: 120 },
+                { text: 'Apparel Size System', dataIndex: 'apparel_size_system', menuDisabled: true, width: 120 },
+                { text: 'Apparel Size Class', dataIndex: 'apparel_size_class', menuDisabled: true, width: 120 },
+                { text: 'Apparel Size Value', dataIndex: 'apparel_size_value', menuDisabled: true, width: 120 },
+                { text: 'Apparel Size To Range', dataIndex: 'apparel_size_to_range', menuDisabled: true, width: 120 },
+                { text: 'Apparel Size Body Type', dataIndex: 'apparel_size_body_type', menuDisabled: true, width: 120 },
+                { text: 'Apparel Size Height Type', dataIndex: 'apparel_size_height_type', menuDisabled: true, width: 120 },
+                { text: 'Other Image URL1', dataIndex: 'other_image_url1', menuDisabled: true, width: 120 },
+                { text: 'Other Image URL2', dataIndex: 'other_image_url2', menuDisabled: true, width: 120 },
+                { text: 'Other Image URL3', dataIndex: 'other_image_url3', menuDisabled: true, width: 120 },
+                { text: 'Other Image URL4', dataIndex: 'other_image_url4', menuDisabled: true, width: 120 },
+                { text: 'Other Image URL5', dataIndex: 'other_image_url5', menuDisabled: true, width: 120 },
+                { text: 'Other Image URL6', dataIndex: 'other_image_url6', menuDisabled: true, width: 120 },
+                { text: 'Other Image URL7', dataIndex: 'other_image_url7', menuDisabled: true, width: 120 },
+                { text: 'Other Image URL8', dataIndex: 'other_image_url8', menuDisabled: true, width: 120 },
+                { text: 'Parentage', dataIndex: 'parentage', menuDisabled: true, width: 120 },
+                { text: 'Parent SKU', dataIndex: 'parent_sku', menuDisabled: true, width: 120 },
+                { text: 'Relationship Type', dataIndex: 'relationship_type', menuDisabled: true, width: 120 },
+                { text: 'Variation Theme', dataIndex: 'variation_theme', menuDisabled: true, width: 120 },
+                { text: 'Package Level', dataIndex: 'package_level', menuDisabled: true, width: 120 },
+                { text: 'package_contains_quantity', dataIndex: 'package_contains_quantity', menuDisabled: true, width: 120 },
+                { text: 'package_contains_identifier', dataIndex: 'package_contains_identifier', menuDisabled: true, width: 120 },
+                { text: 'Update Delete', dataIndex: 'update_delete', menuDisabled: true, width: 120 },
+                { text: 'Product Description', dataIndex: 'product_description', menuDisabled: true, width: 120 },
+                { text: 'Closure Type', dataIndex: 'closure_type', menuDisabled: true, width: 120 },
+                { text: 'Style Number', dataIndex: 'style_number', menuDisabled: true, width: 120 },
+                { text: 'Inner Material Type', dataIndex: 'inner_material_type', menuDisabled: true, width: 120 },
+                { text: 'Manufacturer Part Number', dataIndex: 'manufacturer_part_number', menuDisabled: true, width: 120 },
+                { text: 'Manufacturer', dataIndex: 'manufacturer', menuDisabled: true, width: 120 },
+                { text: 'Key Product Features', dataIndex: 'key_product_features', menuDisabled: true, width: 120 },
+                { text: 'Key Product Features', dataIndex: 'key_product_features1', menuDisabled: true, width: 120 },
+                { text: 'Key Product Features', dataIndex: 'key_product_features2', menuDisabled: true, width: 120 },
+                { text: 'Key Product Features', dataIndex: 'key_product_features3', menuDisabled: true, width: 120 },
+                { text: 'Key Product Features', dataIndex: 'key_product_features4', menuDisabled: true, width: 120 },
+                { text: 'Search Terms', dataIndex: 'search_terms', menuDisabled: true, width: 120 },
+                { text: 'belt-style', dataIndex: 'belt_style', menuDisabled: true, width: 120 },
+                { text: 'Collar Type', dataIndex: 'collar_type', menuDisabled: true, width: 120 },
+                { text: 'Control Type', dataIndex: 'control_type', menuDisabled: true, width: 120 },
+                { text: 'Fit Type', dataIndex: 'fit_type', menuDisabled: true, width: 120 },
+                { text: 'Country/Region as Labeled', dataIndex: 'country_region_as_labeled', menuDisabled: true, width: 120 },
+                { text: 'Fur Description', dataIndex: 'fur_description', menuDisabled: true, width: 120 },
+                { text: 'pocket-description', dataIndex: 'pocket_description', menuDisabled: true, width: 120 },
+                { text: 'Special Size Type', dataIndex: 'special_size_type', menuDisabled: true, width: 120 },
+                { text: 'Additional Features', dataIndex: 'additional_features', menuDisabled: true, width: 120 },
+                { text: 'Additional Features', dataIndex: 'additional_features1', menuDisabled: true, width: 120 },
+                { text: 'Additional Features', dataIndex: 'additional_features2', menuDisabled: true, width: 120 },
+                { text: 'Additional Features', dataIndex: 'additional_features3', menuDisabled: true, width: 120 },
+                { text: 'Additional Features', dataIndex: 'additional_features4', menuDisabled: true, width: 120 },
+                { text: 'theme', dataIndex: 'theme', menuDisabled: true, width: 120 },
+                { text: 'top-style', dataIndex: 'top_style', menuDisabled: true, width: 120 },
+                { text: 'water-resistance-level', dataIndex: 'water_resistance_level', menuDisabled: true, width: 120 },
+                { text: 'Is Autographed', dataIndex: 'is_autographed', menuDisabled: true, width: 120 },
+                { text: 'athlete', dataIndex: 'athlete', menuDisabled: true, width: 120 },
+                { text: 'team_name', dataIndex: 'team_name', menuDisabled: true, width: 120 },
+                { text: 'material_type', dataIndex: 'material_type', menuDisabled: true, width: 120 },
+                { text: 'Weave Type', dataIndex: 'weave_type', menuDisabled: true, width: 120 },
+                { text: 'league_name', dataIndex: 'league_name', menuDisabled: true, width: 120 },
+                { text: 'Shaft Style Type', dataIndex: 'shaft_style_type', menuDisabled: true, width: 120 },
+                { text: 'Bottom Style', dataIndex: 'bottom_style', menuDisabled: true, width: 120 },
+                { text: 'fabric-wash', dataIndex: 'fabric_wash', menuDisabled: true, width: 120 },
+                { text: 'Sleeve Type', dataIndex: 'sleeve_type', menuDisabled: true, width: 120 },
+                { text: 'underwire-type', dataIndex: 'underwire_type', menuDisabled: true, width: 120 },
+                { text: 'Duration Unit', dataIndex: 'duration_unit', menuDisabled: true, width: 120 },
+                { text: 'legal_compliance_certification_certifying_authority_name', dataIndex: 'legal_compliance_certification_certifying_authority_name', menuDisabled: true, width: 120 },
+                { text: 'Duration', dataIndex: 'duration', menuDisabled: true, width: 120 },
+                { text: 'legal_compliance_certification_geographic_jurisdiction', dataIndex: 'legal_compliance_certification_geographic_jurisdiction', menuDisabled: true, width: 120 },
+                { text: 'Shipping Weight', dataIndex: 'shipping_weight', menuDisabled: true, width: 120 },
+                { text: 'Website Shipping Weight Unit Of Measure', dataIndex: 'website_shipping_weight_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Chest Size', dataIndex: 'chest_size', menuDisabled: true, width: 120 },
+                { text: 'Chest Size Unit Of Measure', dataIndex: 'chest_size_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Band Size Numeric', dataIndex: 'band_size_numeric', menuDisabled: true, width: 120 },
+                { text: 'Band Size Num Unit Of Measure', dataIndex: 'band_size_num_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Cup Size', dataIndex: 'cup_size', menuDisabled: true, width: 120 },
+                { text: 'Neck Size', dataIndex: 'neck_size', menuDisabled: true, width: 120 },
+                { text: 'Neck Size Unit Of Measure', dataIndex: 'neck_size_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'SleeveLength', dataIndex: 'sleevelength', menuDisabled: true, width: 120 },
+                { text: 'Sleeve Length Unit Of Measure', dataIndex: 'sleeve_length_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'WaistSize', dataIndex: 'waistsize', menuDisabled: true, width: 120 },
+                { text: 'Waist Size Unit Of Measure', dataIndex: 'waist_size_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Item Length', dataIndex: 'item_length1', menuDisabled: true, width: 120 },
+                { text: 'Item Width', dataIndex: 'item_width', menuDisabled: true, width: 120 },
+                { text: 'Item Height', dataIndex: 'item_height', menuDisabled: true, width: 120 },
+                { text: 'Item Dimensions Unit Of Measure', dataIndex: 'item_dimensions_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Fulfillment Center ID', dataIndex: 'fulfillment_center_id', menuDisabled: true, width: 120 },
+                { text: 'Package Height', dataIndex: 'package_height', menuDisabled: true, width: 120 },
+                { text: 'Package Width', dataIndex: 'package_width', menuDisabled: true, width: 120 },
+                { text: 'Package Length', dataIndex: 'package_length', menuDisabled: true, width: 120 },
+                { text: 'Package Weight', dataIndex: 'package_weight', menuDisabled: true, width: 120 },
+                { text: 'Package Weight Unit Of Measure', dataIndex: 'package_weight_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Package Dimensions Unit Of Measure', dataIndex: 'package_dimensions_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Compliance Regulation Type', dataIndex: 'compliance_regulation_type', menuDisabled: true, width: 120 },
+                { text: 'Compliance Regulation Type', dataIndex: 'compliance_regulation_type1', menuDisabled: true, width: 120 },
+                { text: 'Compliance Regulation Type', dataIndex: 'compliance_regulation_type2', menuDisabled: true, width: 120 },
+                { text: 'Compliance Regulation Type', dataIndex: 'compliance_regulation_type3', menuDisabled: true, width: 120 },
+                { text: 'Compliance Regulation Type', dataIndex: 'compliance_regulation_type4', menuDisabled: true, width: 120 },
+                { text: 'Regulatory Identification', dataIndex: 'regulatory_identification', menuDisabled: true, width: 120 },
+                { text: 'Regulatory Identification', dataIndex: 'regulatory_identification1', menuDisabled: true, width: 120 },
+                { text: 'Regulatory Identification', dataIndex: 'regulatory_identification2', menuDisabled: true, width: 120 },
+                { text: 'Regulatory Identification', dataIndex: 'regulatory_identification3', menuDisabled: true, width: 120 },
+                { text: 'Regulatory Identification', dataIndex: 'regulatory_identification4', menuDisabled: true, width: 120 },
+                { text: 'Cpsia Warning', dataIndex: 'cpsia_warning', menuDisabled: true, width: 120 },
+                { text: 'CPSIA Warning Description', dataIndex: 'cpsia_warning_description', menuDisabled: true, width: 120 },
+                { text: 'Import Designation', dataIndex: 'import_designation', menuDisabled: true, width: 120 },
+                { text: 'item_weight_unit_of_measure', dataIndex: 'item_weight_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Item Weight', dataIndex: 'item_weight', menuDisabled: true, width: 120 },
+                { text: 'Country/Region of Origin', dataIndex: 'country_region_of_origin', menuDisabled: true, width: 120 },
+                { text: 'Is this product a battery or does it utilize batteries?', dataIndex: 'is_this_product_a_battery_or_does_it_utilize_batteries?', menuDisabled: true, width: 120 },
+                { text: 'Batteries are Included', dataIndex: 'batteries_are_included', menuDisabled: true, width: 120 },
+                { text: 'Battery composition', dataIndex: 'battery_composition', menuDisabled: true, width: 120 },
+                { text: 'Battery type/size', dataIndex: 'battery_type_size', menuDisabled: true, width: 120 },
+                { text: 'Battery type/size', dataIndex: 'battery_type_size1', menuDisabled: true, width: 120 },
+                { text: 'Battery type/size', dataIndex: 'battery_type_size2', menuDisabled: true, width: 120 },
+                { text: 'Number of batteries', dataIndex: 'number_of_batteries', menuDisabled: true, width: 120 },
+                { text: 'Number of batteries', dataIndex: 'number_of_batteries1', menuDisabled: true, width: 120 },
+                { text: 'Number of batteries', dataIndex: 'number_of_batteries2', menuDisabled: true, width: 120 },
+                { text: 'Battery weight (grams)', dataIndex: 'battery_weight_grams', menuDisabled: true, width: 120 },
+                { text: 'battery_weight_unit_of_measure', dataIndex: 'battery_weight_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Number of Lithium Metal Cells', dataIndex: 'number_of_lithium_metal_cells', menuDisabled: true, width: 120 },
+                { text: 'Number of Lithium-ion Cells', dataIndex: 'number_of_lithium_ion_cells', menuDisabled: true, width: 120 },
+                { text: 'Lithium Battery Packaging', dataIndex: 'lithium_battery_packaging', menuDisabled: true, width: 120 },
+                { text: 'Watt hours per battery', dataIndex: 'watt_hours_per_battery', menuDisabled: true, width: 120 },
+                { text: 'lithium_battery_energy_content_unit_of_measure', dataIndex: 'lithium_battery_energy_content_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Lithium content (grams)', dataIndex: 'lithium_content_grams', menuDisabled: true, width: 120 },
+                { text: 'lithium_battery_weight_unit_of_measure', dataIndex: 'lithium_battery_weight_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'Applicable Dangerous Goods Regulations', dataIndex: 'applicable_dangerous_goods_regulations', menuDisabled: true, width: 120 },
+                { text: 'Applicable Dangerous Goods Regulations', dataIndex: 'applicable_dangerous_goods_regulations1', menuDisabled: true, width: 120 },
+                { text: 'Applicable Dangerous Goods Regulations', dataIndex: 'applicable_dangerous_goods_regulations2', menuDisabled: true, width: 120 },
+                { text: 'Applicable Dangerous Goods Regulations', dataIndex: 'applicable_dangerous_goods_regulations3', menuDisabled: true, width: 120 },
+                { text: 'Applicable Dangerous Goods Regulations', dataIndex: 'applicable_dangerous_goods_regulations4', menuDisabled: true, width: 120 },
+                { text: 'UN number', dataIndex: 'un_number', menuDisabled: true, width: 120 },
+                { text: 'Safety Data Sheet (SDS) URL', dataIndex: 'safety_data_sheet_sds_url', menuDisabled: true, width: 120 },
+                { text: 'Volume', dataIndex: 'volume', menuDisabled: true, width: 120 },
+                { text: 'item_volume_unit_of_measure', dataIndex: 'item_volume_unit_of_measure', menuDisabled: true, width: 120 },
+                { text: 'legal_compliance_certification_expiration_date', dataIndex: 'legal_compliance_certification_expiration_date', menuDisabled: true, width: 120 },
+                { text: 'Regulatory Organization Name', dataIndex: 'regulatory_organization_name', menuDisabled: true, width: 120 },
+                { text: 'Compliance Certification Status', dataIndex: 'compliance_certification_status', menuDisabled: true, width: 120 },
+                { text: 'Flash point (°C)?', dataIndex: 'flash_point', menuDisabled: true, width: 120 },
+                { text: 'legal_compliance_certification_date_of_issue', dataIndex: 'legal_compliance_certification_date_of_issue', menuDisabled: true, width: 120 },
+                { text: 'legal_compliance_certification_metadata', dataIndex: 'legal_compliance_certification_metadata', menuDisabled: true, width: 120 },
+                { text: 'Legal Compliance Certification', dataIndex: 'legal_compliance_certification', menuDisabled: true, width: 120 },
+                { text: 'Categorization/GHS pictograms (select all that apply)', dataIndex: 'categorization_ghs_pictograms', menuDisabled: true, width: 120 },
+                { text: 'Categorization/GHS pictograms (select all that apply)', dataIndex: 'categorization_ghs_pictograms1', menuDisabled: true, width: 120 },
+                { text: 'Categorization/GHS pictograms (select all that apply)', dataIndex: 'categorization_ghs_pictograms2', menuDisabled: true, width: 120 },
+                { text: 'California Proposition 65 Warning Type', dataIndex: 'california_proposition_65_warning_type', menuDisabled: true, width: 120 },
+                { text: 'California Proposition 65 Chemical Names', dataIndex: 'california_proposition_65_chemical_names', menuDisabled: true, width: 120 },
+                { text: 'Additional Chemical Name1', dataIndex: 'additional_chemical_name1', menuDisabled: true, width: 120 },
+                { text: 'Additional Chemical Name2', dataIndex: 'additional_chemical_name2', menuDisabled: true, width: 120 },
+                { text: 'Additional Chemical Name3', dataIndex: 'additional_chemical_name3', menuDisabled: true, width: 120 },
+                { text: 'Additional Chemical Name4', dataIndex: 'additional_chemical_name4', menuDisabled: true, width: 120 },
+                { text: 'Pesticide Marking', dataIndex: 'pesticide_marking', menuDisabled: true, width: 120 },
+                { text: 'Pesticide Marking', dataIndex: 'pesticide_marking', menuDisabled: true, width: 120 },
+                { text: 'Pesticide Marking', dataIndex: 'pesticide_marking', menuDisabled: true, width: 120 },
+                { text: 'Pesticide Registration Status', dataIndex: 'pesticide_registration_status', menuDisabled: true, width: 120 },
+                { text: 'Pesticide Registration Status', dataIndex: 'pesticide_registration_status1', menuDisabled: true, width: 120 },
+                { text: 'Pesticide Registration Status', dataIndex: 'pesticide_registration_status2', menuDisabled: true, width: 120 },
+                { text: 'Pesticide Certification Number', dataIndex: 'pesticide_certification_number', menuDisabled: true, width: 120 },
+                { text: 'Pesticide Certification Number', dataIndex: 'pesticide_certification_number1', menuDisabled: true, width: 120 },
+                { text: 'Pesticide Certification Number', dataIndex: 'pesticide_certification_number2', menuDisabled: true, width: 120 },
+                { text: 'Radio Frequency Emission & Authorization Status', dataIndex: 'radio_frequency_emission_&_authorization_status', menuDisabled: true, width: 120 },
+                { text: 'SDoC Contact Email Address', dataIndex: 'sdoc_contact_email_address', menuDisabled: true, width: 120 },
+                { text: 'SDOC Contact US Phone Number', dataIndex: 'sdoc_contact_us_phone_number', menuDisabled: true, width: 120 },
+                { text: 'SDoC Contact Name', dataIndex: 'sdoc_contact_name', menuDisabled: true, width: 120 },
+                { text: 'FCC ID', dataIndex: 'fcc_id', menuDisabled: true, width: 120 },
+                { text: 'SDoC Contact US Mailing Address', dataIndex: 'sdoc_contact_us_mailing_address', menuDisabled: true, width: 120 },
+                { text: 'List Price', dataIndex: 'list_price', menuDisabled: true, width: 120 },
+                { text: 'Product Tax Code', dataIndex: 'product_tax_code', menuDisabled: true, width: 120 },
+                { text: 'Handling Time', dataIndex: 'handling_time', menuDisabled: true, width: 120 },
+                { text: 'Launch Date', dataIndex: 'launch_date', menuDisabled: true, width: 120 },
+                { text: 'Release Date', dataIndex: 'release_date', menuDisabled: true, width: 120 },
+                { text: 'Restock Date', dataIndex: 'restock_date', menuDisabled: true, width: 120 },
+                { text: 'Sale Price', dataIndex: 'sale_price', menuDisabled: true, width: 120 },
+                { text: 'Sale Start Date', dataIndex: 'sale_start_date', menuDisabled: true, width: 120 },
+                { text: 'Sale End Date', dataIndex: 'sale_end_date', menuDisabled: true, width: 120 },
+                { text: 'Offer End Date', dataIndex: 'offer_end_date', menuDisabled: true, width: 120 },
+                { text: 'Max Aggregate Ship Quantity', dataIndex: 'max_aggregate_ship_quantity', menuDisabled: true, width: 120 },
+                { text: 'Package Quantity', dataIndex: 'package_quantity', menuDisabled: true, width: 120 },
+                { text: 'Number of Items', dataIndex: 'number_of_items', menuDisabled: true, width: 120 },
+                { text: 'Offering Can Be Gift Messaged', dataIndex: 'offering_can_be_gift_messaged', menuDisabled: true, width: 120 },
+                { text: 'Is Gift Wrap Available', dataIndex: 'is_gift_wrap_available', menuDisabled: true, width: 120 },
+                { text: 'Is Discontinued by Manufacturer', dataIndex: 'is_discontinued_by_manufacturer', menuDisabled: true, width: 120 },
+                { text: 'Max Order Quantity', dataIndex: 'max_order_quantity', menuDisabled: true, width: 120 },
+                { text: 'Shipping-Template', dataIndex: 'shipping_template', menuDisabled: true, width: 120 },
+                { text: 'Offer Start Date', dataIndex: 'offer_start_date', menuDisabled: true, width: 120 },
+                { text: 'Business Price', dataIndex: 'business_price', menuDisabled: true, width: 120 },
+                { text: 'Quantity Price Type', dataIndex: 'quantity_price_type', menuDisabled: true, width: 120 },
+                { text: 'Quantity Lower Bound 1', dataIndex: 'quantity_lower_bound_1', menuDisabled: true, width: 120 },
+                { text: 'Quantity Price 1', dataIndex: 'quantity_price_1', menuDisabled: true, width: 120 },
+                { text: 'Quantity Lower Bound 2', dataIndex: 'quantity_lower_bound_2', menuDisabled: true, width: 120 },
+                { text: 'Quantity Price 2', dataIndex: 'quantity_price_2', menuDisabled: true, width: 120 },
+                { text: 'Quantity Lower Bound 3', dataIndex: 'quantity_lower_bound_3', menuDisabled: true, width: 120 },
+                { text: 'Quantity Price 3', dataIndex: 'quantity_price_3', menuDisabled: true, width: 120 },
+                { text: 'Quantity Lower Bound 4', dataIndex: 'quantity_lower_bound_4', menuDisabled: true, width: 120 },
+                { text: 'Quantity Price 4', dataIndex: 'quantity_price_4', menuDisabled: true, width: 120 },
+                { text: 'Quantity Lower Bound 5', dataIndex: 'quantity_lower_bound_5', menuDisabled: true, width: 120 },
+                { text: 'Quantity Price 5', dataIndex: 'quantity_price_5', menuDisabled: true, width: 120 },
+                { text: 'Progressive Discount Type', dataIndex: 'progressive_discount_type', menuDisabled: true, width: 120 },
+                { text: 'Progressive Discount Lower Bound 1', dataIndex: 'progressive_discount_lower_bound_1', menuDisabled: true, width: 120 },
+                { text: 'Progressive Discount Value 1', dataIndex: 'progressive_discount_value_1', menuDisabled: true, width: 120 },
+                { text: 'Progressive Discount Lower Bound 2', dataIndex: 'progressive_discount_lower_bound_2', menuDisabled: true, width: 120 },
+                { text: 'Progressive Discount Value 2', dataIndex: 'progressive_discount_value_2', menuDisabled: true, width: 120 },
+                { text: 'Progressive Discount Lower Bound 3', dataIndex: 'progressive_discount_lower_bound_3', menuDisabled: true, width: 120 },
+                { text: 'Progressive Discount Value 3', dataIndex: 'progressive_discount_value_3', menuDisabled: true, width: 120 },
+                { text: 'National Stock Number', dataIndex: 'national_stock_number', menuDisabled: true, width: 120 },
+                { text: 'United Nations Standard Products and Services Code', dataIndex: 'united_nations_standard_products_and_services_code', menuDisabled: true, width: 120 },
+                { text: 'Pricing Action', dataIndex: 'pricing_action', menuDisabled: true, width: 120 }                                                          
+            ]
         }
     }    
 })

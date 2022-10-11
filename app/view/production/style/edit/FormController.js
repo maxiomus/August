@@ -1040,11 +1040,11 @@ Ext.define('August.view.production.style.edit.FormController', {
         });        
                 
         me.win.show('', function(){
-            me.mv.unmask();            
+            me.mv.mask();            
         });
 
         me.win.on('close', function(p){
-            me.mv.mask();            
+            me.mv.unmask();            
         });
 
         if(typeof callback === "function"){
@@ -1809,10 +1809,10 @@ Ext.define('August.view.production.style.edit.FormController', {
         //    sub = total - recs.length;        
 
         var theProduct = vm.get('theProduct'),
-            field = me.getView().lookupReference('attachment').down('viewupload').fileUpload
+            field = me.getView().lookupReference('attachment').down('viewupload').fileUpload;
 
         field.name = field.name + '-' + theProduct.id;
-        //console.log('onPhotoDropped', store, theProduct, recs, field);
+        console.log('onFileDropped', store, theProduct, recs, field);
 
         var data = [],
             total = store.getCount(),            
@@ -1826,7 +1826,7 @@ Ext.define('August.view.production.style.edit.FormController', {
             
             data.push(rec.data);                               
                      
-            //console.log('onPhoto', store.getNewRecords(), vm.getSession());
+            console.log(data);
         });                
 
         if(field && field.getFilesQueue().length > 0){
@@ -1876,35 +1876,58 @@ Ext.define('August.view.production.style.edit.FormController', {
         var theProduct = vm.get('theProduct'),
             field = me.getView().lookupReference('photos').down('viewupload').fileUpload
 
-        field.name = field.name + '-' + theProduct.id;
-        console.log('onFileDropped', view, store, theProduct, recs, field);
+        field.name = field.name + '-' + theProduct.id;        
 
         var data = [],
             total = store.getCount(),            
-            count = store.getNewRecords().length;
-                
+            count = store.getNewRecords().length,
+            storeData = store.getData(),
+            frontExist = false,
+            backExist = false;                        
+
+        var m = storeData.findBy(function(item,key){            
+            return item.get('order') == 1;
+        });
+
+        var n = storeData.findBy(function(item,key){            
+            return item.get('order') == 2;
+        });
+
+        var oMax = storeData.max('order');
+
+        if(m != null){
+            frontExist = true;
+        }
+
+        if(n != null){
+            backExist = true;
+        }
+
+        console.log('onPhotoDropped', m, n, oMax, store, recs, storeData);                
+
         Ext.each(recs, function(rec, idx, self) {
-            rec.set('order', (total - count) + idx + 1);
-            var postfix = ((total - count) + idx + 1).toString().padStart(3, '0')
-            if(total === 0){
-                if(idx === 0){
-                    postfix = "front";
-                }
-                else if(idx === 1){
-                    postfix = "back";
-                }
-            }
-            else if(total === 1){
-                if(idx === 0){
-                    postfix = "back";
-                }
-            }
-            else {
+                        
+            var postfix = ((total - count) + idx + 1).toString().padStart(3, '0');
 
-            }
-
-            rec.set('tag', theProduct.get('style') + '_' + theProduct.get('color').replace('/', '-') + "_" + postfix);
+            console.log('index', rec, idx, total);
             
+            if(m == null && n == null){
+                postfix = "front";      
+                rec.set('order', 1);          
+            }
+
+            if(m == null && n != null){
+                postfix = "front";
+                rec.set('order', 1);          
+            }                    
+
+            if(m != null && n == null){
+                postfix = "back";
+                rec.set('order', 2);          
+            }            
+
+            rec.set('order', oMax + idx + 1);
+            rec.set('tag', theProduct.get('style') + '_' + theProduct.get('color').replace('/', '-') + "_" + postfix);            
             data.push(rec.data);                               
                      
             //console.log('onPhoto', store.getNewRecords(), vm.getSession());            
@@ -1922,18 +1945,18 @@ Ext.define('August.view.production.style.edit.FormController', {
                         session.data['style.ProductPhoto'] = null;
                     }
 
-                    store.rejectChanges();                    
-                    store.load();                    
+                    store.rejectChanges();    
+                                    
+                    store.reload();                    
                     //console.log('sucess', response, store.getNewRecords(), me.getSession().getChanges());
 
                 },
-                failure: function(response, opts) {
-                    console.log('failure', response);
+                failure: function(response, opts) {                    
                     Ext.Msg.alert('Failure', response);
                 }
             },{
                 Photos: JSON.stringify(data)
-            });
+            });                     
         }
     },
 

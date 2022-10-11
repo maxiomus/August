@@ -154,6 +154,11 @@ Ext.define('August.view.production.windows.style.OnOrder',{
                     xtype: 'rownumberer', text: '', menuDisabled: true, width: 50,
                 },{
                     text: 'S.O #', dataIndex: 'orderno', menuDisabled: true, width: 90,
+                    renderer: function(v, meta, rec){                                        
+                        
+                        var html = "<a href='#sales-order/edit/{0}'>{1}</a>";
+                        return Ext.String.format(html, v, v);
+                    } 
                 },{
                     text: 'Pick #', dataIndex: 'pickno', menuDisabled: true, width: 80,
                 },{

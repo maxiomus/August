@@ -95,12 +95,14 @@ Ext.define('August.view.TopBar', {
         me.actView = Ext.create('Ext.Action', {
             text: 'View',
             tooltop: 'View',
+            ui: 'default',
+            hidden: true,
             iconCls: 'x-fa fa-file-o',
             handler: function(item, e){
                 this.fireEvent("actview", this, item);
             },
             scope: this
-        }),
+        }),       
         me.actCopy = Ext.create('Ext.Action', {
             text: 'Copy',
             tooltip: 'Copy',
@@ -110,6 +112,17 @@ Ext.define('August.view.TopBar', {
             iconCls: 'x-fa fa-copy',
             handler: function(item, e){
                 this.fireEvent("actcopy", this, item);
+            },
+            scope: this
+        }),
+        me.actPrint = Ext.create('Ext.Action', {
+            text: 'Print',
+            tooltop: 'Print ',
+            ui: 'default',
+            hidden: false,
+            iconCls: 'x-fa fa-print',
+            handler: function(item, e){
+                this.fireEvent("actprint", this, item);
             },
             scope: this
         }),

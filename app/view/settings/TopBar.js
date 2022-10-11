@@ -56,7 +56,7 @@ Ext.define('August.view.settings.TopBar',{
                 text: "Remove",
                 tooltip: "Remove Selected Item",
                 //ui: "default",
-                iconCls: "x-fa fa-remove",
+                iconCls: "x-fa fa-minus",
                 //glyph: 'xf12d@FontAwesome',
                 bind: {
                     disabled: '{!grid.selection}'
@@ -98,10 +98,22 @@ Ext.define('August.view.settings.TopBar',{
                 text: "Refresh",
                 tooltip: "Refresh",
                 //ui: "default",
-                iconCls: "x-fa fa-refresh",
+                iconCls: "x-fa fa-sync",
                 //glyph: 'xf01e@FontAwesome',
                 handler: function(btn, e){
                     me.fireEvent('actrefresh', btn, me);
+                },
+                scope: me
+            }),
+
+            export: Ext.create('Ext.Action', {
+                text: "Export",
+                tooltip: "Export",
+                //ui: "default",
+                iconCls: "x-fa fa-file-export",
+                //glyph: 'xf01e@FontAwesome',
+                handler: function(btn, e){
+                    me.fireEvent('actexport', btn, me);
                 },
                 scope: me
             })
@@ -116,7 +128,7 @@ Ext.define('August.view.settings.TopBar',{
         var me = this;
 
         return [
-            me.actions.add, me.actions.edit, me.actions.remove, me.actions.copy, me.actions.refresh, me.actions.save
+            me.actions.add, me.actions.edit, me.actions.remove, me.actions.copy, me.actions.refresh, me.actions.save, '->', me.actions.export
         ];
     }
 });

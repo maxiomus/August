@@ -107,7 +107,7 @@ Ext.define('August.view.inventory.transfer.FormController', {
                         style: rec.get('style'),
                         color: rec.get('color'),
                         descript: rec.get('descript'),
-                        price: rec.get('price1'),
+                        price: rec.get('cost'),
                         binlocation: rec.get('binlocation'),
                         bundle: rec.get('bundle'),
                         size1: rec.get('size1'),

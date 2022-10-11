@@ -221,10 +221,12 @@
             },
             {
                 "path": "resources/lib/xlsx.core.min.js"
-            },
+            }
+            /*
             {
                 "path": "resources/lib/JsBarcode.all.min.js"
             }
+            */
         ]
     },
 

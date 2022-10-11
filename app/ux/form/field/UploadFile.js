@@ -209,7 +209,8 @@ Ext.define('Ext.ux.form.field.UploadFile', {
         }
 
         for(var i=0;i<this.filesQueue.length;i++) {
-            this.formData.append(this.name + '-' + (i+1), this.filesQueue[i]);            
+            this.formData.append(this.name + '-' + (i+1), this.filesQueue[i]);     
+            console.log(this.name);       
         }
 
         this.xhr.open(method, url, true);

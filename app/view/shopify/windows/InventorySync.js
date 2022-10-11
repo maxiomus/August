@@ -108,9 +108,9 @@ Ext.define('August.view.shopify.windows.InventorySync',{
                         fn: 'onTagSelected'
                     }
                 }
-            }],
+            }]
             
-            buttons: this.buildButtons
+            //buttons: this.buildButtons
         });
 
         me.callParent(arguments);

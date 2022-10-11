@@ -18,7 +18,7 @@ Ext.define('Ext.app.route.Base', {
 
     afterInitViewModel: function(viewModel){
         var me = this;
-        console.log('afterInitViewModel', viewModel);
+        //console.log('afterInitViewModel', viewModel);
         //viewModel.bind('{tab}', me.onTabChange, me)
     },
 
@@ -31,14 +31,14 @@ Ext.define('Ext.app.route.Base', {
     },
 
     onTabChange: function(tabpanel, newTab, oldTab, eOpts){
-        console.log('Base - onTabChange', tabpanel, newTab);
+        //console.log('Base - onTabChange', tabpanel, newTab);
         this.redirectTo(this.getTabRoute(tabpanel, newTab));
         //var route = this.getTabRoute(tabpanel, newTab);
         //this.changeRoute(this, route);
     },
 
     changeRoute: function (controller, route) {
-        console.log('Base - changeRoute', route);
+        //console.log('Base - changeRoute', route);
         if (route.substring(0, 1) !== '!') {
             route = '!' + route;
         }

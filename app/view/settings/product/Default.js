@@ -9,6 +9,7 @@ Ext.define('August.view.settings.product.Default',{
         //'August.view.settings.TopBar',
         'August.view.settings.product.Category',
         'August.view.settings.product.Color',
+        'August.view.settings.product.ColorMapping',
         'August.view.settings.product.RawMatType',
         'August.view.settings.product.FabricContent',
         'August.view.settings.product.FabricType',

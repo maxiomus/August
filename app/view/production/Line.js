@@ -164,6 +164,19 @@ Ext.define('August.view.production.Line',{
                             }
                         },
                         {
+                            header: "Sub. Category",
+                            dataIndex: "subcategory",
+                            width: 120,
+                            hidden: false,
+                            filter: {
+                                operator: 'st',
+                                type: "string"
+                            },
+                            renderer: function(f, e, a){
+                                return f;
+                            }
+                        },   
+                        {
                             header: "Season",
                             dataIndex: "season",                
                             hidden: false,
@@ -176,7 +189,7 @@ Ext.define('August.view.production.Line',{
                             }
                         },
                         {
-                            header: "Division",
+                            header: "Brand",
                             dataIndex: "division",
                             hidden: false,
                             filter: {
@@ -309,20 +322,7 @@ Ext.define('August.view.production.Line',{
                             renderer: function(f, e, a){
                                 return f;
                             }
-                        },
-                        {
-                            header: "Sub. Category",
-                            dataIndex: "subcategory",
-                            width: 120,
-                            hidden: true,
-                            filter: {
-                                operator: 'st',
-                                type: "string"
-                            },
-                            renderer: function(f, e, a){
-                                return f;
-                            }
-                        },    
+                        },                         
                         {
                             header: "MSRP",
                             dataIndex: "sgtRetailPrice",
@@ -415,11 +415,13 @@ Ext.define('August.view.production.Line',{
                                     
                                     rowBody: 
                                         '<div style="float: left; margin: 10px 2px 10px 14px;">' +
-                                            Ext.String.format(tpl, encodeURIComponent(record.data.style), encodeURIComponent(record.data.color), "front") +
+                                            Ext.String.format(tpl, record.data.style, record.data.color.replace('/', '-'), "front") +
                                         '</div>' +
+                                        /*
                                         '<div style="float: left; margin: 10px 6px 10px 0px;">' +
-                                            Ext.String.format(tpl, encodeURIComponent(record.data.style), encodeURIComponent(record.data.color), "back") +
+                                            Ext.String.format(tpl, encodeURIComponent(record.data.style), encodeURIComponent(record.data.color.replace('/', '-')), "back") +
                                         '</div>' +
+                                        */
                                         '<div style="float: left; margin: 10px;">' +
                                         //'<div style="clear: both;">' +
                                             '<table>' +
@@ -430,7 +432,7 @@ Ext.define('August.view.production.Line',{
                                                     '</td>' + 
                                                 '</tr>' +
                                                 '<tr>' +
-                                                    '<td style="width: 100px;">Division</td>' +
+                                                    '<td style="width: 100px;">Brand</td>' +
                                                     '<td style="width: 100px;">' + 
                                                         (xf.ellipsis(record.get("division"),13) || '') + 
                                                     '</td>' + 
@@ -900,6 +902,21 @@ Ext.define('August.view.production.Line',{
                     store: '{lines}'
                 },
                 paramName: 'style'
+            }]
+        );
+
+        f.insert(15,
+            [{
+                xtype: 'button',
+                iconCls: 'x-fa fa-external-link-alt',
+                text: 'Export',
+                handler: function(b){
+                    k.saveDocumentAs({
+                        type: 'xlsx',
+                        title: 'Product Style List',
+                        fileName: 'Style Product' + Ext.Date.format(new Date(), 'Y-m-d')
+                    });
+                }
             }]
         );
 

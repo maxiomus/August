@@ -2,31 +2,21 @@
   {
     "label": "Landscape 8",
     "field": "1",
-    "value": 8
+    "value": "L8-4-2"
   },  
   {
-    "label": "Landscape 4",
+    "label": "Landscape 6",
     "field": "2",
-    "value": 4
-  },
+    "value": "L6-3-2"
+  },  
   {
-    "label": "Landscape 2",
+    "label": "Portrait 8",
     "field": "3",
-    "value": 2
-  },
-  {
-    "label": "Portrait 4",
-    "field": "4",
-    "value": 4
+    "value": "P8-4-2"
     },    
   {
-    "label": "Portrait 3",
-    "field": "5",
-    "value": 3
-  },
-  {
-    "label": "Portrait 2",
-    "field": "6",
-    "value": 2
+    "label": "Portrait 6",
+    "field": "4",
+    "value": "P6-2-3"
   }
 ]

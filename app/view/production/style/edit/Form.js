@@ -1229,12 +1229,12 @@ Ext.define('August.view.production.style.edit.Form',{
                             }
                             //fieldLabel: 'Memo'
                         },{                                                        
-                            name: 'ci_memo',
+                            name: 'cimemo',
                             fieldLabel: 'C.I Memo',
                             margin: '0 0 9 0',
                             height: 100,
                             bind: {
-                                value: '{theProduct.ci_memo}'
+                                value: '{theProduct.cimemo}'
                             }
                             //fieldLabel: 'Memo'
                         }]
@@ -2032,89 +2032,77 @@ Ext.define('August.view.production.style.edit.Form',{
                             fieldLabel: 'Sales Dept',                                               
                             bind: {
                                 value: '{theProduct.user2}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{                                                        
                             name: 'user3',
                             fieldLabel: 'Production Dept',                                                      
                             bind: {
                                 value: '{theProduct.user3}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{                                                        
                             name: 'user4',
                             fieldLabel: 'Fit Dept',                                                     
                             bind: {
                                 value: '{theProduct.user4}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{                                                        
                             name: 'user5',
                             fieldLabel: 'Receiving/Q.C Dept',                                                      
                             bind: {
                                 value: '{theProduct.user5}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{                                                        
                             name: 'user6',
                             fieldLabel: 'Retail Size',                                                       
                             bind: {
                                 value: '{theProduct.user6}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{                                                        
                             name: 'user7',
-                            fieldLabel: '',                                                                               
+                            fieldLabel: 'Model Measurement',                                                                               
                             bind: {
                                 value: '{theProduct.user7}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{                                                        
                             name: 'user8',
                             fieldLabel: 'MKPL DISCOUNT ',                                                      
                             bind: {
                                 value: '{theProduct.user8}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{                                                        
                             name: 'user9',
                             fieldLabel: 'MKPL COLOR',                                                     
                             bind: {
                                 value: '{theProduct.user9}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{ 
                             xtype: 'datefield',                                                       
                             name: 'userdate',
                             fieldLabel: '',                                                                                                                     
                             bind: {
                                 value: '{theProduct.userdate}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{ 
                             xtype: 'datefield',                                                       
                             name: 'userdate1',
                             fieldLabel: 'MKPL DISCOUNT START',                                                  
                             bind: {
                                 value: '{theProduct.userdate1}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{ 
                             xtype: 'datefield',                                                       
                             name: 'userdate2',
                             fieldLabel: 'MKPL DISCOUNT END',                                                    
                             bind: {
                                 value: '{theProduct.userdate2}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         },{ 
                             xtype: 'datefield',                                                       
                             name: 'userdate3',
                             fieldLabel: '',                                                     
                             bind: {
                                 value: '{theProduct.userdate3}'
-                            }
-                            //fieldLabel: 'Memo'
+                            }                            
                         }]
                     },{
                         responsiveCls: 'small-100',
@@ -2569,7 +2557,7 @@ Ext.define('August.view.production.style.edit.Form',{
                             },
 
                             dropped: {
-                                fn: 'onFileDropped',
+                                fn: 'onPhotoDropped',
                                 scope: this.controller
                             },
 
@@ -2852,7 +2840,7 @@ Ext.define('August.view.production.style.edit.Form',{
                 enableTextSelection: false,
 
                 scrollable: true,
-                width: 200,                
+                width: 260,                
 
                 split: {
                     size: 5
@@ -2897,11 +2885,11 @@ Ext.define('August.view.production.style.edit.Form',{
                     return !Ext.isEmpty(name);
                 },
                 getSrcPath: function(a,b){
-                    //var str = 'http://64.136.152.54';
+                    console.log("photo template", a);                    
                     var str = 'http://209.37.126.195';
                     if(!Ext.isEmpty(a.name)) {                                            
                         str = str + a.path + '200xImages/' + a.name + '?w=180&h=270&' + Math.random();                        
-
+                        //str = str + a.path + '200xImages/' + a.name + '?w=180&h=270'; 
                     }                    
                     if(a.pid <= 0 && a.path.includes("blob:")){
                         str = a.path;
@@ -2931,7 +2919,7 @@ Ext.define('August.view.production.style.edit.Form',{
             //'<span class="tag"></span>',
             //'<div class="thumb">',
                 '<tpl if="this.isNotEmpty(path)">',
-                    '<img src="{[this.getSrcPath(values, xcount)]}" width="162" title="{name}" alt="{name}" />',
+                    '<img src="{[this.getSrcPath(values, xcount)]}" width="224px" title="{name}" alt="{name}" />',
                 '</tpl>',
                 '<tpl if="this.isNotEmpty(tag)">',
                     '<div class="tag"></div>',
@@ -2947,11 +2935,12 @@ Ext.define('August.view.production.style.edit.Form',{
                     return !Ext.isEmpty(s);
                 },
                 getSrcPath: function(a,b){
-                    //var str = 'http://64.136.152.54';
+                    //var str = 'http://64.136.152.54';                    
                     var str = 'http://209.37.126.195';
                     
                     if(!Ext.isEmpty(a.name)) {                                            
                         str = str + a.path + '200xImages/' + a.name + '?w=162&h=243&' + Math.random();                        
+                        //str = str + a.path + '200xImages/' + a.name + '?w=162&h=243';
 
                     }                                        
 

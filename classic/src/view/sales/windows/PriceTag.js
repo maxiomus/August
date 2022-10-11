@@ -2,10 +2,10 @@
  * @class sales.windows.PriceTag
  * @extend Ext.panel.Panel
  *
- * Show the detail of a production Linesheet
+ * Show window for Print Price Tag
  *
  * @constructor
- * Create a new post
+ * 
  * @param {Object} config The config object
  */
 Ext.define('August.view.sales.windows.PriceTag',{ 
@@ -15,8 +15,8 @@ Ext.define('August.view.sales.windows.PriceTag',{
         "August.view.sales.windows.PriceTagController",
         "August.view.sales.windows.PriceTagModel",
         'Ext.ux.toggleslide.ToggleSlide',
-        'Ext.ux.form.field.ToggleSlide',
-        'Ext.ux.BoxReorderer'
+        'Ext.ux.form.field.ToggleSlide'
+        //'Ext.ux.BoxReorderer'
     ],
 
     alias: 'widget.windows-pricetag',
@@ -148,7 +148,7 @@ Ext.define('August.view.sales.windows.PriceTag',{
                     //flex: 1,
                     bodyPadding: 0,
                     //scrollable: "y",
-                    loadMask: true,
+                    //loadMask: true,
                     overItemCls: "x-item-over",
                     itemSelector: "div.item-selector",
                     enableTextSelection: false,                                                
@@ -391,6 +391,7 @@ Ext.define('August.view.sales.windows.PriceTag',{
         ];
     },    
 
+    /*
     buildBottomBar: function(){
         var b = Ext.widget("combo", {
             name: "perpage",
@@ -439,7 +440,8 @@ Ext.define('August.view.sales.windows.PriceTag',{
             items: ["-", b, "Per Page"]
         };
     },
-    
+    */
+   
     buildContextMenu: function(){
         return Ext.create('Ext.menu.Menu', {
             items: [this.actRefresh, this.actPrint]

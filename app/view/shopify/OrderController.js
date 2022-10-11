@@ -252,9 +252,9 @@ Ext.define('August.view.shopify.OrderController', {
             nextBtn = bbar.down("button[name=next]"),
             prevBtn = bbar.down("button[name=prev]");
 
-            if(linkInfo == null){
-                store.getProxy().setExtraParams({});
-            }   
+        if(linkInfo == null){
+            store.getProxy().setExtraParams({});
+        }   
 
         store.load({
             callback: function(recs, op, success){

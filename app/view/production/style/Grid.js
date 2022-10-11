@@ -31,15 +31,15 @@ Ext.define("August.view.production.style.Grid", {
 
     viewConfig: {
         //loadingHeight: 100,
-        stripeRows: true,
+        //stripeRows: true,
         trackOver: true,
         //enableTextSelection: false,
 
         preserveScrollOnRefresh: true,
-        //preserveScrollOnReload: true,
-        //deferInitialRefresh: true,
+        preserveScrollOnReload: true,
+        deferInitialRefresh: true,
         deferEmptyText: true,
-        //emptyText: '<h1 style="margin: 20px">No matching results</h1>',
+        emptyText: '<h1 style="margin: 20px">No matching results</h1>',
         getRowClass: function(a, g, f, h){
             //return "custom-row-style";
         },

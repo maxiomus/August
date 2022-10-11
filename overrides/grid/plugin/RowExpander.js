@@ -5,7 +5,7 @@ Ext.define('Ext.overrides.grid.plugin.RowExpander', {
     isCollapsed: function (rowIdx) {
         var me = this,
             rowNode = me.view.getNode(rowIdx),
-            row = Ext.fly(rowNode, '_rowExpander');
+            row = Ext.fly(rowNode, '_rowExpander');                
 
         return row.hasCls(me.rowCollapsedCls)
     },

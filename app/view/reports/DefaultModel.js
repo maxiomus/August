@@ -19,8 +19,13 @@ Ext.define('August.view.reports.DefaultModel', {
                         children: [
                             {
                                 leaf: true,
-                                text: 'Inventory Aging',
+                                text: 'Inventory Aging by WH - 30 days',
                                 routeId: 'inventory-aginginterval'
+                            },
+                            {
+                                leaf: true,
+                                text: 'Inventory by Warehouse asof',
+                                routeId: 'inventory-warehouseasof'
                             }
                         ]
                         
