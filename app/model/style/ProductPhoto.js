@@ -1,5 +1,5 @@
 /**
- * Created by tech on 9/23/2015.
+ * Created by tech on 9/23/2021.
  */
 
 Ext.define('August.model.style.ProductPhoto', {

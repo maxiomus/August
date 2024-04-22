@@ -19,6 +19,17 @@ Ext.define('August.view.reports.invoice.SummaryBySoTypeController', {
         this.getStore("invoicesummaries").reload();
     },
 
+    onActionExport: function(btn, owner){                
+        var me = this,
+            grid = me.lookupReference('invoiceSummaryGrid');
+
+        grid.saveDocumentAs({
+            type: 'xlsx',
+            title: 'Invoice Summary By S.O Type',
+            fileName: 'Invoice Summary By Sales Order Type' + Ext.Date.format(new Date(), 'Y-m-d')
+        });        
+    },
+
     onStoreBeforeLoad: function(store) {
         var me = this,
             fromDate = me.getView().down('datefield[name="fromDate"]'),

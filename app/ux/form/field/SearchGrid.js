@@ -122,6 +122,7 @@ Ext.define('Ext.ux.form.field.SearchGrid', {
                 }
             });            
                         
+            console.log('searchGrid', filter);
             filter.setValue(value);
             //filter.setActive(true);
             me.hasSearch = true;

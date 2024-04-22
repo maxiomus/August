@@ -199,7 +199,7 @@ Ext.define('August.view.TopBar', {
                 xtype: "segmentedbutton",
                 reference: "viewselection",
                 hidden: true,
-                value: 1,
+                value: 0,
                 items: [{
                     tooltip: "Default",
                     //ui: "bootstrap-btn-default",

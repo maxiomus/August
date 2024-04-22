@@ -1,11 +1,11 @@
-Ext.define('August.view.purchase.windows.PrintSOController', {
+Ext.define('August.view.sales.windows.PrintSOController', {
     extend: 'Ext.app.ViewController',
 
     mixins: [
         'Ext.app.route.Base'
     ],
 
-    alias: 'controller.purchase-windows-printso',
+    alias: 'controller.sales-windows-printso',
 
     requires: [
         //'August.model.Media'
@@ -21,30 +21,28 @@ Ext.define('August.view.purchase.windows.PrintSOController', {
 
         var me = this,
             view = me.getView(),
-            header = view.down('component[name="printPoHeader"]'),
-            footer = view.down('component[name="printPoFooter"]');
+            header = view.down('component[name="printSoHeader"]'),
+            footer = view.down('component[name="printSoFooter"]');
             
             binding = vm.bind({
-                bindTo: '{thePO}',
+                bindTo: '{theOrder}',
                 deep: true,
                 single: true
             }, function(rec) {                
                 // Send viewModel's data to callback function.
-                var store = rec.purchaseorderitems(),
+                var store = rec.salesorderitems(),
                     proxy = store.getProxy();
 
-                var lineItem = store.getAt(0);
-                var imageName = lineItem.get('style') + '_' + lineItem.get('color').replace('/', '-') + '_front.jpg';
+                //var lineItem = store.getAt(0);
+                //var imageName = lineItem.get('style') + '_' + lineItem.get('color').replace('/', '-') + '_front.jpg';
                 //store.setPageSize(8);                            
                 //view.setLoading(true);                                                                                            
 
-                //var b = document.getElementById('po-barcode');
-                //var c = document.getElementsByClassName('barcode');
-
                 var data = rec.getData();
-                data.imageName = imageName;
-                data.vendorAddress = vm.get('theVendor').getData();
-                data.shipToAddress = vm.get('theShipTo').getData();
+                //data.imageName = imageName;
+
+                data.customerAddress = vm.get('theCustomer').getData();
+                data.shipToAddress = vm.get('theStore').getData();                
 
                 // populate component's template data
                 header.update(data);

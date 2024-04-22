@@ -19,8 +19,7 @@ Ext.define('August.model.shopify.Product', {
         { name: "template_suffix", type: 'string' },
         { name: "status", type: 'string' },
         { name: "published_scope", type: 'string' },
-        { name: "tags", type: 'string' },
-        { name: "admin_graphql_api_id", type: 'string' }
+        { name: "tags", type: 'string' }
     ],
 
     idProperty: 'id',

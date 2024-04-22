@@ -121,7 +121,7 @@ Ext.define('August.view.sales.windows.PriceTag',{
                 //me.fireEvent("itemclickprint", me, item);                
 
                 var innerView = me.getComponent('innerView');
-                //console.log('innerView', innerView);
+                console.log('innerView', innerView);
                 innerView.print(undefined, this.cssTemplate());
             },
             scope: me

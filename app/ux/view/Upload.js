@@ -51,13 +51,15 @@ Ext.define('Ext.ux.view.Upload', {
                     }
                 },
                 change: function(field, path, eOpts) {
-                    
+                    console.log('filefield - change', field, path);
+
                     if (Ext.isIE) {
                         return;
                     }
 
                     if(path){
                         var el = field.fileInputEl.dom,
+                            records = [],
                             store = me.store;
 
                         window.URL = window.URL || window.webkitURL;
@@ -72,6 +74,8 @@ Ext.define('Ext.ux.view.Upload', {
                                 size: file.size,
                                 path: window.URL.createObjectURL(file)
                             });
+
+                            records.push(rec[0]);
                         }
 
                         field.addFilesToQueue(el.files);
@@ -80,6 +84,8 @@ Ext.define('Ext.ux.view.Upload', {
                         if (field.multiselect) {
                             field.fileInputEl.dom.setAttribute('multiple', '1');
                         }
+
+                        me.fireEvent('dropped', me, records);
                     }
                 }
             }
@@ -90,13 +96,13 @@ Ext.define('Ext.ux.view.Upload', {
                 text: 'Refresh',
                 iconCls: 'x-fa fa-sync',
                 handler: function(item, e){
-                    me.fireEvent('menuefreshclick', item, me);                    
+                    me.fireEvent('menurefreshclick', me, item);                    
                 }
             },{
                 text: "Remove",
                 iconCls: "x-fa fa-remove",
                 handler: function(item, e){
-                    me.fireEvent('menuremoveclick', item, me);                    
+                    me.fireEvent('menuremoveclick', me, item);                    
                 }
             }]
         });
@@ -208,7 +214,7 @@ Ext.define('Ext.ux.view.Upload', {
     },
 
     onItemAdd: function(records, index, node, view, eOpts){
-
+        console.log('Upload - itemAdd', records, node, view)
     },
 
     onItemRemove: function(records, index, item, view, eOpts){

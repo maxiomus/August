@@ -1,0 +1,28 @@
+
+.material-body-class .x-grid-rowbody {
+    padding: 0px 0px 0px 10px !important;
+}
+  
+.material-body-class .thumb-wrap {    
+    //height: 78px;
+    padding: 4px 0 2px 0;
+    //padding: 0 0 6px 20px;
+    float: left;
+    cursor: pointer;        
+              
+}
+      
+.material-body-class .thumb {    
+    -moz-border-radius:.3em;
+    -webkit-border-radius:.3em;
+    border-radius:.3em;
+
+    background: #ffffff;
+    border: 1px solid #ddd;
+
+    //margin: 1px;
+    padding: 0 0 0 5px;
+    width: 59px;
+    //height: 42px;      
+    //margin-right: -50%;        
+}

@@ -1,7 +1,7 @@
 [
     {
       "label": "Shopify",
-      "name": "shopify", 
+      "name": "SHOPIFY", 
       "value": "99"
     },
     {
@@ -58,7 +58,27 @@
       "label": "Belk Shopify",
       "name": "BK", 
       "value": "21"
+    },
+    {
+      "label": "Macy's Shopify",
+      "name": "MC",       
+      "value": "22"
+    },  
+    {
+      "label": "Saks's Shopify",
+      "name": "SK",       
+      "value": "23"
     }, 
+    {
+      "label": "Reitsman's Shopify",
+      "name": "RM",       
+      "value": "24"
+    },
+    {
+      "label": "Hudson's Shopify",
+      "name": "HM",       
+      "value": "25"
+    },
     {
       "label": "SPO Shopify",
       "name": "SPO",       
@@ -73,10 +93,10 @@
       "label": "HBC",
       "name": "HB", 
       "value": "101"
-    },        
+    },           
     {
-      "label": "BELK - OLD",
-      "name": "BKO", 
+      "label": "Belk DSCO",
+      "name": "BKT", 
       "value": "102"
     },        
     {
@@ -114,5 +134,41 @@
       "name": "AMM", 
       "url": "",
       "value": "109"
+    },
+    {
+      "label": "Macy's MP",
+      "name": "MCM", 
+      "url": "",
+      "value": "110"
+    },
+    {
+      "label": "Saks's MP",
+      "name": "SM", 
+      "url": "",
+      "value": "111"
+    },
+    {
+      "label": "Reitmans's MP",
+      "name": "RM", 
+      "url": "",
+      "value": "112"
+    },
+    {
+      "label": "Hudson's MP",
+      "name": "HM", 
+      "url": "",
+      "value": "113"
+    },
+    {
+      "label": "FashionGo",
+      "name": "FGP", 
+      "url": "",
+      "value": "114"
+    },
+    {
+      "label": "Belk",
+      "name": "BK", 
+      "url": "",
+      "value": "115"
     }
 ]

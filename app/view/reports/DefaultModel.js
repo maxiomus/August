@@ -39,6 +39,11 @@ Ext.define('August.view.reports.DefaultModel', {
                                 leaf: true,
                                 text: 'Invoice Summary by S.O type',
                                 routeId: 'invoice-summarybysotype'
+                            },
+                            {
+                                leaf: true,
+                                text: 'Invoice By Styles & S.O type',
+                                routeId: 'invoice-stylesbysotype'
                             }
                         ]
                     }

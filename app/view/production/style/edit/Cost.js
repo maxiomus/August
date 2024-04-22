@@ -4,8 +4,8 @@ Ext.define('August.view.production.style.edit.Cost',{
 
     requires: [
         'August.view.production.style.edit.CostController',
-        'August.view.production.style.edit.CostModel',
-        'Ext.ux.grid.plugin.AllRowExpander'
+        'August.view.production.style.edit.CostModel'
+        //'Ext.ux.grid.plugin.AllRowExpander'
     ],
 
     alias: 'widget.style-edit-cost',
@@ -92,8 +92,8 @@ Ext.define('August.view.production.style.edit.Cost',{
             },{
                 ptype: "gridfilters"
             },{
-                ptype: 'allrowexpander',
-                pluginId: 'rowexdetail',
+                ptype: 'rowexpander',
+                id: 'rowexdetail',
                 expandOnDblClick: false,
                 rowBodyTpl: new Ext.XTemplate(
                     //'{%this.owner.grid.prepareValues(value);%}',
@@ -178,7 +178,7 @@ Ext.define('August.view.production.style.edit.Cost',{
                 scope: formController
             },{
                 text: 'Delete',
-                iconCls: 'x-fa fa-remove',
+                iconCls: 'x-fa fa-times-circle red-text',
                 tooltip: 'Delete Cost Sheet',
                 handler: 'onDeleteCostClick',
                 scope: formController

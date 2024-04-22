@@ -61,15 +61,25 @@ Ext.define('August.store.NavigationTree', {
                     view: 'customer.invoice.List',
                     leaf: true,
                     read: true,
-                    granted: ['account', 'administrators'],
+                    granted: ['acct_staff', 'administrators'],
                     iconCls: 'x-far fa-address-book',
                     routeId: 'customer-invoice'
-                },{
+                },
+                {
+                    text: 'Credit Memo',
+                    view: 'customer.creditmemo.List',
+                    leaf: true,
+                    read: true,
+                    //granted: ['acct_staff', 'administrators'],
+                    iconCls: 'x-far fa-credit-card',
+                    routeId: 'customer-creditmemo'
+                },
+                {
                     text: 'Payments',
                     view: 'customer.payment.Receive',
                     leaf: true,
                     read: true,
-                    granted: ['account', 'administrators'],
+                    granted: ['acct_staff', 'administrators'],
                     iconCls: 'x-fas fa-file-invoice-dollar',
                     routeId: 'payment-receive'
                 }]
@@ -95,7 +105,7 @@ Ext.define('August.store.NavigationTree', {
                     view: 'sales.pick.Ticket',
                     leaf: true,
                     read: true,
-                    iconCls: 'x-fa fa-file-text-o',
+                    iconCls: 'x-fa fa-mouse-pointer',
                     routeId: 'pick-ticket'
                 }
                 /*
@@ -187,7 +197,32 @@ Ext.define('August.store.NavigationTree', {
                     routeId: 'shopify.freetherose'
                 }
                 */       
-            ]},                                             
+            ]},  
+            {
+                text: 'Mirakl',
+                expanded: false,
+                selectable: false,
+                iconCls: 'x-fa fa-shopping-bag',
+                routeId:'shopify',
+                id: 'shopify',
+                children: [
+                {
+                    text: 'Orders',
+                    view: 'shopify.Order',
+                    leaf: true,
+                    read: true,
+                    iconCls: 'x-fas fa-tags',
+                    routeId: 'shopify-order'
+                },
+                {
+                    text: 'Products',
+                    view: 'shopify.Product',
+                    leaf: true,
+                    read: true,
+                    iconCls: 'x-fas fa-tshirt',
+                    routeId: 'shopify-product'
+                }                      
+            ]},                                           
             {
                 text: 'Production',
                 expanded: false,
@@ -197,11 +232,11 @@ Ext.define('August.store.NavigationTree', {
                 id:       'production',
                 children: [
                 {
-                    text: 'Product Style',
+                    text: 'Style Manage',
                     view: 'production.style.Product',
                     leaf: true,
                     read: true,
-                    iconCls: 'x-fa fa-cube',
+                    iconCls: 'x-fa fa-parking',
                     routeId: 'product'
                 },
                 {
@@ -213,7 +248,7 @@ Ext.define('August.store.NavigationTree', {
                     routeId: 'line'
                 },
                 {
-                    text: 'Purchase Orders',
+                    text: 'P.O',
                     view: 'purchase.Order',
                     leaf: true,
                     read: true,
@@ -236,7 +271,15 @@ Ext.define('August.store.NavigationTree', {
                     read: true,
                     iconCls: 'x-fa fa-calendar',
                     routeId: 'wip'
-                }            
+                },
+                {
+                    text: 'P.I.M',
+                    view: 'pim.ProductDetail',
+                    leaf: true,
+                    read: true,
+                    iconCls: 'x-fa fa-cube',
+                    routeId: 'productdetail'
+                } 
             ]},
             {
                 text: 'Inventory',
@@ -308,7 +351,7 @@ Ext.define('August.store.NavigationTree', {
                 text: 'Reports',
                 view: 'reports.Default',
                 iconCls: 'x-fa fa-poll',
-                granted: ['administrators'],
+                granted: ['administrators', 'sales_rep'],
                 leaf: true,
                 read: true,
                 routeId: 'reports'

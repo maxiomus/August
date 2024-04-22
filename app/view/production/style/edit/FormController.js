@@ -1687,9 +1687,10 @@ Ext.define('August.view.production.style.edit.FormController', {
         */
     },
 
-    onMenuRefreshClick: function(item, c){
-        //console.log('onMenuRefreshClick', item, c);
+    onMenuRefreshClick: function(c, item){
+        
         var me = this,       
+            vm = me.getViewModel(),
             session = me.getSession(),     
             changes = session.getChanges();        
 
@@ -1709,11 +1710,11 @@ Ext.define('August.view.production.style.edit.FormController', {
             
         }
                 
-        console.log('refresh', c, changes, session);
+        console.log('refresh', c, item, changes, session);
         c.store.load();        
     },
 
-    onMenuRemoveClick: function(item, c){
+    onMenuRemoveClick: function(c, item){
         
         var me = this,                   
             store = c.getStore(),
@@ -2070,7 +2071,7 @@ Ext.define('August.view.production.style.edit.FormController', {
             //mv = August.app.getMainView(),                        
             xf = Ext.util.Format;        
         
-        var srcPath = 'http://209.37.126.195' + rec.get('path') + rec.get('name');        
+        var srcPath = 'https://endlessrose.net' + rec.get('path') + rec.get('name');        
 
         if(rec.data.hasOwnProperty('path') && rec.data.path.includes("blob:")){
             srcPath = rec.data.path;            
@@ -2169,7 +2170,7 @@ Ext.define('August.view.production.style.edit.FormController', {
 
                         if(iframe){
                             var cw = iframe.getEl().dom.contentWindow;
-                            console.log(iframe, cw.document);
+                            //console.log(iframe, cw.document);
                             cw.print();
                         }
                         else{
@@ -2177,7 +2178,7 @@ Ext.define('August.view.production.style.edit.FormController', {
                             //var img = innerPnl.down('image');
 
                             var innerPnl = pw.getComponent('innerPnl');
-                            console.log('innerPnl', innerPnl);
+                            //console.log('innerPnl', innerPnl);
                             innerPnl.print();
                             
                         }
@@ -2199,6 +2200,123 @@ Ext.define('August.view.production.style.edit.FormController', {
 
     onPhotoSelect: function(view, rec, idx){
         //console.log('onPhotoSelect', rec);
+    },    
+
+    onPhotoSelectionChange: function(sm, rec){
+        var me = this,
+            view = me.getView(),
+            refs = me.getReferences(),
+            photos = refs.photos,
+            detail = photos.getComponent('photo-detail'),
+            dvm = detail.getViewModel();
+        
+        //view.setSelection(rec);
+        if(rec.length > 0){
+
+            //console.log(rec[0])
+            if(detail.items.length == 0){
+                detail.add([{
+                    xtype: 'box',
+                    itemId: 'detail-header',
+                    cls: 'sample-detail-header',
+                    style: {
+                        borderBottom: '1px solid #cfcfcf'
+                    },
+                    padding: '10 0 10 0',
+                    tpl: new Ext.XTemplate(
+                        '<div style="font-weight: bold; font-size: 1.2em; color: #888;">PHOTO DETAILS</div>',
+                        //'<a class="link" href="{linkUrl}">',                        
+                        '<div><i class="far fa-file-image fa-4x" style="padding-top:14px;padding-bottom: 5px;"></i></div>',
+                            //'<img src="{[this.getSrcPath(values, xcount)]}" width="96" title="{name}" style="border:1px solid #888;" />',
+                        '<div style="font-weight: bold;">{name}</div>',                        
+                        '<div>{created:this.getFileDate}</div>',
+                        {
+                            getSrcPath: function(a,b){
+                                var str;
+                                if(a.path){
+                                    str = a.path;
+                                }
+                                else {
+                                    if(!Ext.isEmpty(a.name) && !Ext.isEmpty(a.type)) {
+                                        
+                                        str = 'https://endlessrose.net:9443/StyleImages/' + a.name + '?w=174&h=232';
+                                        if(a.ID < 0){
+                                            str = 'https://endlessrose.net:9443/StyleImages/' + a.name + '?w=174&h=232';
+                                        }
+                                    }
+                                    else {
+                                        str = 'https://endlessrose.net:9443/StyleImages/' + a.name + '?w=174&h=232';
+                                    }
+                                }
+
+                                return str;
+                                //return a.replace(/(\.[^.]+)$/, "_medium$1");
+                            },
+                            getFileDate: function(v){
+                                if(Ext.isEmpty(v)){
+                                    v = new Date();
+                                }
+
+                                return Ext.util.Format.date(v, 'F j, Y');
+                            }
+                        }
+                    )
+                },{
+                    xtype: 'fieldcontainer',
+                    layout: 'anchor',
+
+                    style: {
+                        borderTop: '1px solid #ffffff'                        
+                    },
+                    padding: '4px 0 0 0',
+
+                    defaultType: 'textfield',
+
+                    defaults: {
+                        anchor: '100%'
+                    },
+
+                    fieldDefaults: {
+                        msgTarget: 'under',
+                        labelAlign: 'top'
+                    },
+
+                    items: me.buildPhotoFields()
+                }]);
+            }
+
+            //detail.updateLayout();
+            var selected = rec[rec.length-1];
+            if(detail.down('#detail-header')){
+                detail.down('#detail-header').update(selected.data);
+
+                dvm.set('thePhoto', selected);
+
+                if(view.ownerCt.routeId == 'sample'){
+                    dvm.set('fieldLabel', 'For RFQ');
+                    dvm.set('readOnly', false);
+                }
+
+                if(view.ownerCt.routeId == 'product'){
+                    dvm.set('fieldLabel', 'For AUGUST');
+                    dvm.set('readOnly', true);
+                    //dvm.set('readOnly', !selected.phantom);
+                }
+            }
+
+        }
+        else {
+            detail.removeAll();
+        }
+
+    },
+
+    onPhotoRefresh: function(view){
+        var imgs = view.getEl().query('img.stylePhotos', false)
+        console.log('onPhotoRender', imgs);
+        Ext.each(imgs, function(img){
+            console.log(img.dom.complete, img.dom.naturalHeight, img.dom.src);
+        });
     },
 
     onItemSelectionChange: function(sm, rec){
@@ -2289,115 +2407,6 @@ Ext.define('August.view.production.style.edit.FormController', {
 
     },
 
-    onPhotoSelectionChange: function(sm, rec){
-        var me = this,
-            view = me.getView(),
-            refs = me.getReferences(),
-            photos = refs.photos,
-            detail = photos.getComponent('photo-detail'),
-            dvm = detail.getViewModel();
-        
-        //view.setSelection(rec);
-        if(rec.length > 0){
-
-            //console.log(rec[0])
-            if(detail.items.length == 0){
-                detail.add([{
-                    xtype: 'box',
-                    itemId: 'detail-header',
-                    cls: 'sample-detail-header',
-                    style: {
-                        borderBottom: '1px solid #cfcfcf'
-                    },
-                    padding: '10 0 10 0',
-                    tpl: new Ext.XTemplate(
-                        '<div style="font-weight: bold; font-size: 1.2em; color: #888;">PHOTO DETAILS</div>',
-                        //'<a class="link" href="{linkUrl}">',                        
-                        '<div><i class="far fa-file-image fa-4x" style="padding-top:14px;padding-bottom: 5px;"></i></div>',
-                            //'<img src="{[this.getSrcPath(values, xcount)]}" width="96" title="{name}" style="border:1px solid #888;" />',
-                        '<div style="font-weight: bold;">{name}</div>',                        
-                        '<div>{created:this.getFileDate}</div>',
-                        {
-                            getSrcPath: function(a,b){
-                                var str;
-                                if(a.path){
-                                    str = a.path;
-                                }
-                                else {
-                                    if(!Ext.isEmpty(a.name) && !Ext.isEmpty(a.type)) {
-                                        
-                                        str = 'http://209.37.126.195:9090/StyleImages/' + a.name + '?w=174&h=232';
-                                        if(a.ID < 0){
-                                            str = 'http://209.37.126.195:9090/StyleImages/' + a.name + '?w=174&h=232';
-                                        }
-                                    }
-                                    else {
-                                        str = 'http://209.37.126.195:9090/StyleImages/' + a.name + '?w=174&h=232';
-                                    }
-                                }
-
-                                return str;
-                                //return a.replace(/(\.[^.]+)$/, "_medium$1");
-                            },
-                            getFileDate: function(v){
-                                if(Ext.isEmpty(v)){
-                                    v = new Date();
-                                }
-
-                                return Ext.util.Format.date(v, 'F j, Y');
-                            }
-                        }
-                    )
-                },{
-                    xtype: 'fieldcontainer',
-                    layout: 'anchor',
-
-                    style: {
-                        borderTop: '1px solid #ffffff'                        
-                    },
-                    padding: '4px 0 0 0',
-
-                    defaultType: 'textfield',
-
-                    defaults: {
-                        anchor: '100%'
-                    },
-
-                    fieldDefaults: {
-                        msgTarget: 'under',
-                        labelAlign: 'top'
-                    },
-
-                    items: me.buildPhotoFields()
-                }]);
-            }
-
-            //detail.updateLayout();
-            var selected = rec[rec.length-1];
-            if(detail.down('#detail-header')){
-                detail.down('#detail-header').update(selected.data);
-
-                dvm.set('thePhoto', selected);
-
-                if(view.ownerCt.routeId == 'sample'){
-                    dvm.set('fieldLabel', 'For RFQ');
-                    dvm.set('readOnly', false);
-                }
-
-                if(view.ownerCt.routeId == 'product'){
-                    dvm.set('fieldLabel', 'For AUGUST');
-                    dvm.set('readOnly', true);
-                    //dvm.set('readOnly', !selected.phantom);
-                }
-            }
-
-        }
-        else {
-            detail.removeAll();
-        }
-
-    },
-
     /**
      *
      * @param dv {Ext.view.View}
@@ -2408,7 +2417,7 @@ Ext.define('August.view.production.style.edit.FormController', {
      */
     onItemDblClick: function(dv, rec, item, idx, e){
         this.showRequest(rec);
-    },
+    },    
 
     buildAttchFields: function(){
         return [{

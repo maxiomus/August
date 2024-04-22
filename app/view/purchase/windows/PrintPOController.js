@@ -48,7 +48,7 @@ Ext.define('August.view.purchase.windows.PrintPOController', {
 
                 // populate component's template data
                 header.update(data);
-                console.log('initViewModel - Binding', data); 
+                //console.log('initViewModel - Binding', data); 
                 footer.update({memo: Ext.util.Format.nl2br(data.memo), trimmemo: Ext.util.Format.nl2br(data.trimMemo)});
 
                 JsBarcode(".barcode").init();

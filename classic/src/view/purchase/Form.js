@@ -30,10 +30,6 @@ Ext.define('August.view.purchase.OrderForm',{
         type: 'fit'
     },    
 
-    listeners: {
-
-    },
-
     initComponent: function() {
         var me = this;        
 
@@ -246,17 +242,18 @@ Ext.define('August.view.purchase.OrderForm',{
                 tooltip: 'Close View',
                 handler: 'onClose'
             },'-', {
-                xtype: 'buttongroup',
+                xtype: 'toolbar',
                 reference: 'groupCrud',
-                margin: -8,
+                padding: 0,
+                margin: 0,
                 hidden: false,
                 items: btnsConfig
             },'->',{
                 iconCls: 'x-fa fa-print',
-                text: 'Print',
+                text: 'Print Preview',
                 ui: 'default',
                 tooltip: 'Print P.O',
-                handler: 'onPrintClick'
+                handler: 'onOpenPrintViewClick'
             }]
         }],
 
@@ -690,7 +687,7 @@ Ext.define('August.view.purchase.OrderForm',{
                             },
                             items: [{
                                     xtype: 'textfield',
-                                    name: 'SONo',
+                                    name: 'SoNo',
                                     fieldLabel: 'S.O #',
                                     fieldCls: 'emphasized',
                                     readOnly: true,
@@ -752,14 +749,14 @@ Ext.define('August.view.purchase.OrderForm',{
                                 },
                                 {
                                     xtype: 'textfield',
-                                    name: 'so_customer',
+                                    name: 'customer',
                                     fieldLabel: 'Customer',
                                     fieldCls: 'emphasized',
                                     readOnly: true,
                                     selectOnFocus: false,
                                     //editable: false,
                                     bind: {
-                                        value: '{thePO.so_customer}'
+                                        value: '{thePO.customer}'
                                     }
                                     //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                                 },
@@ -821,14 +818,14 @@ Ext.define('August.view.purchase.OrderForm',{
                                 },
                                 {
                                     xtype: 'textfield',
-                                    name: 'so_store',
+                                    name: 'store',
                                     fieldLabel: 'Store',
                                     fieldCls: 'emphasized',
                                     readOnly: true,
                                     selectOnFocus: false,
                                     //editable: false,
                                     bind: {
-                                        value: '{thePO.so_store}'
+                                        value: '{thePO.store}'
                                     }
                                     //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                                 },
@@ -898,14 +895,14 @@ Ext.define('August.view.purchase.OrderForm',{
                                 },
                                 {
                                     xtype: 'textfield',
-                                    name: 'so_po',
+                                    name: 'cust_po',
                                     fieldLabel: 'Cust P.O #',
                                     fieldCls: 'emphasized',
                                     readOnly: true,
                                     selectOnFocus: false,
                                     //editable: false,
                                     bind: {
-                                        value: '{thePO.so_po}'
+                                        value: '{thePO.cust_po}'
                                     }
                                     //renderer: Ext.util.Format.dateRenderer('F j, Y, h:i:s a')
                                 },
@@ -1240,8 +1237,8 @@ Ext.define('August.view.purchase.OrderForm',{
                             },
                             listeners: {
                                 refresh: function(view, e){
-                                    var expander = view.ownerCt.getPlugin('poRowExpander');
-                                    expander.expandAll();
+                                    //var expander = view.ownerCt.getPlugin('poRowExpander');
+                                    //expander.expandAll();
                                 }
                             }
                         },
@@ -1664,11 +1661,14 @@ Ext.define('August.view.purchase.OrderForm',{
                             delete qe.combo.lastQuery;
                         }
                     },
+                    select: {
+                        fn: 'onStyleComboSelected',
+                        scope: this.controller
+                    },
                     change: function(c){
-                        c.getStore().load();
+                        //c.getStore().load();
                     },                     
-                    triggerClear: function(c){
-                        c.getStore().load();                                
+                    triggerClear: function(c){                        
 
                         /*
                         var color = this.ownerCt.ownerCt.query('combo[name="stylecolor"]')[0],
@@ -1677,9 +1677,15 @@ Ext.define('August.view.purchase.OrderForm',{
                         color.setValue('');
                         descript.setValue('');                                    
                         */
-                    },
-                    select: function(combo, record, e){
-                        /*
+
+                        //c.getStore().load();
+                        var cboColor = c.next('combo[name="color"]');
+
+                        cboColor.setValue('');
+                        cboColor.getStore().clearFilter();                        
+                    }
+                    /*
+                    select: function(combo, record, e){                        
                         var colorCombo = this.ownerCt.ownerCt.query('combo[name="stylecolor"]')[0],
                             colorStore = colorCombo.getStore();
 
@@ -1692,9 +1698,9 @@ Ext.define('August.view.purchase.OrderForm',{
                                 colorCombo.select(colorStore.first());
                                 //colorCombo.fireEvent('select', combo, [store.first()]);
                             }
-                        });
-                        */                                    
+                        });                               
                     }
+                    */
                 }
             }
         },
@@ -1709,7 +1715,7 @@ Ext.define('August.view.purchase.OrderForm',{
             },
             editor: {
                 xtype: "combo",
-                name: 'stylecolor',                                                          
+                name: 'color',                                                          
                 fieldCls: 'required',   
                 displayField: "label",
                 valueField: "value",
@@ -1755,7 +1761,7 @@ Ext.define('August.view.purchase.OrderForm',{
                 }],
                 listeners: {
                     select: {
-                        fn: 'onStyleComboSelected',
+                        fn: 'onColorComboSelected',
                         scope: this.controller        
                     
                     },
@@ -1781,10 +1787,14 @@ Ext.define('August.view.purchase.OrderForm',{
                         }
                     },
                     change: function(c){
-                        c.getStore().load();
+                        //c.getStore().load();
                     },                     
                     triggerClear: function(c){
-                        c.getStore().load();                                
+                        var cboStyle = c.previousSibling('combo[name="style"]');
+                        if(Ext.isEmpty(cboStyle.getValue())){
+                            c.getStore().clearFilter();
+                        }  
+                        //c.getStore().load();                                
                     }
                 }
             }

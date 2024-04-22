@@ -56,7 +56,7 @@ Ext.define('August.model.shopify.shopifyTemplate', {
         { name: 'cost_per_item', type: 'string' },
         { name: 'price_international', type: 'string' },
         { name: 'compare_at_price', type: 'string' },
-        { name: 'status', type: 'string' }
+        { name: 'status', type: 'string' }        
     ],
 
     //identifier: 'negative',

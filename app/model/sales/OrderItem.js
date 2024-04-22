@@ -58,7 +58,7 @@ Ext.define('August.model.sales.OrderItem', {
         { name: 'unit13', type: 'int' },
         { name: 'unit14', type: 'int' },
         { name: 'unit15', type: 'int' },
-        { name: 'totalunit', type: 'int' },
+        { name: 'totalUnit', type: 'int' },
         { name: 'price', type: 'number' },
         { name: 'extPrice', type: 'number' },
         { name: 'style_price', type: 'number' },

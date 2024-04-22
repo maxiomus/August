@@ -15,9 +15,12 @@ Ext.define('August.view.sales.pick.FormController', {
     ],
 
     init: function(){
-        var vm = this.getViewModel();
-        //console.log('init', vm.linkData.theOrder);
-        console.log('init', this.getReferences());
+        var me = this,
+            vm = this.getViewModel();
+
+        me.mv = August.app.getMainView();            
+        
+        //console.log('init', this.getReferences());
     },
 
     initViewModel: function(vm) {
@@ -39,7 +42,7 @@ Ext.define('August.view.sales.pick.FormController', {
         var me = this,
             form = me.getView(),
             //refs = this.getReferences(),
-            grid = form.lookupReference('pickDetailGrid'),
+            grid = form.lookupReference('pick-grid'),
             store = grid.getStore(),
             rowEdit = grid.getPlugin("pickGridRowEdit");        
 
@@ -51,8 +54,11 @@ Ext.define('August.view.sales.pick.FormController', {
             warehouse: 'WH'            
         });
 
-        var override = grid.getPlugin('pickRowExpander');                             
-        override.expandAll(); 
+        var override = grid.getPlugin('pickRowExpander');                                              
+        if(override.isCollapsed(0) == true) {
+            override.toggleRow(0, store.getAt(0));
+        }               
+        //override.expandAll(); 
 
         rowEdit.startEdit(0, 0);
     },
@@ -61,7 +67,7 @@ Ext.define('August.view.sales.pick.FormController', {
         var me = this,
             form = me.getView(),
             session = me.getViewModel().getSession(),
-            grid = form.lookupReference('pickDetailGrid'),
+            grid = form.lookupReference('pick-grid'),
             store = grid.getStore(),
             d = grid.getSelection()[0];
 
@@ -94,7 +100,7 @@ Ext.define('August.view.sales.pick.FormController', {
     onEditItemClick: function(btn){
         var me = this,
             form = me.getView(),
-            grid = form.lookupReference('pickDetailGrid'),
+            grid = form.lookupReference('pick-grid'),
             selection = grid.getSelection()[0];
             rowEdit = grid.getPlugin("pickGridRowEdit");
 
@@ -108,7 +114,7 @@ Ext.define('August.view.sales.pick.FormController', {
     onDeleteItemClick: function(btn){
         var me = this,
             form = me.getView(),
-            grid = form.lookupReference('pickDetailGrid'),
+            grid = form.lookupReference('pick-grid'),
             store = grid.getStore(),
             selection = grid.getSelection()[0];
 
@@ -141,7 +147,7 @@ Ext.define('August.view.sales.pick.FormController', {
     onSelectionChanged: function(sm, selected, e) {
         var me = this,
             form = me.getView(),
-            grid = form.lookupReference('pickDetailGrid'),
+            grid = form.lookupReference('pick-grid'),
             columns = grid.getColumns(),
             rec = selected[0];
 
@@ -160,18 +166,18 @@ Ext.define('August.view.sales.pick.FormController', {
     onStyleComboSelected: function(combo, rec, e){
         var me = this,
             form = me.getView(), 
-            grid = form.lookupReference('pickDetailGrid'),
+            grid = form.lookupReference('pick-grid'),
             selection = grid.getSelection()[0];
             rowEdit = grid.getPlugin("pickGridRowEdit"),            
             color = combo.next('combo[name="color"]'),
             price = combo.next('numberfield[name="price"]');
             //season = combo.next('combo[name="season"]'),
             //cancelDate = combo.next('datefield[name="cancelDate"]');            
-        
+        /*
         if((combo.getValue() != selection.get('style')) && !Ext.isEmpty(combo.getValue()) && !Ext.isEmpty(color.getValue())) {
             
             Ext.Ajax.request({
-                url : '/WebApp/api/Products/SO',
+                url : '/WebApp/api/Products/SI',
                 method : 'GET',
                 headers: {
                     'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
@@ -232,25 +238,27 @@ Ext.define('August.view.sales.pick.FormController', {
                 },
                 scope : this
             });
-        }        
+        }
+        */        
                 
     },
 
     onColorComboSelected: function(combo, rec, e){
         var me = this,
             form = me.getView(), 
-            grid = form.lookupReference('pickDetailGrid'),
+            grid = form.lookupReference('pick-grid'),
             selection = grid.getSelection()[0];
             rowEdit = grid.getPlugin("pickGridRowEdit"),            
             style = combo.previousSibling('combo[name="style"]'),
-            price = combo.next('numberfield[name="price"]');
+            price = combo.ownerCt.down('numberfield[name="price"]'),
+            origPrice = combo.ownerCt.down('combo[name="stylePrice"]');
             //season = combo.next('combo[name="season"]'),
             //cancelDate = combo.next('datefield[name="cancelDate"]');          
         
-        if((combo.getValue() != selection.get('color')) && !Ext.isEmpty(style.getValue()) && !Ext.isEmpty(combo.getValue())) {
+        if(!Ext.isEmpty(style.getValue()) && !Ext.isEmpty(combo.getValue())) {
                         
             Ext.Ajax.request({
-                url : '/WebApp/api/Products/SO',
+                url : '/WebApp/api/Products/SI',
                 method : 'GET',
                 headers: {
                     'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
@@ -394,71 +402,54 @@ Ext.define('August.view.sales.pick.FormController', {
         combo.getStore().load();        
     },
 
-    showWindow: function(comp, record){
+    onOpenPrintViewClick: function(b, e){
         var me = this,
-            view = this.getView(),
-            viewer = view.up('viewer');
+            vm = me.getViewModel(),
+            rec = vm.get('thePickTicket');
+            
+        me.showWindow(rec, 'sales-windows-printpt', function(type){
 
-        //console.log(window.innerWidth, window.innerHeight)
-        this.isEdit = !!record;
+            var win = me.win,
+                wvm = win.getViewModel();
+                                      
+            /*            
+            wvm.getStore('shopifytemplates').on('datachanged', function(store){
+                btnTemplate.setDisabled(store.getCount() == 0);
+                
+                console.log('templates - store datachanged', store.first());
+            });
+            */
+            //win.on('templateclick', me.onSaveWebPublish, me);                        
+
+            //btnSave.setDisabled(template.getStore().getCount() == 0);                                                       
+        });
+    }, 
+
+    showWindow: function(rec, xtype, callback){
+        var me = this,
+            view = me.getView();        
+
         me.win = view.add({
-            xtype: 'inv-window',
-            reference: 'inv-Window',
-
-            //alignTarget: '',
-            //width: window.innerWidth < 1360 ? (view.getWidth() * 0.98) : 1480,
-            //maxWidth: 1366,
-            //height: window.innerHeight < 760 ? (view.getHeight() * 0.94) : 600,
+            xtype: xtype,
 
             viewModel: {
                 data: {
-                    title: !record ? 'Add New Item' : ('Edit Item: ' + (record.get('style') && record.get('color') ? ' (' + record.get('style') + ' / ' + record.get('color') + ')' : ''))
-                },
-
-                links: {
-                    // If we are passed a record, a copy of it will be created in the newly spawned session.
-                    // Otherwise, create a new phantom customer in the child.
-                    theItem: record || {
-                        type: 'pick.Detail',
-                        create: {
-                            orderdate: view.getViewModel().get('thePickTicket').data.orderDate,
-                            wh: view.getViewModel().get('thePickTicket').data.warehouse,
-                            create_user: August.loggedInUser.userId
-                        }
-                    }
+                    selected: rec
                 }
             },
-            // Creates a child session that will spawn from the current session
-            // of this view.
-            session: true,
+            // Create a child session that will spawn from the current session of this view
+            //session: true,
 
-            buttons: [{
-                text: 'Save',
-                bind: {
-                    //disabled: '{!isStyleValid}'
-                },
-                handler: this.onSaveItemClick,
-                scope: this
-            }, {
-                text: 'Cancel',
-                handler: function(b){
-                    me.win.close();
-                }
-            }]
+            renderTo: Ext.getBody()
         });
 
-
-        var rec = this.win.getViewModel().get('theItem');
-        console.log('showWindow', rec);
-        //matStore.sort('lineseq', 'ASC');
-
-        this.win.on('close', function(p){
-            view.up('viewer').up('maincontainerwrap').unmask();
+        me.win.show('', function(){
+            me.mv.mask();
         });
 
-        this.win.show('', function(){
-            view.up('viewer').up('maincontainerwrap').mask();
-        });
+        if(typeof callback === "function"){
+            callback(xtype);
+        }
     },
 
     onSave: function(action){
@@ -471,9 +462,10 @@ Ext.define('August.view.sales.pick.FormController', {
             changes = session.getChanges(),
             batch = session.getSaveBatch(); 
 
+        console.log('Pick - Form', session, changes, batch);
+
         if(view.isValid()){
-            
-            console.log(changes, batch);
+                        
             //var changes = me.getView().getSession().getChanges();
             
             if(changes != null && changes["pick.Detail"] != undefined){

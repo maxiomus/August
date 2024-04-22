@@ -37,10 +37,12 @@ Ext.define('August.Application', {
     },
 
     init: function() {
-        var me = this;
+        var me = this;        
+
         Ext.tip.QuickTipManager.init();        
 
         //this.setGlyphFontFamily('Pictos');
+        console.log('Application.js - init: ', me, localStorage.getItem('expires'));
 
         me.splashscreen = Ext.getBody().mask(
             'Loading application, Please wait...', 'splashscreen'
@@ -63,9 +65,7 @@ Ext.define('August.Application', {
         }
         else {
             localStorage.clear();            
-        }        
-
-        console.log('Application.js - launch - this: ', me, localStorage.getItem('expires'));
+        }                
         // logic check if your is already authenticated.
 
         /*

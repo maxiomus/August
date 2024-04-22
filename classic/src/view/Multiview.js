@@ -23,7 +23,7 @@ Ext.define('August.view.Multiview', {
 
     defaultType: "container",
 
-    publishes: ['items', 'mainItems'],    
+    publishes: ['items', 'mainItems', 'displayItems'],    
 
     style: {
         borderTop: '1px solid #cfcfcf'
@@ -68,6 +68,7 @@ Ext.define('August.view.Multiview', {
                 hidden: true,
                 //width: 150,
                 //height: 300,
+                minWidth: 480,
                 items: me.displayItems
             }]
         });

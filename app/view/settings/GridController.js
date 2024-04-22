@@ -4,11 +4,12 @@ Ext.define('August.view.settings.GridController', {
     alias: 'controller.settings-grid',
 
     init: function(c){
-
+        
     },            
 
     onRowSelect: function(rm, rec, idx){
         var me = this,
+            vm = me.getViewModel(),
             grid = me.getView();
 
         Ext.each(grid.getColumns(), function(col, idx){
@@ -16,7 +17,9 @@ Ext.define('August.view.settings.GridController', {
                 col.getEditor().setDisabled(!rec.phantom);
                 return false;
             }
-        });
+        });        
+
+        console.log('onRowSelect');
     },
 
     onItemContextMenu: function(h, j, k, g, l){
@@ -39,6 +42,7 @@ Ext.define('August.view.settings.GridController', {
      * @param t HTMLElement
      */
     onGridCellClick: function(view, td, cIdx, rec, tr, rIdx, e){
+        
         var me = this,
             grid = me.getView(),
             column = grid.getColumns()[cIdx],
@@ -47,7 +51,9 @@ Ext.define('August.view.settings.GridController', {
 
         search.paramName = column.dataIndex;
 
+        console.log('onGridCellClick', search);
         column.focus();
+        
         //console.log(grid.getHeaderContainer(), grid.getColumns()[cIdx].focus(), column.dataIndex)
     },
 

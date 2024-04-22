@@ -33,7 +33,9 @@ Ext.define('August.view.customer.invoice.Form',{
     },
 
     listeners: {
-
+        render: {
+            fn: 'onRender'        
+        }
     },
 
     initComponent: function() {
@@ -166,6 +168,12 @@ Ext.define('August.view.customer.invoice.Form',{
                 },
                 hidden: false,
                 items: btnsConfig
+            }, '->', {
+                iconCls: 'x-fa fa-print',
+                text: 'Print Preview',
+                ui: 'default',
+                tooltip: 'Print Invoice',
+                handler: 'onOpenPrintViewClick'
             }]
         },        
 
@@ -1177,6 +1185,10 @@ Ext.define('August.view.customer.invoice.Form',{
                         scope: this.controller
                     },
                     */
+                    storeupdate: function(store, recs, idx) {
+                        console.log('INV Store', store);
+                    },
+
                     selectionchange: {
                         fn: 'onSelectionChanged',
                         scope: this.controller
@@ -1330,7 +1342,11 @@ Ext.define('August.view.customer.invoice.Form',{
             }]                    
         });
 
-        me.callParent(arguments);        
+        me.callParent(arguments);       
+        
+        //var grid = me.lookupReference("inv-grid"),
+        //    store = grid.getStore();
+        //me.relayEvents(store, ["update"], 'store');
     },          
         
     buildGridColumns: function(){

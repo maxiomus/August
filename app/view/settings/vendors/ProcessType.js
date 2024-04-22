@@ -14,8 +14,8 @@ Ext.define('August.view.settings.vendors.ProcessType',{
         type: 'vendors-processtype'
     },
 
-    //referenceHolder: true,
-    session: true,
+    referenceHolder: true,
+    session: {},
 
     border: false,
     layout: 'border',
@@ -28,7 +28,7 @@ Ext.define('August.view.settings.vendors.ProcessType',{
             items: [{
                 xtype: 'settings-grid',
                 title: 'Process Type',
-                //reference: 'grid',
+                reference: 'typeGrid',
                 region: 'center',
                 flex: 1,
                 split: true,
@@ -52,7 +52,8 @@ Ext.define('August.view.settings.vendors.ProcessType',{
                 flex: 1,
 
                 bind: {
-                    store: '{grid.selection.orders}'
+                    store: '{typeGrid.selection.orders}',
+                    hidden: '{!typeGrid.selection}'
                 },
 
                 columns: me.buildOrderColumns()

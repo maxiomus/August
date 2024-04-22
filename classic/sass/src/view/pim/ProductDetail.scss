@@ -1,0 +1,22 @@
+.pim-product-grid .thumb-wrap {
+    width: 20%;
+    padding: 0 20px 0 0;
+    float: left;
+    cursor: pointer;        
+              
+}
+      
+.pim-product-grid .thumb {    
+    -moz-border-radius:.3em;
+    -webkit-border-radius:.3em;
+    border-radius:.3em;
+
+    background: #ffffff;
+    border: 1px solid #ddd;
+
+    //padding: 1px;
+    margin: 0 10px 2px 0;
+    width: 46px;    
+    //height: 42px;      
+    //margin-right: -50%;        
+}

@@ -9,7 +9,9 @@ Ext.define('August.view.settings.vendors.ProcessTypeController', {
     ],
 
     init: function(grid){
-
+        var me = this,
+            vm = me.getViewModel();
+        
     },
 
     onTypeRowSelect: function(m, rec, idx){

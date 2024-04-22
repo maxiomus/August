@@ -113,7 +113,7 @@ Ext.define('August.view.production.windows.style.Upload', {
         */
 
         Ext.getStore('memComponents').clearFilter();
-        Ext.getStore('memComponents').filter('text', 'PRINTS');
+        //Ext.getStore('memComponents').filter('text', 'PRINTS');
 
         Ext.applyIf(me, {
             items: [{
@@ -150,7 +150,7 @@ Ext.define('August.view.production.windows.style.Upload', {
                         readOnly: true,
                         bind: {
                             //store: '{styles}',
-                            value: '{selected.style}'
+                            value: ''
                         },
                         store: 'memStyles',
                         remoteStore: 'Styles',
@@ -178,54 +178,17 @@ Ext.define('August.view.production.windows.style.Upload', {
                         }],
                         anchor: '100%'
                     },{
-                        xtype: 'combo',
-                        fieldLabel: 'Body #',
-                        labelAlign: 'top',
-                        name: 'body',
-                        hideTrigger: true,
-                        allowBlank: true,
-                        readOnly: true,
-                        bind: {
-                            //store: '{bodies}',
-                            value: '{selected.user2}'
-                        },
-                        store: 'memBodies',
-                        remoteStore: 'Bodies',
-                        queryMode: 'local',
-                        valueField: 'id',
-                        displayField: 'id',
-                        editable: false,
-                        selectOnFocus: false,
-                        selectOnTab: false,
-                        //typeAhead: true,
-                        //forceSelection: true,
-                        minChars: 1,
-                        matchFieldWidth: true,
-                        pageSize: 50,
-                        listConfig: {
-                            width: 340,
-                            loadingText: 'Searching....',
-                            emptyText: '<p style="padding-left: 5px;">No match found.</p>'
-
-                            // Custom rendering template for each item
-
-                        },
-                        plugins: [{
-                            ptype: "cleartrigger"
-                        }],
-                        anchor: '100%'
-                    },{
                         xtype: "combo",
-                        fieldLabel: 'Print #',
+                        fieldLabel: 'Component #',
                         labelAlign: 'top',
-                        name: 'print',
+                        name: 'compo',
                         hideTrigger: true,
                         allowBlank: true,
                         readOnly: true,
                         store: 'memComponents',
                         remoteStore: 'Components',
                         bind: {
-                            value: '{thePrint}'
+                            value: ''
                         },
                         valueField: 'label',
                         displayField: 'label',
@@ -255,7 +218,8 @@ Ext.define('August.view.production.windows.style.Upload', {
                         labelAlign: 'top',
                         name: 'descript',
                         bind: {
-                            value: '{components.selection.F_DESC1}'
+                            //value: '{components.selection.F_DESC1}'
+                            value: ''
                         },
                         anchor: '100% -180'
                     }]

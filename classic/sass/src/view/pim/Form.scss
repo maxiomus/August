@@ -1,0 +1,23 @@
+.pim-photo-grid .thumb-wrap {
+    width: 20%;
+    padding: 0 104px 0 0;
+    float: left;
+    cursor: pointer;        
+              
+}
+      
+.pim-photo-grid .thumb {    
+    -moz-border-radius:.3em;
+    -webkit-border-radius:.3em;
+    border-radius:.3em;
+
+    background: #ffffff;
+    border: 1px solid #ddd;
+
+    //padding: 1px;
+    //margin: 0 10px 0 0;
+    width: 88px;
+    //text-align: center;
+    //height: 42px;      
+    //margin-right: -50%;        
+}

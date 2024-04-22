@@ -24,6 +24,7 @@ Ext.define('August.model.style.Publish', {
         { name: 'price5', type: 'number', persist: false },     
         { name: 'user5', type: 'string', persist: false },        
         { name: 'user6', type: 'string', persist: false },           
+        { name: 'user7', type: 'string', persist: false },           
         { name: 'season', type: 'string', persist: false },        
         { name: 'ohs', type: 'number', persist: false },        
         { name: 'orders', type: 'number', persist: false },        
@@ -84,8 +85,10 @@ Ext.define('August.model.style.Publish', {
     proxy: {
         type: 'rest',
         batchActions: true, // default false when rest proxy.
-        url: '/WebApp/api/SitePublishes/',
+        url: '/WebApp/api/SitePublishes',
 
+        timeout: 900000,
+        
         pageParam: '',
         startParam: '',
         limitParam: '',

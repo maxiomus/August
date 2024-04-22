@@ -127,6 +127,7 @@ Ext.define('Ext.overrides.container.Container', {
         cw.document.getElementsByTagName('div')[0].removeAttribute('style');        
         
         // print the iframe
+        console.log('container print', cw);
         cw.print();
 
         // destroy the iframe

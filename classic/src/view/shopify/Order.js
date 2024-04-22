@@ -4,7 +4,8 @@ Ext.define('August.view.shopify.Order', {
     requires: [
         'August.view.shopify.OrderController',
         'August.view.shopify.OrderModel',
-        'August.plugin.grid.Exporter'
+        'August.plugin.grid.Exporter',
+        'Ext.ux.form.field.SearchText'
     ],
 
     alias: "widget.shopify-order",
@@ -90,14 +91,15 @@ Ext.define('August.view.shopify.Order', {
                         deferInitialRefresh: true,
                         emptyText: '<h1 style="margin: 20px">No matching results</h1>',
                         getRowClass: function(rec, index, param, store){
-                            var note = rec.get('note');
-                            var idx = note.indexOf("N41 SO#");
+                            //var note = rec.get('note');
+                            //var idx = note.indexOf("N41 SO#");
                 
                             //return idx < 0 ? 'error-row-color' : 'valid-row-color';
                             return "";
                         },
                         listeners: {
                             render: function(view){
+                                /*
                                 //var view = grid.getView();
                                 view.tip = Ext.create('Ext.tip.ToolTip', {
                                     // The overall target element.
@@ -130,6 +132,7 @@ Ext.define('August.view.shopify.Order', {
                                         }
                                     }
                                 });
+                                */
                             }
                         }
                     }
@@ -164,7 +167,7 @@ Ext.define('August.view.shopify.Order', {
                 hideLabel: true,
                 valueField: "name",
                 displayField: "label",
-                value: "shopify",
+                value: "SHOPIFY",
                 editable: false,
                 //reference: "filterSelection",
                 bind: {
@@ -178,10 +181,12 @@ Ext.define('August.view.shopify.Order', {
                     }                    
                 }
             },{
-                xtype: "searchgrid",
-                width: 300,
-                grid: "shopify-order-grid",
-                paramName: "sono"
+                xtype: "searchtext",
+                reference: 'searchtext',
+                width: 480,              
+                bind: {                    
+                    store: '{shopifyorders}'
+                },                  
             }]
         );
 
@@ -240,19 +245,22 @@ Ext.define('August.view.shopify.Order', {
                 return f;
             }
         },{
-            text: "Order",
+            text: "Order #",
             dataIndex: "name",
             width: 100,
             locked: false,
             filter: {
                 type: "string"
             },
-            renderer: function(v, meta, rec){                
+            renderer: function(v, meta, rec){             
+                /*   
                 var url = rec.get('order_status_url');
                 var ps = rec.get('order_status_url').indexOf('.com/');
                 
                 var html = "<a href='{2}.com/admin/orders/{0}' target='_blank'>{1}</a>";
                 return Ext.String.format(html, rec.get('id'), v, url.substring(0, ps));
+                */
+               return v.replace('#','');
             } 
         },
         {
@@ -264,12 +272,14 @@ Ext.define('August.view.shopify.Order', {
                 type: "string"
             },
             renderer: function(v, meta, rec) {
-                var idx = v.indexOf("N41 SO#");
-                if(idx >= 0){
-                    var ws = v.indexOf("\r\n",idx+8);
-                    var html = "<span class='green-dot'></span>&nbsp;<a href='#sales-order/edit/{0}'>{0}</a>";
-                    meta.tdCls = '';
-                    return Ext.String.format(html, ws == -1 ? v.substring(idx+8) : v.substring(idx+8, ws));
+                if(v != null) {
+                    var idx = v.indexOf("N41 SO#");
+                    if(idx >= 0){
+                        var ws = v.indexOf("\n",idx+8);
+                        var html = "<span class='green-dot'></span>&nbsp;&nbsp;<a href='#sales-order/edit/{0}'>{0}</a>";
+                        meta.tdCls = '';
+                        return Ext.String.format(html, v.substring(idx+7, idx+14).trim());
+                    }
                 }
 
                 meta.tdCls = 'red-text';
@@ -279,7 +289,8 @@ Ext.define('August.view.shopify.Order', {
         {
             xtype: 'datecolumn',
             text: "Date",
-            dataIndex: "created_at",
+            //dataIndex: "created_at",
+            dataIndex: "createdAt",
             format: 'Y-m-d',
             filter: {
                 type: "date"
@@ -299,48 +310,99 @@ Ext.define('August.view.shopify.Order', {
         */ 
         {
             text: "Customer",
-            dataIndex: "customerName",
+            //dataIndex: "customerName",
+            dataIndex: "customer",
             width: 140,
             hidden: false,
             filter: {type: "string"},
-            renderer: function(value, h, a){                
-                return value;
+            renderer: function(value, h, a){                                
+                if(value != null) {
+                    return value.displayName;
+                }
+                
+                return '';
             }
         }, 
         {
             text: "Total",
-            dataIndex: "total_price",
+            //dataIndex: "total_price",
+            dataIndex: "totalPriceSet",
             //width: 140,
             hidden: false,
-            formatter: 'usMoney',
+            //formatter: 'usMoney',
             filter: {
                 type: "number"
-            }            
+            },
+            renderer: function(value, h, a){                
+                var xf = Ext.util.Format;
+                if (value == null){
+                    return '';
+                }
+                return xf.usMoney(value.shopMoney.amount);
+            }
+        },
+        {
+            text: "Return status",
+            dataIndex: "returnStatus",
+            width: 160,
+            filter: {                
+                type: "list",
+                options: ["INSPECTION_COMPLETE",
+                "IN_PROGRESS",
+                "NO_RETURN",
+                "RETURNED",
+                "RETURN_FAILED",
+                "RETURN_REQUESTED"]
+            }
         },
         {
             text: "Payment Status",
-            dataIndex: "financial_status",
+            //dataIndex: "financial_status",
+            dataIndex: "displayFinancialStatus",
             width: 120,
             hidden: false,
-            filter: {type: "string"},
+            filter: {
+                type: "list",
+                options: ["AUTHORIZED",
+                    "EXPIRED",
+                    "PAID",
+                    "PARTIALLY_PAID",
+                    "PARTIALLY_REFUNDED",
+                    "PENDING",
+                    "REFUNDED",
+                    "VOIDED"]                
+            },
             renderer: function(i, h, a){
                 return i;
             }
         },                                  
         {
             text: "Fulfillments Status",
-            dataIndex: "fulfillment_status",
+            //dataIndex: "fulfillment_status",
+            dataIndex: "displayFulfillmentStatus",
             width: 120,
             hidden: false,
-            filter: {type: "string"},
+            filter: {
+                type: "list",
+                options: ["FULFILLED",
+                    "IN_PROGRESS",
+                    "ON_HOLD",
+                    "OPEN",
+                    "PARTIALLY_FULFILLED",
+                    "PENDING_FULFILLMENT",
+                    "RESTOCKED",
+                    "SCHEDULED",
+                    "UNFULFILLED"]
+                
+            },
             renderer: function(v, meta, rec) {                
-                if(!Ext.isEmpty(v)){
+                if(!Ext.isEmpty(v) && v == 'FULFILLED'){
                     meta.tdCls = '';
-                    return "<span class='green-dot'></span>" + " " + Ext.String.capitalize(v);
+                    return "<span class='green-dot'></span>&nbsp;&nbsp;" + v.charAt(0) + v.slice(1).toLowerCase();
                 }
 
                 meta.tdCls = 'red-text';
-                return "<span class='x-fas fa-exclamation-circle'></span>";
+                return "<span class='x-fas fa-exclamation-circle'></span>&nbsp;&nbsp;" + v.charAt(0) + v.slice(1).toLowerCase();
             }
         },
         /*
@@ -358,7 +420,8 @@ Ext.define('August.view.shopify.Order', {
         */
         {
             text: "Items",
-            dataIndex: "itemsCount",
+            //dataIndex: "itemsCount",
+            dataIndex: "currentSubtotalLineItemsQuantity",
             //width: 140,
             hidden: false,
             filter: {type: "number"},
@@ -366,25 +429,26 @@ Ext.define('August.view.shopify.Order', {
                 var postfix = value > 1 ? "s" : ""; 
                 return Ext.String.format("{0} item{1}", value, postfix);
             }
-        },
-        /*
+        },        
         {
-            text: "Delivery Method",
-            dataIndex: "shipping_lines",            
-            width: 300,
-            hidden: true,
+            text: "Delivery Status",
+            dataIndex: "fulfillments",            
+            width: 180,            
             filter: {type: "string"},
             renderer: function(value, h, a){                
-                return value[0].title;
+                return value;
             }            
-        },
-        */
+        },        
         {
             text: "Delivery Method",
-            dataIndex: "deliveryMethod",            
-            width: 120,            
+            //dataIndex: "deliveryMethod",            
+            dataIndex: "shippingLine",
+            width: 140,            
             filter: {type: "string"},
-            renderer: function(value, h, a){                
+            renderer: function(value, h, a){         
+                if(value == null) {
+                    return '';
+                }
                 return value;
             }            
         },
@@ -392,6 +456,7 @@ Ext.define('August.view.shopify.Order', {
             xtype: 'datecolumn',
             text: "Updated",
             dataIndex: "updated_at",
+            hidden: true,
             format: 'Y-m-d',
             filter: {
                 type: "date"
@@ -407,8 +472,9 @@ Ext.define('August.view.shopify.Order', {
                 return i;
             }
         },{
-            text: "Note",
-            dataIndex: "note",
+            text: "Note Attributes",
+            //dataIndex: "note_modified",
+            dataIndex: "customAttributes",
             flex: 1,
             filter: {
                 type: 'string'
@@ -438,7 +504,7 @@ Ext.define('August.view.shopify.Order', {
                 width: 76,
                 store: new Ext.data.ArrayStore({
                     fields: ["id"],
-                    data: [["15"], ["25"], ["50"], ["100"], ["250"]]
+                    data: [["15"], ["25"], ["50"], ["100"], ["200"]]
                 }),
                 //value: "50",
                 displayField: "id",
@@ -459,20 +525,24 @@ Ext.define('August.view.shopify.Order', {
                     var linkInfo = vm.get('shopifyLink'),
                         prevBtn = btn.previousSibling();
 
-                    if(linkInfo != null && linkInfo.NextLink != null){
-                        Ext.apply(store.getProxy().extraParams, {
-                            page_info: linkInfo.NextLink.PageInfo,
+                    if(linkInfo != null && linkInfo.hasNextPage == true){
+                        store.getProxy().extraParams = {
+                            //page_info: linkInfo.NextLink.PageInfo
+                            page_info: linkInfo.endCursor,
                             limit: combo.getValue()
-                        });
+                        };
                     }   
 
                     store.load({                        
                         callback: function(recs, op, success){                            
-                            vm.set('shopifyLink', op.getResponse().responseJson.LinkHeader);    
+                            //vm.set('shopifyLink', op.getResponse().responseJson.LinkHeader);    
+                            vm.set('shopifyLink', op.getResponse().responseJson.pageInfo);    
                             linkInfo = vm.get('shopifyLink');                        
                             if(linkInfo != null ){
-                                btn.setDisabled(linkInfo.NextLink == null);
-                                prevBtn.setDisabled(linkInfo.PreviousLink == null);
+                                //btn.setDisabled(linkInfo.NextLink == null);
+                                //prevBtn.setDisabled(linkInfo.PreviousLink == null);
+                                btn.setDisabled(!linkInfo.hasNextPage);
+                                prevBtn.setDisabled(!linkInfo.hasPreviousPage);
                             }
                         }
                     });
@@ -487,19 +557,24 @@ Ext.define('August.view.shopify.Order', {
                     var linkInfo = vm.get('shopifyLink'),
                         nextBtn = btn.nextSibling();
 
-                    if(linkInfo != null && linkInfo.PreviousLink != null){
-                        Ext.apply(store.getProxy().extraParams, {
-                            page_info: linkInfo.PreviousLink.PageInfo,
+                    if(linkInfo != null && linkInfo.hasPreviousPage == true){
+                        store.getProxy().extraParams = {
+                            //page_info: linkInfo.PreviousLink.PageInfo,
+                            page_info: linkInfo.startCursor,
+                            ordinal: 'last',
                             limit: combo.getValue()
-                        });
+                        };
                     } 
                     store.load({                                            
                         callback: function(recs, op, success){                                                                                  
-                            vm.set('shopifyLink', op.getResponse().responseJson.LinkHeader);
+                            //vm.set('shopifyLink', op.getResponse().responseJson.LinkHeader);
+                            vm.set('shopifyLink', op.getResponse().responseJson.pageInfo);
                             linkInfo = vm.get('shopifyLink');
                             if(linkInfo != null ){
-                                btn.setDisabled(linkInfo.PreviousLink == null);                          
-                                nextBtn.setDisabled(linkInfo.NextLink == null); 
+                                //btn.setDisabled(linkInfo.PreviousLink == null);                          
+                                //nextBtn.setDisabled(linkInfo.NextLink == null); 
+                                btn.setDisabled(!linkInfo.hasPreviousPage);                          
+                                nextBtn.setDisabled(!linkInfo.hasNextPage); 
                             }                                
                         }
                     });    
@@ -515,8 +590,9 @@ Ext.define('August.view.shopify.Order', {
             store.setPageSize(e.getValue());
             store.load({
                 callback: function(recs, op, success){
-                    //console.log(recs, op);
-                    vm.set('shopifyLink', op.getResponse().responseJson.LinkHeader);
+                    console.log('seelct', op.getResponse());
+                    //vm.set('shopifyLink', op.getResponse().responseJson.LinkHeader);
+                    vm.set('shopifyLink', op.getResponse().responseJson.pageInfo);
                 }
             });
             //console.log("combo select", f)

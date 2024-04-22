@@ -458,7 +458,7 @@ Ext.define("August.view.production.WIP", {
             {
                 text: 'Photo', dataIndex: '', width:88, locked: false, hidden: false, draggable: false, ignoreExport: true,
                 renderer: function (value, p, record) {
-                    var tpl = '<span class="file"><img style="vertical-align: middle;width:64px;margin:0 2px 0 0;" src="http://209.37.126.195:9090/StyleImages/200xImages/{0}_{1}_front.jpg?w=64&h=64" alt="{0}_{1}" /></span>';
+                    var tpl = '<span class="file"><img style="vertical-align: middle;width:64px;margin:0 2px 0 0;" src="https://endlessrose.net:9443/StyleImages/200xImages/{0}_{1}_front.jpg?w=64&h=64" alt="{0}_{1}" /></span>';
 
                     //var xf = Ext.util.Format;
                     if (!Ext.isEmpty(record)) {

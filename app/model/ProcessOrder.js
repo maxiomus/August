@@ -3,14 +3,14 @@ Ext.define('August.model.ProcessOrder', {
 
     fields: [
         { name: 'id', type: 'int' },
-        { name: 'ProcessType', type: 'string', critical: true },
-        { name: 'orderNo', type: 'int', critical: true },
+        //{ name: 'processType', type: 'string' },
+        { name: 'orderNo', type: 'int' },
         { name: 'location', type: 'string' },
-        { name: 'line', type: 'int', critical: true },
+        { name: 'line', type: 'int' },
         { name: 'account', type: 'string' },
         { name: 'receiving_loc' },
         {
-            name: 'ProcessType',
+            name: 'processType',
             type: 'string',
             reference: {
                 parent: 'ProcessType',
@@ -20,12 +20,12 @@ Ext.define('August.model.ProcessOrder', {
                 //role: 'type',
                 field: 'code',
                 inverse: 'orders'
-            }
+            }            
         }
     ],
 
-    idProperty: 'id',
-    identifier: 'negative',
+    //idProperty: 'id',
+    //identifier: 'negative',
 
     /*
     validators: {

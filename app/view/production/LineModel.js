@@ -102,10 +102,15 @@ Ext.define('August.view.production.LineModel', {
             remoteFilter: true,
             remoteSort: true,
 
-            pageSize: 50,
+            //groupField: 'category',
+            //sorters: ['category'],
 
-            proxy: {
-                type: 'rest',
+            pageSize: 50,            
+
+            proxy: {                
+                type: 'ajax',
+                
+                // @sw-cache,
                 url: '/WebApp/api/Products/',           
                    
                 reader: {
@@ -199,14 +204,16 @@ Ext.define('August.view.production.LineModel', {
             }
         },
 
-        vendors: {
-            fields: ["label", "value"],
+        designers: {
+            fields: ['guid', 'lable', 'value'],
             autoLoad: false,
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/WebApp/api/List/vendors",
-
+                url: "/WebApp/api/List/designers",
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
                 reader: {
                     type: "json",
                     rootProperty: 'data'
@@ -229,21 +236,113 @@ Ext.define('August.view.production.LineModel', {
                 }
             }
         },
-
-        subcategories: {
-            fields: ["label", "value"],
-            //storeId: 'customer',
-            autoLoad: false,
+        
+        stylecategories: {
+            fields: ['guid', 'lable', 'value'],
+            //storeId: 'type',
+            autoLoad: true,
             pageSize: 0,
             proxy: {
                 type: "ajax",
-                url: "/WebApp/api/List/subcategories",
+                url: "/WebApp/api/List/categories",
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
                 reader: {
                     type: "json",
                     rootProperty: "data"
                 }
             }
         },
+
+        subcategories: {
+            fields: ['guid', 'lable', 'value'],
+            //storeId: 'customer',
+            autoLoad: true,
+            pageSize: 0,
+            proxy: {
+                type: "ajax",
+                url: "/WebApp/api/List/subcategories",
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: "json",
+                    rootProperty: "data"
+                }
+            }
+        },
+
+        subdivisions: {
+            fields: ['guid', 'lable', 'value'],
+            //storeId: 'customer',
+            autoLoad: true,
+            pageSize: 0,
+            proxy: {
+                type: "ajax",
+                url: "/WebApp/api/List/subdivisions",
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: "json",
+                    rootProperty: "data"
+                }
+            }
+        },
+
+        status: {
+            fields: ['guid', 'lable', 'value'],
+            autoLoad: true,
+            pageSize: 0,
+            proxy: {
+                type: 'ajax',
+                url: '/WebApp/api/List/status',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            }
+        },
+
+        seasons: {
+            fields: ['guid', 'lable', 'value'],
+            //storeId: 'customer',
+            autoLoad: true,
+            pageSize: 0,
+            proxy: {
+                type: "ajax",
+                url: "/WebApp/api/List/seasons",
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: "json",
+                    rootProperty: "data"
+                }
+            }
+        },               
+
+        divisions: {
+            fields: ['guid', 'lable', 'value'],
+            //storeId: 'customer',
+            autoLoad: true,
+            pageSize: 0,
+            proxy: {
+                type: "ajax",
+                url: "/WebApp/api/List/divisions",
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                reader: {
+                    type: "json",
+                    rootProperty: "data"
+                }
+            }
+        },  
 
         templates: {
             fields: ['label', 'field'],

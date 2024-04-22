@@ -7,7 +7,8 @@ Ext.define('August.view.reports.invoice.Default',{
         'August.view.reports.invoice.DefaultModel',
         //'August.view.reports.Grid',
         //'August.view.reports.TopBar',
-        'August.view.reports.invoice.SummaryBySoType'
+        'August.view.reports.invoice.SummaryBySoType',
+        'August.view.reports.invoice.StylesBySoType'
     ],
 
     alias: 'widget.invoice-default',

@@ -24,6 +24,7 @@ Ext.define('August.model.ProcessType', {
     ],
 
     idProperty: 'code',
+    //identifier: 'negative',
 
     /*
     validators: {

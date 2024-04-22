@@ -21,30 +21,53 @@ Ext.define('August.view.shopify.ProductController', {
         //console.log(this.lookupReference('multiview').refs);
         var me = this;
 
-        me.mv = August.app.getMainView();        
-    },
+        me.mv = August.app.getMainView();       
+    },    
 
-    onBeforeStoreLoad: function(store){
+    onBeforeStoreLoad: function(store, opt, e){
         var me = this,            
 
             topbar = me.getView().down("toolbar"),
             combo = topbar.down("combo[name=sites]");
         
-        //console.log('Shopify Product beforeload', combo.getValue());
+        //console.log('Shopify Product beforeload', opt, e);
 
         store.getProxy().setHeaders({
             'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-        })
+        });
 
         Ext.apply(store.getProxy().extraParams, {            
-            store: combo.getValue()
+            store: combo.getValue().toUpperCase()
         });
                
-    },    
+    },            
+
+    onStoreLoad: function(store, recs, success, opt){
+        var me = this,
+            vm = me.getViewModel(),
+            //store = vm.getStore('shopifyproducts'),
+            bbar = me.getView().down("toolbar[dock=bottom]"),
+            nextBtn = bbar.down("button[name=next]"),
+            prevBtn = bbar.down("button[name=prev]"); 
+            
+        var linkInfo = opt.getResponse().responseJson.pageInfo;
+        
+        //vm.set('shopifyLink', null);
+        vm.set('shopifyLink', linkInfo);
+        //store.getProxy().setExtraParams({}); 
+
+        //console.log('Shopify Product load', success, opt.getResponse());
+
+        nextBtn.setDisabled(linkInfo == null || linkInfo.hasNextPage == false);   
+        prevBtn.setDisabled(linkInfo == null || linkInfo.hasPreviousPage == false);          
+        
+    },
 
     onStoreChange: function(combo, nValue, oValue){
         var me = this,
             vm = me.getViewModel(),
+            multiview = me.getView().lookupReference('multiview'),
+            grid = multiview.lookupReference('shopifyProductGrid'),
             store = vm.getStore('shopifyproducts'),
             bbar = me.getView().down("toolbar[dock=bottom]"),
             nextBtn = bbar.down("button[name=next]"),
@@ -53,14 +76,21 @@ Ext.define('August.view.shopify.ProductController', {
         vm.set('shopifyLink', null);
         store.getProxy().setExtraParams({}); 
 
+        grid.getSelectionModel().deselectAll();
+
         store.load({
             callback: function(recs, op, success){
-                var linkInfo = op.getResponse().responseJson.LinkHeader;
+                //var linkInfo = op.getResponse().responseJson.LinkHeader;
+                //console.log(op.getResponse().responseJson);
+                var linkInfo = op.getResponse().responseJson.pageInfo;
                 
-                nextBtn.setDisabled(linkInfo == null || linkInfo.NextLink == null);   
-                prevBtn.setDisabled(linkInfo == null || linkInfo.PreviousLink == null);  
+                nextBtn.setDisabled(linkInfo == null || linkInfo.hasNextPage == false);   
+                prevBtn.setDisabled(linkInfo == null || linkInfo.hasPreviousPage == false);  
+                //nextBtn.setDisabled(linkInfo == null || linkInfo.NextLink == null);   
+                //prevBtn.setDisabled(linkInfo == null || linkInfo.PreviousLink == null);  
 
                 vm.set('shopifyLink', linkInfo);
+                
             }
         });
     },    
@@ -69,7 +99,7 @@ Ext.define('August.view.shopify.ProductController', {
         //console.log(b, c);
 
         var layout = this.lookupReference('multiview'),
-            grid = layout.lookupReference('shopify-product-grid') || layout.lookupReference('tiles'),
+            grid = layout.lookupReference('shopifyProductGrid') || layout.lookupReference('tiles'),
             rec = grid.getSelection()[0];
 
         //console.log(rec.data.id);
@@ -103,30 +133,181 @@ Ext.define('August.view.shopify.ProductController', {
             vm = me.getViewModel(),
             linkInfo = vm.get('shopifyLink'),
             store = vm.getStore('shopifyproducts'),
-            bbar = me.getView().down("toolbar[dock=bottom]"),
-            nextBtn = bbar.down("button[name=next]"),
-            prevBtn = bbar.down("button[name=prev]");
+            bbar = me.getView().down("toolbar[dock=bottom]");
+            //nextBtn = bbar.down("button[name=next]"),
+            //prevBtn = bbar.down("button[name=prev]");
 
             if(linkInfo == null){
                 store.getProxy().setExtraParams({});
             }   
 
+        //console.log('refresh', store);
+
         store.load({
             callback: function(recs, op, success){
-                var linkInfo = op.getResponse().responseJson.LinkHeader;
-                console.log(bbar, nextBtn, linkInfo);
+                //var linkInfo = op.getResponse().responseJson.LinkHeader;
+                console.log(op.getResponse().responseJson);
+                var linkInfo = op.getResponse().responseJson.pageInfo;
+                //console.log(bbar, nextBtn, linkInfo);
                 
-                nextBtn.setDisabled(linkInfo == null || linkInfo.NextLink == null);   
-                prevBtn.setDisabled(linkInfo == null || linkInfo.PreviousLink == null);  
+                //nextBtn.setDisabled(linkInfo == null || linkInfo.NextLink == null);   
+                //prevBtn.setDisabled(linkInfo == null || linkInfo.PreviousLink == null);  
+                nextBtn.setDisabled(linkInfo == null || linkInfo.hasNextPage == false);   
+                prevBtn.setDisabled(linkInfo == null || linkInfo.hasPreviousPage == false);  
                 vm.set('shopifyLink', linkInfo);
             }
         });
     },
 
+    onAddVariantsClick: function(b, e){
+        var me = this,
+            multiview = me.getView().lookupReference('multiview'),
+            grid = multiview.lookupReference('shopifyProductGrid'),
+            topbar = multiview.lookupReference("topbar"),
+            combo = topbar.down('combo[name=sites]'),
+            rec = grid.getSelectionModel().selected.items[0];
+            
+        //console.log('onAdd', combo.getSelection().get('value'));
+        console.log('onAddVariant', rec.variants());
+        var variant = rec.get('variant'),
+            sku = variant.sku.split('-');
+                            
+        var param = {
+            //style: rec.get('handle').split('-').pop(),
+            style: sku[0],
+            siteid: combo.getSelection().get('value'),
+            store: combo.getValue(),
+            product_id: rec.get('id')
+        }
+                
+        me.showWindow(param, 'shopify-windows-variantupdate', b, function(type){
+
+            var win = me.win,
+                wvm = win.getViewModel(),
+                //btnSave = win.getDockedItems('toolbar[dock="bottom"] > button[action="save"]')[0];
+                btnPublish = win.down('button[action="publish"]');            
+                                    
+            wvm.getStore('publishes').on('datachanged', function(store){
+                btnPublish.setDisabled(store.getCount() == 0);
+                
+                //console.log('publishes - store datachanged', store.first());
+            });
+            
+            win.on('publishclick', me.onPublishVariants, me);
+        });
+    },    
+
+    onPublishVariants: function(b, c) {        
+
+        var me = this,
+            saveColors = [],
+            wvm = me.win.getViewModel(),
+            param = wvm.get('selected'),
+            topbar = me.win.down("toolbar"),
+            withImages = topbar.down('checkbox[name=withImages]'),
+            numOfImages = topbar.down('combobox[inputId=numOfImages]'),
+            //styleGrid = me.getView().lookupReference('style-grid'),
+            //styleRec = styleGrid.getSelectionModel().selected.items[0],
+            //topbar = c.down("toolbar"),
+            //combo = topbar.down("combo[name=site]"),
+            //comboSelected = combo.getSelection(),
+            publishGrid = c.lookupReference('publishGrid'),
+            //attributeGrid = c.lookupReference('attributeGrid'),                                    
+            store = publishGrid.getStore();        
+
+        var publishData = [];
+
+        store.each(function(rec, idx){
+            if(rec.get('toPublish') == true && rec.get('published') == false){
+                //store.remove(rec);                   
+                publishData.push(rec.getData(true));
+                saveColors.push(rec.get('color'));
+            }
+            else{
+                //saveColors.push(rec.get('color'));
+            }
+            
+        });
+        
+        var processMask = new Ext.LoadMask({
+            msg: 'Saving... Please wait',
+            target: me.win
+        });                        
+        
+        //console.log(store.getRange(), store.getData(true), store.first().getData(true));
+        var postfix = '';
+        if(withImages.getValue()){
+            postfix = '&imgCnt=' + numOfImages.getValue();
+        }
+        
+
+        console.log('sessinon', store.getSession().getChanges());
+        Ext.Ajax.request({
+            url: '/WebApp/api/ShopifyVariants/' + param.store + '/Product/' + param.product_id.replace('gid://shopify/Product/', '') + '?img=' + withImages.getValue() + postfix,
+            method: 'POST',        
+            //useDefaultXhrHeader: false,
+            //cors: true,
+            headers: {
+                'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+            },
+            jsonData: publishData,
+            /*
+            params: {
+                store: param.store
+            }
+            */                            
+        }).then(function(response){
+            var result = Ext.decode(response.responseText, false);
+            console.log('callback from shopify', response.responseJson);
+            if(result =! null) {
+                store.each(function(rec, idx){
+                    if(rec.get('toPublish') == true || rec.get('published' != true)){
+                        rec.set('published', true);                        
+                        rec.set('toPublish', false);                        
+                    }
+                });
+
+                console.log('st', store.getSession().data);
+                store.sync({
+                    success: function(batch, opts) {
+                        //me.win.close();
+                        store.load();
+                        processMask.hide('', function() {
+                            Ext.Msg.alert('Status', 'Changes saved successfully.', function(){
+                                console.log(result);
+                            });
+                        });                
+                    },
+                    failure: function(batch, opts) {
+                        console.log(opts);
+                        //var resp = opts.getResponse();                
+                        processMask.hide('', function() {
+                            Ext.Msg.alert(resp.statusText + ' - ' + resp.status, resp.responseJson.Message);
+                        });
+                    },
+                    callback: function (batch, opts) {
+                        //console.log(opts);
+                    }    
+                });
+            }
+                 
+        }).otherwise(function(reason){
+            console.log(reason);
+            processMask.hide('', function() {
+                
+                Ext.Msg.alert('Status ' + reason.status, reason.responseText.replace(/\\/g, ""));
+            });                        
+                     
+        });
+        
+        //me.win.close();
+        processMask.show();
+    },  
+
     onActAddPhotoClick: function(b, e) {
         var me = this,
             multiview = me.getView().lookupReference('multiview'),
-            grid = multiview.lookupReference('shopify-product-grid'),
+            grid = multiview.lookupReference('shopifyProductGrid'),
             topbar = multiview.lookupReference("topbar"),
             combo = topbar.down('combo[name=sites]'),
             rec = grid.getSelectionModel().selected.items[0];        
@@ -137,30 +318,52 @@ Ext.define('August.view.shopify.ProductController', {
                 wvm = win.getViewModel(),
                 store = wvm.getStore('options'),
                 //btnSave = win.getDockedItems('toolbar[dock="bottom"] > button[action="save"]')[0];
+                //tabs = me.lookupReference('tabs4colors'),
                 selectedStore = combo.getSelection(),
-                btnUpdate = win.down('button[action="update"]');            
-            
-            var colors = rec.options().first().get('values'),
+                btnUpload = win.down('button[action="upload"]');            
+                        
+            var options = rec.get('options'),
+                colors = options[0].values,
                 images = rec.images(),
+                variants = rec.variants(),
+                
                 //src = images.first().get('src'),                
                 //idx = src.indexOf('/products/'),
                 //locationSrc = src.substring(0, idx);
-                locationSrc = "https://s3.us-west-1.wasabisys.com/web-images/" + selectedStore.get('imageSrc') + "/"
-            
-                        
+                locationSrc = "https://jirho.com/web-images/" + selectedStore.get('imageSrc') + "/"                        
+                
             wvm.setData({ title: rec.get('title') });
             wvm.setData({ store: selectedStore.get('name') });
-            wvm.setData({ source: locationSrc });                        
+            wvm.setData({ source: selectedStore.get('imageSrc') });                        
+
+            console.log('photo update', variants);
 
             colors.forEach(color => {
-                var ctr = 0;
-                images.each(function(image) {                                        
-                    if(image.get('src').toLowerCase().includes(color.replace(/\/+/g,'').replace(/\s+/g,'').toLowerCase())){
-                        ctr = ctr + 1;
-                    }
-                });
+                var ctr = 0,
+                    sub = [];
 
-                store.add({ color: color, qty: ctr, total: 5 })
+                images.each(function(image) {                                        
+                    var idx = 0,
+                        imgName = image.get('src');
+
+                    if(imgName.toLowerCase().includes(color.replace(/\/+/g,'').replace(/\s+/g,'').toLowerCase())){
+                        ctr = ctr + 1;
+                        idx = imgName.lastIndexOf(".jpg");
+                        
+                        var off = 3,
+                            prefix = imgName.substring(idx - off, idx);
+
+                        if(isNaN(prefix)){
+                            off = 37;
+                        }
+                        
+                        sub.push(imgName.substring(idx - off, idx));
+                    }                                                             
+                   
+                });                
+
+                store.add({ color: color, uploaded: sub.join(','), addition: "" });
+                
             });            
             /*
             wvm.getStore('photos').on('datachanged', function(store){
@@ -170,7 +373,7 @@ Ext.define('August.view.shopify.ProductController', {
             });
             */            
             
-            win.on('updateclick', me.onUpdateProductImage, me);
+            win.on('uploadclick', me.onUploadProductImage, me);
         });    
     },
 
@@ -180,13 +383,13 @@ Ext.define('August.view.shopify.ProductController', {
         vm.set('selectedStores', tag.getValue().join());
         console.log('tag', tag.getValue(), vm.get('selectedStores'));
     },
-
+    
     /**
      *
      * @param b
      * @param c
      */
-     onSyncClick: function(b, c){
+    onSyncClick: function(b, c){
         var me = this,
             multiview = me.getView().lookupReference('multiview');
 
@@ -288,7 +491,7 @@ Ext.define('August.view.shopify.ProductController', {
     onUploadPhotoClick: function(b, e){
         var me = this,
             multiview = me.getView().lookupReference('multiview'),
-            grid = multiview.lookupReference('shopify-product-grid'),
+            grid = multiview.lookupReference('shopifyProductGrid'),
             topbar = multiview.lookupReference("topbar"),
             combo = topbar.down('combo[name=sites]'),
             rec = grid.getSelectionModel().selected.items[0];        
@@ -302,12 +505,13 @@ Ext.define('August.view.shopify.ProductController', {
                 selectedStore = combo.getSelection(),
                 btnUpdate = win.down('button[action="update"]');            
             
-            var colors = rec.options().first().get('values'),
+            var options = rec.get('options'),
+                colors = options[0].values,
                 images = rec.images(),
                 //src = images.first().get('src'),                
                 //idx = src.indexOf('/products/'),
                 //locationSrc = src.substring(0, idx);
-                locationSrc = "https://s3.us-west-1.wasabisys.com/web-images/" + selectedStore.get('imageSrc') + "/"
+                locationSrc = "https://jirho.com/web-images/" + selectedStore.get('imageSrc') + "/"
             
                         
             wvm.setData({ title: rec.get('title') });
@@ -332,11 +536,11 @@ Ext.define('August.view.shopify.ProductController', {
             });
             */            
             
-            win.on('updateclick', me.onUpdateProductImage, me);
+            win.on('uploadclick', me.onUploadProductImage, me);
         });
     },
 
-    onUpdateProductImage: function(){
+    onUploadProductImage: function(){
         var me = this,
             wvm = me.win.getViewModel(),
             store = wvm.getStore('options'),
@@ -345,7 +549,7 @@ Ext.define('August.view.shopify.ProductController', {
             combo = topbar.down("combo[name=sites]"),
             comboSelected = combo.getSelection(),
             
-            grid = multiview.lookupReference('shopify-product-grid'),
+            grid = multiview.lookupReference('shopifyProductGrid'),
             rec = grid.getSelectionModel().selected.items[0];
 
         var processMask = new Ext.LoadMask({
@@ -357,7 +561,7 @@ Ext.define('August.view.shopify.ProductController', {
             colorQty = {};
         
         store.each(function(rec){
-            colorQty[rec.data.color] = rec.data.total;    
+            colorQty[rec.data.color] = !Ext.isEmpty(rec.get('addition')) ? rec.get('addition').join(',') : "";    
         });
 
         //console.log(wvm.get('source'), wvm.get('total'));
@@ -365,6 +569,7 @@ Ext.define('August.view.shopify.ProductController', {
         Ext.Ajax.request({
             url: '/WebApp/api/ShopifyProducts/' + rec.get('id') + "/ImageUpdate",            
             method: 'PUT',        
+            timeout: 900000,
             //useDefaultXhrHeader: false,
             //cors: true,
             headers: {
@@ -375,7 +580,7 @@ Ext.define('August.view.shopify.ProductController', {
 
             params: {
                 store: comboSelected.get('name'),
-                source: wvm.get('source'),
+                source: wvm.get('source'),                
                 colorsQty: JSON.stringify(colorQty)
             }
             
@@ -423,7 +628,7 @@ Ext.define('August.view.shopify.ProductController', {
             topbar = layout.lookupReference("topbar"),
             //searchcombo = topbar.lookupReference('searchcombo'),
             //searchtext = topbar.down('searchtextlist'),
-            grid = layout.lookupReference("shopify-product-grid");
+            grid = layout.lookupReference("shopifyProductGrid");
 
         //searchcombo.setValue('');
         //searchcombo.getTrigger('clear').hide();
@@ -445,25 +650,55 @@ Ext.define('August.view.shopify.ProductController', {
      */
     onSelect: function(sm, rec, index, eOpts){
         //onSelectionChange: function(sm, selected, eOpts) {
-
-        var layout = this.getView().lookupReference('multiview'),
+        
+        var me = this,
+            //vm = me.getViewModel(),
+            layout = me.getView().lookupReference('multiview'),            
             refs = layout.getReferences(),
-            topbar = refs.topbar,
-            display = refs.display;
+            //grid = refs.shopifyProductGrid,
+            topbar = refs.topbar;
+                            
+            //display = refs.display,
+            //option1 = rec.options().first(),
+            //colors = "";        
 
-        //display.setActive(rec);
-
-        //console.log(rec);
         var k = [],
             q = topbar.lookupReference("viewselection");
 
         k[0] = "shopify-product";
         //k[1] = q.value == 0 ? "default" : q.value == 1 ? "medium" : "tiles";
         k[1] = "default";
-        k[2] = rec.get("id");
 
-        //console.log('grid - onSelect', rec);
-        this.redirectTo(k.join("/"));
+        var id = rec.get("id");
+        k[2] = id.replace('gid://shopify/Product/', '');
+        
+        me.redirectTo(k.join("/"));                   
+    },
+
+    onSelectionChange: function(sm, selected){
+        var me = this, 
+            mv = me.getView().lookupReference('multiview'),            
+            topbar = mv.lookupReference('topbar'),
+            combo = topbar.down("combo[name=sites]"),
+            v_proxy = August.model.shopify.ProductVariantGQ.getProxy(),
+            i_proxy = August.model.shopify.ProductImage.getProxy();
+
+        console.log('onRender', topbar, combo);
+        v_proxy.setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });
+
+        Ext.apply(v_proxy.extraParams, {            
+            store: combo.getValue()
+        });
+
+        i_proxy.setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });
+
+        Ext.apply(i_proxy.extraParams, {            
+            store: combo.getValue()
+        });
     },
 
     onItemContextMenu:function(h, j, k, g, l){
@@ -488,7 +723,13 @@ Ext.define('August.view.shopify.ProductController', {
 
             viewModel: {
                 data: {
-                    
+                    selected: rec
+                },
+
+                formulas: {
+                    uppercase: function(get) {
+                        return get('selected');
+                    }
                 }
             },
             // Create a child session that will spawn from the current session of this view

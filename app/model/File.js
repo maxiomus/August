@@ -7,24 +7,18 @@ Ext.define('August.model.File', {
             type: 'auto',
             persist: false
         },
-        {   name: 'name', mapping: 'file.name'},
-        {   name: 'type', mapping: 'file.type'},
-        {   name: 'size', mapping: 'file.size'},
-        {   name: 'created', mapping: 'file.created'},
-        {   name: 'lastmod', mapping: 'file.lastmod'}
+        {   name: 'name', mapping: 'file.name' },
+        {   name: 'type', mapping: 'file.type' },
+        {   name: 'size', mapping: 'file.size' },
+        {   name: 'created', mapping: 'file.created' },
+        {   name: 'lastmod', mapping: 'file.lastmod' }                       
         /*
-        {
-            name: 'label', type: 'string', allowNull: true
-        },
-        {
-            name: 'tag', type: 'string', allowNull: true
-        },
         {
             name: 'description', type: 'string', allowNull: true
         },
         {
-            name: 'priority', type: 'int', allowNull: true
-        },
+            name: 'label', type: 'string', allowNull: true
+        },        
         {
             name: 'active', type: 'boolean', defaultValue: true, allowNull: true
         }

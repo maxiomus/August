@@ -7,6 +7,7 @@ Ext.define('August.plugin.grid.Exporter', {
         me.grid = grid;
         me.grid.saveDocumentAs = Ext.Function.bind(me.saveDocumentAs, me);
     },
+
     getCsvData: function () {
 
 
@@ -45,6 +46,7 @@ Ext.define('August.plugin.grid.Exporter', {
         }
 
         csvContent += enewLine;
+
         for (var i = 0; i < records.length; i++) {
             var data = records[i].data;
 
@@ -58,13 +60,16 @@ Ext.define('August.plugin.grid.Exporter', {
 
                 printableValue = ((noCsvSupport) && value == '') ? '' : value;
                 printableValue = String(printableValue).replace(/,/g, "");
-                printableValue = String(printableValue).replace(/(\r\n|\n|\r)/gm, "");
+                if(!String(printableValue).startsWith("\"")){
+                    printableValue = String(printableValue).replace(/(\r\n|\n|\r)/gm, " ");
+                }                
                 csvContent += sdelimiter + printableValue + edelimiter;
             }
             csvContent += enewLine;
         }
         return csvContent
     },
+
     saveData: function (blob, fileName) {
 
 
@@ -83,6 +88,7 @@ Ext.define('August.plugin.grid.Exporter', {
             document.body.removeChild(link);
         }
     },
+
     downloadCSV: function (fileName) {
 
 
@@ -94,6 +100,7 @@ Ext.define('August.plugin.grid.Exporter', {
 
 
     },
+
     convertXLSX: function () {
         var tempData = this.getCsvData().split('\r\n');
         var data = [];
@@ -131,6 +138,7 @@ Ext.define('August.plugin.grid.Exporter', {
 
         return ws;
     },
+
     downloadXLSX: function (title, fileName) {
 
 

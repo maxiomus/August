@@ -5,7 +5,7 @@ Ext.define('August.view.production.LineSheetController', {
         'Ext.app.route.Base'
     ],
 
-    alias: 'controller.linesheet',
+    alias: 'controller.production-linesheet',
 
     requires: [
         'August.model.Media'
@@ -16,38 +16,59 @@ Ext.define('August.view.production.LineSheetController', {
     },
 
     initViewModel: function(vm) {                   
-
+        
         var me = this,
             view = me.getView(),
             //memStore = view.memStylesInLines,
-            binding = vm.bind({
-            bindTo: '{theLineSheet}',
-            deep: true,
-            single: true
-        }, function(rec){
-            console.log('root binding - callback', rec);
+            //toolbar = view.getDockedItems('toolbar[dock="top"]')[1],            
+            binding = vm.bind('{theLineSheet}',
+            //bindTo: '{theLineSheet}',
+            //deep: true
+            //single: true
+            function(rec){            
 
-            var store = rec.stylesInLines(),
-                proxy = store.getProxy();
+                var store = rec.stylesInLines(),
+                    proxy = store.getProxy();
 
-            //store.setPageSize(8);            
+                //store.setPageSize(8);            
+                console.log('root binding - callback', store);
 
-            view.setLoading(true);            
+                vm.set('count', store.getCount());
+                vm.set('onhand', store.sum('ohs'));
 
-            store.on('load', function(s){
+                view.setLoading(true);                            
 
-                //memStore.getProxy().setData(s.getRange());                
-                //memStore.load();
+                store.on('load', function(s){
+                    //memStore.getProxy().setData(s.getRange());                
+                    //memStore.load();
+
+                    //vm.set('count', s.getCount());
+                    //vm.set('onhand', s.sum('ohs'));
+                });
+                
+                /*
+                if(toolbar && toolbar.items.length > 0){
+                    var s = toolbar.down("tbtext[name=count]"),
+                        h = toolbar.down("tbtext[name=onhand]");
+                 
+                    s.setText('Total Styles: ' + store.getCount());
+                    h.setText('Total On Hand: ' + store.sum('ohs'));
+                }
+                */
 
                 view.setLoading(false);
-            },{
-                single: true
-            });
+                binding.destroy();
 
-            //rec.samplesInLines().load()
-            binding.destroy();
 
-        }, this);
+            }, this);    
+            
+            if(binding){
+                view.setLoading(false);
+            }                           
+    },
+
+    onLineSheetRender: function(c) {
+                
     },
 
     onItemSelect: function(v){
@@ -111,14 +132,15 @@ Ext.define('August.view.production.LineSheetController', {
             store = line.stylesInLines(),
             showCost = me.getView().down('toggleslidefield').getValue(),
             template = me.getView().down('combo[name=templates]'),
+            button = me.getView().down('multisortbutton'),
             mv = August.app.getMainView(),
             xf = Ext.util.Format;
-
-        //console.log(me.getView().down('toggleslidefield').getValue());
+        
         var data = {};
         store.getFilters().each(function(filter){
+            console.log(filter);
             if(filter.getProperty() != 'lineseq'){
-                data[filter.getProperty()] = filter.getValue();
+                data[filter.getProperty()] = encodeURIComponent(filter.getValue());
             }
         });
         //console.log(data)
@@ -131,8 +153,11 @@ Ext.define('August.view.production.LineSheetController', {
         }
 
         if(template){
-            console.log(template.getValue());
             url = Ext.String.urlAppend(url, xf.format('template={0}', template.getValue()));
+        }
+
+        if(button){            
+            url = Ext.String.urlAppend(url, xf.format('sort={0}', button.getDataIndex()+'-'+button.getDirection()));
         }
 
         if(showCost){
@@ -212,21 +237,38 @@ Ext.define('August.view.production.LineSheetController', {
      * @param {String} v ComboBox Value
      */
     onTriggerSearchClicked: function(c,v){
-        /*
-        var rec = this.getViewModel().get('theLineSheet'),
+        
+        var me = this,
+            vm = me.getViewModel(),
+            title = vm.get('title'),
+            rec = vm.get('theLineSheet'),
             store = rec.stylesInLines(),
-            filters = store.getFilters();
+            filters = store.getFilters();                     
 
-        store.setRemoteFilter(false);
-
+        store.setRemoteFilter(false);        
+                
         var filterSub = new Ext.util.Filter({
-            property: 'subcategory',
-            value: c.getValue()
+            property: 'category',
+            value: v,
+            operator: 'in'
         });
 
-        filters.add(filterSub);
-        */       
-        
+        if(!Ext.isEmpty(v)) {
+            vm.set('title', rec.get('linetitle') + ' - ' + v);
+
+            filters.add(filterSub);            
+            
+        }
+        else {
+            vm.set('title', rec.get('linetitle'));
+            
+            filters.remove(filterSub);       
+            
+        }
+                        
+        vm.set('count', store.getCount());
+        vm.set('onhand', store.sum('ohs'));
+        /*
         // page size change... 
         var me = this,            
             toolbar = me.getView().getDockedItems()[1],
@@ -237,26 +279,37 @@ Ext.define('August.view.production.LineSheetController', {
         
         store.setPageSize(paging.getValue());
         store.load();
-        
+        */
     },
 
     onTriggerClearClicked: function(c,trigger){
-        /*
-        var rec = this.getViewModel().get('theLineSheet'),
+        
+        var me = this,
+            vm = me.getViewModel(),
+            title = vm.get('title'),
+            rec = vm.get('theLineSheet'),
             store = rec.stylesInLines(),
             filters = store.getFilters();
+        
+        vm.set('title', rec.get('linetitle'));
 
         var filterSub = new Ext.util.Filter({
-            property: 'subcategory',
-            value: c.getValue()
+            property: 'category',            
+            value: c.getValue(),
+            operator: 'in'
         });
 
         filters.remove(filterSub);
-        */
+
+        vm.set('count', store.getCount());
+        vm.set('onhand', store.sum('ohs'));
+        
+        /*
         var toolbar = this.getView().getDockedItems()[1],
-            paging = toolbar.down('combo[name="perpage"]');
-                    
+        paging = toolbar.down('combo[name="perpage"]');
+
         paging.setValue(null);
+        */
         
     },
 

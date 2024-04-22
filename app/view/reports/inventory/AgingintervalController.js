@@ -15,6 +15,17 @@ Ext.define('August.view.reports.inventory.AgingIntervalController', {
 
     onActionRefresh: function(b, c){
         this.getStore("inventoryagings").reload();
+    },
+
+    onActionExport: function(btn, owner){                
+        var me = this,
+            grid = me.lookupReference('inventoryAgingGrid');
+
+        grid.saveDocumentAs({
+            type: 'xlsx',
+            title: 'Inventory Aging Summary',
+            fileName: 'Inventory Aging Summary' + Ext.Date.format(new Date(), 'Y-m-d')
+        });        
     }
 
 });

@@ -10,7 +10,7 @@ Ext.define('August.model.shopify.ProductImage', {
         { 
             name: "product_id",
             reference: {
-                parent: 'shopify.Product',                
+                parent: 'shopify.ProductGQ',                
                 field: 'id',
                 inverse: 'images'
             }
@@ -33,11 +33,12 @@ Ext.define('August.model.shopify.ProductImage', {
     },
 
     proxy: {
-        type: 'memory',        
+        type: 'rest',        
 
+        url: '/shopify-php/api/shopify_images.php',
         pageParam: '',
         startParam: '',
-        limitParam: '',
+        //limitParam: '',
 
         reader: {
             type: 'json',

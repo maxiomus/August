@@ -34,15 +34,17 @@ Ext.define('August.view.production.Line',{
     },
 
     initComponent: function(){
-        var me = this;
+        var me = this,
+            vm = me.getViewModel();
 
+        //console.log('Line', vm);
         //me.dockedItems = me.buildDockedItems();
 
         Ext.applyIf(me, {
             items: [{
                 xtype: "multiview",
                 reference: "multiview",
-                title: "Line Styles",
+                title: " Line Styles",
                 iconCls: "x-fa fa-tshirt",
                 tbar: {
                     xtype: "topbar",
@@ -100,19 +102,60 @@ Ext.define('August.view.production.Line',{
                             renderer: function(f, e, a){
                                 return f;
                             }
-                        },{
-                            header: "Style",
-                            dataIndex: "style",
+                        },
+                        /*
+                        {
+                            xtype: 'widgetcolumn',
+                            text: 'Style',
+                            //dataIndex: "style",
                             width: 140,
                             //locked: false,
                             filter: {
                                 operator: 'st',
                                 type: "string"
                             },
-                            renderer: function(f, e, a){
-                                return f;
+                            widget: {
+                                xtype: 'image',
+                                width: '48',
+                                height: '68',
+                                bind: 'http://209.37.126.195:9090/StyleImages/200xImages/{record.style}_{record.color}_front.jpg'
                             }
                         },
+                        */
+                        {                            
+                            text: "Style",
+                            dataIndex: "style",
+                            width: 180,
+                            //locked: false,
+                            groupable: false,
+                            filter: {
+                                operator: 'st',
+                                type: "string"
+                            },
+                            renderer: function(value, meta, rec){                                                                                                        
+
+                                var tpl = 
+                                        //'<div class="material-body-class" style="float: left;">' +
+                                        '<div class="material-body-class">' +
+                                        '<div>{0}</div>' +                                                                                                                                 
+                                            '<div class="thumb-wrap">' + 
+                                                '<div class="thumb">' + 
+                                                    '<img style="vertical-align:top;width:48px;height:68px;" src="https://endlessrose.net:9443/StyleImages/200xImages/{0}_{1}_{2}.jpg" ' +
+                                                        'onerror="this.onerror=null;this.src=\'https://endlessrose.net:9443/StyleImages/{0}_{2}.jpg\';" ' + 
+                                                        //'onload=\"console.log(this);\" ' +
+                                                    '/>' + 
+                                                '</div>' +                            
+                                            '</div>' +
+                                        '</div>';
+
+                                return Ext.String.format(tpl, rec.data.style, encodeURIComponent(rec.data.color.replace('/', '-')), "front");
+                            },
+                            summaryType: 'count',
+                            summaryRenderer: function(v, data, index){      
+                                    
+                                //return Ext.String.format("<font style='foint-weight:bold;color:blue;'>Total # of Style: </font>");                                
+                            }
+                        },                        
                         {
                             header: "Color",
                             dataIndex: "color",
@@ -123,6 +166,11 @@ Ext.define('August.view.production.Line',{
                             },
                             renderer: function(f, e, a){
                                 return f;
+                            },
+                            summaryType: 'count',
+                            summaryRenderer: function(v, data, index){                
+                                //return Ext.String.format("<font style='foint-weight:bold;color:blue;'>Total # of Style: </font>");
+                                return Ext.String.format('Total: {0}', Ext.util.Format.number(v, '0,000'));
                             }
                         },
                         {
@@ -141,10 +189,12 @@ Ext.define('August.view.production.Line',{
                         {
                             header: "Status",
                             dataIndex: "status",
-                            width: 140,            
-                            filter: {
-                                operator: 'st',
-                                type: "string"
+                            width: 100,            
+                            filter: {                                
+                                type: 'list',
+                                idField: 'value',
+                                labelField: 'label',
+                                store: vm.getStore('status')
                             },
                             renderer: function(f, e, a){
                                 return f;
@@ -156,8 +206,10 @@ Ext.define('August.view.production.Line',{
                             width: 140,
                             hidden: false,
                             filter: {
-                                operator: 'st',
-                                type: "string"
+                                type: 'list',
+                                idField: 'value',
+                                labelField: 'label',
+                                store: vm.getStore('stylecategories')
                             },
                             renderer: function(f, e, a){
                                 return f;
@@ -169,8 +221,10 @@ Ext.define('August.view.production.Line',{
                             width: 120,
                             hidden: false,
                             filter: {
-                                operator: 'st',
-                                type: "string"
+                                type: 'list',
+                                idField: 'value',
+                                labelField: 'label',
+                                store: vm.getStore('subcategories')
                             },
                             renderer: function(f, e, a){
                                 return f;
@@ -181,8 +235,10 @@ Ext.define('August.view.production.Line',{
                             dataIndex: "season",                
                             hidden: false,
                             filter: {
-                                operator: 'st',
-                                type: "string"
+                                type: 'list',
+                                idField: 'value',
+                                labelField: 'label',
+                                store: vm.getStore('seasons')
                             },
                             renderer: function(f, e, a){
                                 return f;
@@ -193,13 +249,30 @@ Ext.define('August.view.production.Line',{
                             dataIndex: "division",
                             hidden: false,
                             filter: {
-                                operator: 'st',  
-                                type: "string"
+                                type: 'list',
+                                idField: 'value',
+                                labelField: 'label',
+                                store: vm.getStore('divisions')
                             },
                             renderer: function(f, e, a){
                                 return f;
                             }
                         },
+                        {
+                            header: "Sub. Division",
+                            dataIndex: "subdivision",
+                            width: 120,
+                            hidden: false,
+                            filter: {
+                                type: 'list',
+                                idField: 'value',
+                                labelField: 'label',
+                                store: vm.getStore('subdivisions')
+                            },
+                            renderer: function(f, e, a){
+                                return f;
+                            }
+                        },  
                         {
                             header: "Size Cat.",
                             dataIndex: "sizeCat",
@@ -215,8 +288,8 @@ Ext.define('August.view.production.Line',{
                         {
                             header: "Bundle",
                             dataIndex: "bundle",
-                            width: 120,
-                            hidden: false,
+                            width: 100,
+                            hidden: true,
                             filter: {
                                 operator: 'st',
                                 type: "string"
@@ -228,36 +301,32 @@ Ext.define('August.view.production.Line',{
                         {
                             header: "Designer",
                             dataIndex: "designer",
-                            width: 140,            
+                            width: 100,            
                             filter: {
-                                operator: 'st',
-                                type: "string"
+                                type: 'list',
+                                idField: 'value',
+                                labelField: 'label',
+                                store: vm.getStore('designers')
                             },
                             renderer: function(f, e, a){
                                 return f;
                             }
-                        },   
-                        {
-                            header: "On Hand",
-                            dataIndex: "ohs",                
-                            hidden: false,
-                            filter: {
-                                type: 'number'
-                            },
-                            renderer: function(f, e, a){
-                                return f;
-                            }
-                        },
+                        },                           
                         {
                             header: "ATS",
                             dataIndex: "ats",
                             locked: false,
-                            hidden: true,
+                            hidden: false,
+                            formatter: "number('0,000')",
                             filter: {
                                 type: "number"
                             },
                             renderer: function(f, e, a){
                                 return f;
+                            },
+                            summaryType: 'sum',
+                            summaryRenderer: function(value, data, index){
+                                return Ext.util.Format.number(value, '0,000');
                             }
                         },
                         {
@@ -265,40 +334,77 @@ Ext.define('August.view.production.Line',{
                             dataIndex: "ots",
                             locked: false,
                             hidden: true,
+                            formatter: "number('0,000')",
                             filter: {
                                 type: "number"
                             },
                             renderer: function(f, e, a){
                                 return f;
+                            },
+                            summaryType: 'sum',
+                            summaryRenderer: function(value, data, index){
+                                return Ext.util.Format.number(value, '0,000');
+                            }
+                        },
+                        {
+                            header: "On Hand",
+                            dataIndex: "ohs",                
+                            hidden: false,
+                            formatter: "number('0,000')",
+                            filter: {
+                                type: 'number'
+                            },
+                            renderer: function(f, e, a){
+                                return f;
+                            },
+                            summaryType: 'sum',
+                            summaryRenderer: function(value, data, index){
+                                return Ext.util.Format.number(value, '0,000');
                             }
                         },
                         {
                             header: "On Order",
                             dataIndex: "orders",
                             locked: false,
+                            formatter: "number('0,000')",
                             filter: {
                                 type: "number"
                             },
                             renderer: function(f, e, a){
                                 return f;
+                            },
+                            summaryType: 'sum',
+                            summaryRenderer: function(value, data, index){
+                                return Ext.util.Format.number(value, '0,000');
                             }
                         },
                         {
                             header: "WIP",
                             dataIndex: "pos",
                             locked: false,
+                            formatter: "number('0,000')",
                             filter: {
                                 type: "number"
                             },
                             renderer: function(f, e, a){
                                 return f;
+                            },
+                            summaryType: 'sum',
+                            summaryRenderer: function(value, data, index){
+                                return Ext.util.Format.number(value, '0,000');
                             }
                         },
                         {
-                            header: "Avail. Date",
+                            xtype: 'datecolumn',
+                            text: "Avail. Date",
                             dataIndex: "availableDate",
-                            filter: {type: "date"},
-                            renderer: function(k, i, a){
+                            format: 'Y-m-d',
+                            filter: {
+                                type: "date",
+                                dateFormat: 'C'
+                            }
+                            /*                         
+                            renderer: function(k, i, a){                                
                                 if(k!=undefined){
                                     var d=new Date(k),
                                     j = function(c){
@@ -307,8 +413,10 @@ Ext.define('August.view.production.Line',{
                                     var l = j(d.getUTCMonth()+1)+"-"+j(d.getUTCDate())+"-"+d.getUTCFullYear();
                                     i.tdAttr='data-qtip="'+l+'"';
                                     return l;
-                                }
+                                }                                
+                               return k;
                             }
+                            */                           
                         },       
                         {
                             header: "Group",
@@ -403,25 +511,33 @@ Ext.define('August.view.production.Line',{
                                 }
                             }
                         }],                        
-
-                        features: [{
+                        /*
+                        {
                             ftype: 'rowbody',
                             getAdditionalData: function (data, idx, record, orig) {
-                                // Usually you would style the my-body-class in a CSS file
+                                // Usually you would style the my-body-class in a CSS file                                
+                
                                 var xf = Ext.util.Format;
-                                var tpl = '<span class="file"><img style="vertical-align: middle;width:120px;height:180px;margin:0 2px 0 0;" src="http://209.37.126.195:9090/StyleImages/200xImages/{0}_{1}_{2}.jpg" alt="{0}_{1}" /></span>';
+                                //var tpl = '<span class="file"><img style="vertical-align: middle;width:120px;height:180px;margin:0 2px 0 0;" src="http://209.37.126.195:9090/StyleImages/200xImages/{0}_{1}_{2}.jpg" alt="{0}_{1}" /></span>';
+                                var tpl = '<div class="thumb-wrap">' + 
+                                            '<div class="thumb">' + 
+                                                '<img style="vertical-align:top;width:48px;height:64px;" src="http://209.37.126.195:9090/StyleImages/200xImages/{0}_{1}_{2}.jpg" ' +
+                                                    'onerror=\"this.onerror=null;this.src=\'http://209.37.126.195:9090/StyleImages/default-broken.png\';" ' +
+                                                '/>' + 
+                                            '</div>' +                            
+                                          '</div>';
+                          
                                 return {
                                     // When Mat Type column visible width: 144px
                                     
                                     rowBody: 
-                                        '<div style="float: left; margin: 10px 2px 10px 14px;">' +
+                                        '<div style="float: left;">' +                                            
                                             Ext.String.format(tpl, record.data.style, record.data.color.replace('/', '-'), "front") +
-                                        '</div>' +
-                                        /*
-                                        '<div style="float: left; margin: 10px 6px 10px 0px;">' +
-                                            Ext.String.format(tpl, encodeURIComponent(record.data.style), encodeURIComponent(record.data.color.replace('/', '-')), "back") +
-                                        '</div>' +
-                                        */
+                                        '</div>',
+                                        
+                                        //'<div style="float: left; margin: 10px 6px 10px 0px;">' +
+                                        //    Ext.String.format(tpl, encodeURIComponent(record.data.style), encodeURIComponent(record.data.color.replace('/', '-')), "back") +
+                                        //'</div>' +                                                                                
                                         '<div style="float: left; margin: 10px;">' +
                                         //'<div style="clear: both;">' +
                                             '<table>' +
@@ -475,12 +591,21 @@ Ext.define('August.view.production.Line',{
                                                 '</tr>' +
                                             '</table>' +
                                         '</div>',
+                                    
                                     rowBodyCls: "material-body-class"
                                 };
-                            }
-                        },{
+                            }                            
+                        },
+                        */
+                        features: [{
                             ftype: 'grouping',
-                            groupHeaderTpl: '{columnName}: {name} ({rows.length} Item{[values.rows.length > 1 ? "s" : ""]})'
+                            groupHeaderTpl: '{columnName}: {name} ({rows.length} Item{[values.rows.length > 1 ? "s" : ""]})',
+                            //enableGroupingMenu: true,
+                            hideGroupedHeader: true,
+                            showSummaryRow: false
+                        },{
+                            ftype: 'summary',
+                            dock: 'bottom'
                         }],
 
                         plugins: [{
@@ -651,6 +776,52 @@ Ext.define('August.view.production.Line',{
                                 ]
                             }],
                             */
+                            viewConfig: {
+                                stripeRows: true,
+                                trackOver: true,                            
+                        
+                                preserveScrollOnRefresh: true,
+                                //preserveScrollOnReload: true,
+                                //deferInitialRefresh: true,
+                                deferEmptyText: true,
+                                listeners: {
+                                    render: function(view){
+                                        //var view = grid.getView();
+                                        view.tip = Ext.create('Ext.tip.ToolTip', {
+                                            // The overall target element.
+                                            target: view.el,
+                                            // Each grid row causes its own separate show and hide.
+                                            //delegate: view.itemSelector,
+                                            delegate: view.cellSelector,
+                                            // Moving within the row should not hide the tip.
+                                            trackMouse: true,
+                                            // Render immediately so that tip.body can be referenced prior to the first show.
+                                            renderTo: Ext.getBody(),
+                                            listeners: {
+                                                // Change content dynamically depending on which element triggered the show.
+                                                beforeshow: function updateTipBody(tip) {
+                                                    var trigger = tip.triggerElement,
+                                                        parent = tip.triggerElement.parentElement,
+                                                        columnTitle = view.getHeaderByCell(trigger).text,
+                                                        columnDataIndex = view.getHeaderByCell(trigger).dataIndex,
+                                                        columnText = view.getRecord(parent).get(columnDataIndex);
+        
+                                                    if(!Ext.isEmpty(columnText)){
+                                                        var xf = Ext.util.Format;
+        
+                                                        tip.update(columnText);
+                                                    }
+                                                    else {
+                                                        return false;
+                                                    }
+        
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            },
+
                             listeners: {
                                 render: {
                                     fn: function(g){
@@ -705,9 +876,13 @@ Ext.define('August.view.production.Line',{
                                 itemmouseleave: 'hideActions',
                                 scope: this.controller
                             },
+
                             columns: [{
-                                width: 24,
-                                align: 'center',
+                                text: 'ID',
+                                name: 'lineseq',
+                                dataIndex: 'lineseq',
+                                width: 50,
+                                //align: 'center',
                                 menuDisabled: true,
                                 sortable: false
                             },{
@@ -773,6 +948,7 @@ Ext.define('August.view.production.Line',{
                                     }
                                 }]
                             }],
+
                             plugins: [{
                                 ptype: "gridfilters"
                             },{

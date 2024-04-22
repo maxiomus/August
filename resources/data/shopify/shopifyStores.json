@@ -1,7 +1,7 @@
 [
   {
     "label": "Shopify",
-    "name": "shopify", 
+    "name": "SHOPIFY", 
     "imageSrc": "shopify",
     "url": "testing-27august.myshopify.com",
     "value": "99"
@@ -16,28 +16,28 @@
   {
     "label": "Endlesss Rose",
     "name": "ER", 
-    "imageSrc": "er",
+    "imageSrc": "shopify",
     "url": "endless-rose-2.myshopify.com",
     "value": "10"
   },
   {
     "label": "English Factory",
     "name": "EF", 
-    "imageSrc": "ef",
+    "imageSrc": "shopify",
     "url": "english-factory-1.myshopify.com",
     "value": "11"
   },
   {
     "label": "Grey Lab",
     "name": "GL", 
-    "imageSrc": "gl",
+    "imageSrc": "shopify",
     "url": "grey-lab.myshopify.com",
     "value": "12"
   },
   {
     "label": "Free The Rose",
     "name": "FR", 
-    "imageSrc": "fr",
+    "imageSrc": "shopify",
     "url": "free-the-roses.myshopify.com",
     "value": "13"
   },
@@ -75,14 +75,42 @@
     "imageSrc": "walmart",
     "url": "27-walmart-marketplace.myshopify.com",
     "value": "20"
-  },    
+  },      
   {
     "label": "Belk Shopify",
     "name": "BK", 
     "imageSrc": "belk",
-    "url": "belk-marketplace.myshopify.com",
+    "url": "",
     "value": "21"
-  }, 
+  },  
+  {
+    "label": "Macy's Shopify",
+    "name": "MC", 
+    "imageSrc": "macys",
+    "url": "macys-marketplace.myshopify.com",
+    "value": "22"
+  },
+  {
+    "label": "Saks's Shopify",
+    "name": "SK", 
+    "imageSrc": "saks",
+    "url": "saks-marketplace.myshopify.com/",
+    "value": "23"
+  },
+  {
+    "label": "Reitsman's Shopify",
+    "name": "RM", 
+    "imageSrc": "reitsmans",
+    "url": "27augustapparel-canada.myshopify.com",
+    "value": "24"
+  },
+  {
+    "label": "Hudson's Shopify",
+    "name": "HM", 
+    "imageSrc": "hudsons",
+    "url": "belk-marketplace.myshopify.com",
+    "value": "25"
+  },    
   {
     "label": "SPO Shopify",
     "name": "SPO", 
@@ -149,5 +177,35 @@
     "name": "AMM", 
     "url": "",
     "value": "109"
+  },
+  {
+    "label": "Macy's MP",
+    "name": "MCM", 
+    "url": "",
+    "value": "110"
+  },
+  {
+    "label": "Saks's MP",
+    "name": "SM", 
+    "url": "",
+    "value": "111"
+  },
+  {
+    "label": "Reitmans's MP",
+    "name": "RM", 
+    "url": "",
+    "value": "112"
+  },
+  {
+    "label": "Hudson's MP",
+    "name": "HM", 
+    "url": "",
+    "value": "113"
+  },
+  {
+    "label": "FashionGo",
+    "name": "FGP", 
+    "url": "",
+    "value": "114"
   }
 ]

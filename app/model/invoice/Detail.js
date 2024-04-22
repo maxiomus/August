@@ -6,7 +6,7 @@ Ext.define('August.model.invoice.Detail', {
     ],
 
     fields: [        
-        { name: 'invoiceNO', type: 'int' },
+        //{ name: 'invoiceNO', type: 'int' },
         { name: 'cmno', type: 'int' },
         { name: 'line', type: 'int' },
         { name: 'style', type: 'string' },

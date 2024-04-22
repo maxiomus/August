@@ -2,11 +2,6 @@
  * @class Ext.ux.grid.plugin DragSelector
  * @extends Ext.util.Observable
  *
- * @author Harald Hanek (c) 2011-2012
- *
- * The Initial Developer of the Original Code is: Claudio Walser aka Foggy cwa[at]uwd.ch
- * @copyright 2007-2008, UWD GmbH, all rights reserved. License details:
- * http://www.gnu.org/licenses/lgpl.html
  */
 Ext.define('Ext.ux.grid.plugin.DragSelector', {
     extend: 'Ext.util.Observable',

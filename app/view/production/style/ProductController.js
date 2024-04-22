@@ -8,7 +8,7 @@ Ext.define('August.view.production.style.ProductController', {
     alias: 'controller.product',
 
     requires: [
-        'August.model.Media'
+        'August.model.Photo'
         //'August.model.Color'
     ],
 
@@ -191,6 +191,25 @@ Ext.define('August.view.production.style.ProductController', {
         grid.getStore().clearFilter();
     },
 
+    onBeforeStoreLoad: function(store) {
+
+        store.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        })
+    },
+
+    /**
+     * 
+     * @param {*} store 
+     */
+    onStoreLoad: function(store){
+        var me = this,
+            //topbar = me.getView().down('toolbar'),
+            multiview = me.getView().lookupReference('multiview'),
+            grid = multiview.lookupReference('grid');                                        
+                                
+    },
+
     /**
      *
      * @param sm
@@ -216,7 +235,18 @@ Ext.define('August.view.production.style.ProductController', {
         k[1] = q.value == 0 ? "default" : q.value == 1 ? "medium" : "tiles";
         k[2] = rec.get("id");
 
-        this.redirectTo(k.join("/"));
+        this.redirectTo(k.join("/"));        
+    },
+
+    onSelectionChange: function(sm, selected){
+        var me = this,
+            vm = me.getViewModel(),
+            photos = vm.getStore('photos');
+
+        console.log('osc', photos, selected[0].getId());
+        
+        photos.filter('id', selected[0].getId());        
+        photos.load();
     },
 
     onItemContextMenu:function(h, j, k, g, l){
@@ -277,7 +307,7 @@ Ext.define('August.view.production.style.ProductController', {
                 //btnSave = win.getDockedItems('toolbar[dock="bottom"] > button[action="save"]')[0];
                 //combo = win.down('combo[name="site"]'),
                 //field = win.down('searchtextlist'),
-                grid = win.lookupReference('styleGrid'),                          
+                grid = win.lookupReference('colorGrid'),                          
                 btnSaveAs = win.down('button[action="saveas"]');
             
             /*
@@ -297,7 +327,7 @@ Ext.define('August.view.production.style.ProductController', {
             }, me);
 
             win.on('saveasclick', function(btn, type){
-                var grid = win.lookupReference('styleGrid');
+                var grid = win.lookupReference('grid');
                                 
                 grid.saveDocumentAs({
                     type: type,
@@ -308,7 +338,7 @@ Ext.define('August.view.production.style.ProductController', {
             }, me);
             */
         });
-    },
+    },    
 
     onOpenTemplateClick: function(b, e){
         var me = this,
@@ -362,11 +392,15 @@ Ext.define('August.view.production.style.ProductController', {
             }, me);
 
             win.on('resetclick', function(b,c) {
-                var store = template.getStore();  
+                var store = grid.getStore();                    
 
                 //var selected = template.getSelectionModel().selected;
+                console.log('resetclick', store);
                 field.fireEvent('triggerclear', field);
-                store.removeAll();
+                
+                store.getFilters().removeAll();
+
+                template.getStore().removeAll();
 
             }, me);
 
@@ -376,7 +410,7 @@ Ext.define('August.view.production.style.ProductController', {
                 grid.saveDocumentAs({
                     type: type,
                     title: 'Shopify Product Template',
-                    fileName: 'Product template ' + Ext.Date.format(new Date(), 'Y-m-d')
+                    fileName: grid.getTitle() + ' Product template ' + Ext.Date.format(new Date(), 'Y-m-d')
                 });
                 
             }, me);
@@ -414,16 +448,17 @@ Ext.define('August.view.production.style.ProductController', {
             grid = multiview.lookupReference('grid'),
             rec = grid.getSelectionModel().selected.items[0];
 
-        this.showWindow(rec, 'windows-style-upload', function(type){
+        this.showWindow(rec, 'windows-style-photoupload', function(type){
 
             var win = me.win,
                 wvm = win.getViewModel(),
                 //btnSave = win.getDockedItems('toolbar[dock="bottom"] > button[action="save"]')[0];
-                btnSave = win.down('button[action="save"]');
+                btnSave = win.down('button[action="save"]');            
 
             wvm.setStores({
                 fileStore: {
-                    model: 'Media',
+                    model: 'Photo',
+                    autoLoad: true,
                     listeners: {
                         beforesync: function(options, e){
                             /*
@@ -438,35 +473,18 @@ Ext.define('August.view.production.style.ProductController', {
                     }
                 }
             });
-
+            
             wvm.getStore('fileStore').on('add', function(store, records, index){
 
-                records.forEach(function(mediaRec){
-                    mediaRec.set('FID', '3');
-                    mediaRec.set('RORDER', index+1);
-                    mediaRec.set('F_NAME', rec.data.style.trim() + (!Ext.isEmpty(rec.data.user2) ? '_' + rec.data.user2.trim() : '') + (!Ext.isEmpty(rec.data.prints) ? '_' +  rec.data.prints.split('(#)')[0] : '') + '_' + mediaRec.data.RORDER + '.' + mediaRec.data.name.split('.').pop());
-                    mediaRec.set('F_TYPE', mediaRec.data.type);
-                    mediaRec.set('F_SIZE', mediaRec.data.size);
-                    mediaRec.set('F_EXT', '.' + mediaRec.data.name.split('.').pop());
-                    mediaRec.set('F_STYLE', rec.data.style.trim());
-                    mediaRec.set('F_DESC5', rec.data.user2);
-                    mediaRec.set('F_DESC6', rec.data.prints.split('(#)')[0]);
-                    mediaRec.set('F_DESC3', rec.data.prints.split('(#)')[1]);
-                    mediaRec.set('F_LINK', 'DLIB/BLU-PHOTOS/');
-                    mediaRec.set('F_OWNER', rec.id);
-                    mediaRec.set('F_LOCATION', mediaRec.data.name + '_' + mediaRec.data.size);
-                    mediaRec.set('F_APPLICATION', 'DAL');
-                    mediaRec.set('F_CATEGORY', 'Photos');
-                    //mediaRec.set('F_OWNER', rec.data.style.trim());
-                    mediaRec.set('F_BFLAG', true);
-                    mediaRec.set('F_MFLAG', index > 1 ? null : (index == 0 ? 'FRONT' : 'BACK'));
-                    mediaRec.set('F_USERID', August.user.data.Userid);
-                    mediaRec.set('F_CREATED_ON', new Date());
-                    //idx = idx + 1;
+                records.forEach(function(prec) {   
+                    prec.set('order', index+1);
+                    //mediaRec.set('F_NAME', rec.data.style.trim() + (!Ext.isEmpty(rec.data.user2) ? '_' + rec.data.user2.trim() : '') + (!Ext.isEmpty(rec.data.prints) ? '_' +  rec.data.prints.split('(#)')[0] : '') + '_' + mediaRec.data.RORDER + '.' + mediaRec.data.name.split('.').pop());                    
+                    prec.set('style', rec.get('style').trim());
+                    prec.set('color', rec.get('color').trim());                                                                                
                     //console.log(mediaRec);
                 });
             });
-
+            
             wvm.getStore('fileStore').on('datachanged', function(store){
                 btnSave.setDisabled(store.getCount() == 0);
             });
@@ -742,8 +760,8 @@ Ext.define('August.view.production.style.ProductController', {
         var me = this,
             saveColors = [],
             //vm = c.getViewModel(),
-            //styleGrid = me.getView().lookupReference('style-grid'),
-            //styleRec = styleGrid.getSelectionModel().selected.items[0],
+            //grid = me.getView().lookupReference('style-grid'),
+            //styleRec = grid.getSelectionModel().selected.items[0],
             topbar = c.down("toolbar"),
             combo = topbar.down("combo[name=site]"),
             comboSelected = combo.getSelection(),
@@ -765,11 +783,13 @@ Ext.define('August.view.production.style.ProductController', {
             target: me.win
         });        
         
-        var p = me.constructShopifyProduct(store, saveColors);
+        var p = me.constructShopifyProduct(store, comboSelected.get('name'), saveColors);
         
         Ext.Ajax.request({
             url: '/WebApp/api/ShopifyProducts',            
-            method: 'POST',        
+            method: 'POST', 
+                  
+            timeout: 900000, 
             //useDefaultXhrHeader: false,
             //cors: true,
             headers: {
@@ -851,13 +871,17 @@ Ext.define('August.view.production.style.ProductController', {
     onSaveUpload: function(b, c){
 
         var me = this,
-            vm = c.getViewModel(),
-            grid = me.getView().refs.multiview.refs.grid,
-            form = c.down('form').getForm(),
-            sampleRec = grid.getSelection()[0],
-            fileStore = vm.getStore('fileStore'),
-            field = c.down('form').down('multiupload').getDockedItems('toolbar[dock="top"] > uploadfiles')[0];
+            wvm = c.getViewModel(),
+            session = wvm.getSession(),
+            changes = session.getChanges(),
+            data = [],
+            //grid = me.getView().refs.multiview.refs.grid,
+            //form = c.down('form').getForm(),
+            //sampleRec = grid.getSelection()[0],
+            fileStore = wvm.getStore('fileStore'),
+            field = c.down('multiupload').getDockedItems('toolbar[dock="top"] > uploadfiles')[0];
 
+        /*
         if(!form.isValid()){
             Ext.create('Ext.ux.window.Notification', {
                 position: 'br',
@@ -875,25 +899,58 @@ Ext.define('August.view.production.style.ProductController', {
                 slideBackAnimation: 'elasticIn'
             }).show();
         }
+        */
 
         var processMask = new Ext.LoadMask({
             msg: 'Saving... Please wait',
             target: me.getView()
         });
 
+        fileStore.each(function(rec, idx){
+            var postfix = (idx + 1).toString().padStart(3, '0');
+
+            rec.set('order', idx + 1);
+            rec.set('tag', rec.get('style') + '_' + rec.get('color').replace('/', '-') + "_" + postfix);            
+            data.push(rec.data);
+        });        
+
+        if(field && field.getFilesQueue().length > 0){
+            field.send({
+                url: '/WebApp/api/Files/Photos/upload',
+                //params: '',
+                waitMsg: 'Saving photos...',
+                success: function(resp){
+                    console.log(resp);
+                    
+                    processMask.hide('', function() {
+                        Ext.Msg.alert('Status', 'Changes saved successfully.');
+                        Ext.Msg.maskClickAction = 'hide';
+                    });
+                                                            
+                    //Ext.Msg.alert('Status', JSON.stringify(resp.data, null, 4));   
+                },
+                failure: function(resp) {
+                    processMask.hide('', function() {
+                        Ext.Msg.alert('Failure', resp);
+                    });
+                }
+            }, {
+                Photos: JSON.stringify(data)
+            });
+        }
+        
+        /*
         fileStore.sync({
             //url: '/form-upload.aspx',
             //headers : {'Content-Type':'multipart/form-data; charset=UTF-8'},
             //waitMsg: 'Uploading files...',
             success: function(batch, opt) {
-
-                /*
-                var res = Ext.JSON.decode(response.responseText, true);
-                var win = form.owner.up('window');
-                if(win){
-                    win.close();
-                }
-                */
+                
+                //var res = Ext.JSON.decode(response.responseText, true);
+                //var win = form.owner.up('window');
+                //if(win){
+                //    win.close();
+                //}                
 
                 var operations = batch.getOperations();
 
@@ -918,7 +975,7 @@ Ext.define('August.view.production.style.ProductController', {
                                     });
                                 }
                             }, {
-                                Media: JSON.stringify(response.data)
+                                Photos: JSON.stringify(response.data)
                             });
                         }
                     }
@@ -954,6 +1011,7 @@ Ext.define('August.view.production.style.ProductController', {
                 //console.log(options);
             }
         });
+        */
 
         me.win.close();
         processMask.show();
@@ -992,26 +1050,27 @@ Ext.define('August.view.production.style.ProductController', {
     /**
      * 
      * @param {Ext.data.Store} store 
+     * @param {} site
      * @param {Array} colors 
      * @returns 
      */
-    constructShopifyProduct: function(store, colors){
+    constructShopifyProduct: function(store, site, colors){
         
-        var rec = store.first(),
-            memo = this.stringToHtmlUlTag(rec.get('memo').replace(/, updated by Mass Update/g, ""), 'product-details memo', /- .*/mig),
-            style = this.stringToHtmlUlTag(rec.get('style'), 'product-descriptions style', null),            
-            cimemo = this.stringToHtmlUlTag(rec.get('cimemo'), 'product-descriptions cimemo', null),
-            retailSize = this.stringToHtmlUlTag(rec.get('user6'), 'product-descriptions user6', null);
+        var rec = store.first(),                   
+            memo = this.stringToHtmlUlTag(rec.get('memo').replace(/, updated by Mass Update/g, "")+rec.get('cimemo'), 'product-details',  site, /- .*/mig),
+            style = this.stringToHtmlUlTag(rec.get('style'), 'product-desc style', site, null),            
+            //cimemo = this.stringToHtmlUlTag(rec.get('cimemo'), 'product-desc cimemo', null),
+            retailSize = this.stringToHtmlUlTag(rec.get('user6'), 'product-desc user6', site, null);            
 
         //console.log('constructShopifyProduct', memo);
         var product = Ext.create('August.model.shopify.Product', {
             title: rec.get('descript'),
-            body_html: memo + style + cimemo + retailSize,
+            body_html: memo + style + retailSize + '<p class="p2">S</p>',
             vendor: rec.get("division"),            
             product_type: rec.get('category'),            
             handle: rec.get('descript') + "-" + rec.get('style'),
-            status: rec.get('active') ? 'active' : 'draft',
-            published_scope: 'global'
+            status: rec.get('status') ? 'active' : 'draft',
+            published_scope: 'web'
         });
         
         var optionInfo = [{name: 'Color', position: 1}, {name: 'Size', position: 2}],
@@ -1033,9 +1092,10 @@ Ext.define('August.view.production.style.ProductController', {
         });                           
 
         var ctr = 1,
-            twoSides = ['front', 'back'];
+            twoSides = ['front', 'back'],
+            measurement = '<p class="p3">';
 
-        store.each(function(rec, idx){                                    
+        store.each(function(recv, idx){                                    
             /*
             Ext.Array.each(twoSides, function(item, idx, self){
                 var imageurl = Ext.String.format('http://64.136.152.54:8088/ProductImages/{0}_{1}_{2}.jpg', rec.get('style'), rec.get('color'), item),  
@@ -1044,35 +1104,48 @@ Ext.define('August.view.production.style.ProductController', {
                 });
                 product.images().add(image);
             });            
-            */
+            */              
+
+            if (!Ext.isEmpty(recv.get('user7'))) {                
+
+                if (idx < 2) {
+                    measurement += recv.get('color') + ": " + recv.get('user7') + " ";
+                }
+            }
 
             sizes.forEach(function(value, index, arr){
                 var variant = Ext.create('August.model.shopify.ProductVariant', {
-                    title: rec.get('color') + " / " + value,
-                    price: rec.get('sgtRetailPrice'),
-                    sku : rec.get('style') + "-"+ rec.get('color') + "-" + value,
+                    title: recv.get('color') + " / " + value,
+                    price: recv.get('sgtRetailPrice'),
+                    sku : recv.get('style') + "-"+ recv.get('color').replace("/", "") + "-" + value,
                     position: ctr, 
                     inventory_policy: "deny",                          
                     //"compare_at_price": null,
                     fulfillment_service: "manual",
                     inventory_management: "shopify",      
-                    option1: rec.get('color'),
+                    option1: recv.get('color'),
                     option2: value,
                     //"option3": null,                    
                     taxable: true,
                     //"inventory_item_id": 43775777734826,
                     //"inventory_quantity": 2,
                     //"old_inventory_quantity": 2,
-                    //"requires_shipping": true,
+                    requires_shipping: true,
                     barcode: upcSize[value]
                 });
 
                 product.variants().add(variant);
                 ctr = ctr + 1;                
             });
-        });
-        
+        });            
+
+        if(site != "AA") {
+            measurement += '</p>';      
+            product.data.body_html += measurement;
+        }        
+
         console.log('constructShopifyProduct', product, sizes, sizeInfo);
+
         return product.getData(true);        
     },
 
@@ -1080,28 +1153,38 @@ Ext.define('August.view.production.style.ProductController', {
      * 
      * @param {string} source 
      * @param {string} cls 
+     * @param {string} site
      * @param {string} rgxPattern 
      */
-    stringToHtmlUlTag: function(source, cls, rgxPattern)
+    stringToHtmlUlTag: function(source, cls, site, rgxPattern)
     {
-        var html = Ext.String.format("<ul class=\"{0}\">", cls);
+        var html = Ext.String.format('<div class="{0}"><ul>', cls); 
 
-        var matches = source.match(rgxPattern);
-        
-            //console.log('stringToHtmlUlTag', source, matches);
-            if(matches == null){
-                return Ext.String.format("<div class=\"{0}\">{1}</div>", cls, source);
-            }                        
+        var matches = source.match(rgxPattern);                                                      
 
-            matches.forEach(function(value, index, self){
-                html += Ext.String.format("<li class=\"{0}\">{1}</li>", cls, value.replace(/(- )/, ""));
-            });
+        //console.log('stringToHtmlUlTag', source, matches);
+        if(matches == null){
+            return Ext.String.format("<div class=\"{0}\">{1}</div>", cls, source);
+        }  
 
-            html += '</ul>';    
-            //console.log('stringToHtmlUlTag', Ext.htmlDecode(html));            
+        /*
+        matches.forEach(function(value, index, self){                        
+            html += Ext.String.format("<li>{1}</li>", cls, value.replace(/(- )/, ""));
+            
+        });
+        */
+       
+        var idx = 0;
+        for(var value of matches) {
+            if(site == "AA" && idx == 4) { break; }
+            html += Ext.String.format("<li>{1}</li>", cls, value.replace(/(- )/, ""));
+        }
 
-            return Ext.htmlDecode(html);
+        html += '</ul></div><br />';    
+        //console.log('stringToHtmlUlTag', Ext.htmlDecode(html));            
+
+        return Ext.htmlDecode(html);
     }
-    
+
 
 });

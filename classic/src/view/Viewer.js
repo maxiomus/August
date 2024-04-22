@@ -1,5 +1,4 @@
-
-Ext.define("August.view.Viewer",{
+Ext.define("August.view.Viewer", {
     extend: "Ext.tab.Panel",
 
     requires: [
@@ -23,7 +22,7 @@ Ext.define("August.view.Viewer",{
     minWidth: 300,
     border: false,
 
-    cls: 'viewer',
+    cls: 'viewer',    
 
     tabBar: {
         defaults: {

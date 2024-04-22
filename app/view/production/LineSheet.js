@@ -16,15 +16,16 @@
         "August.view.production.LineSheetModel",
         'Ext.ux.toggleslide.ToggleSlide',
         'Ext.ux.form.field.ToggleSlide',
-        'Ext.ux.BoxReorderer',        
+        'Ext.ux.BoxReorderer',       
+        'Ext.ux.form.MultiSelect', 
         'August.plugin.grid.Exporter'
     ],
 
-    alias: 'widget.linesheet',
+    alias: 'widget.production-linesheet',
 
-    controller: "linesheet",
+    controller: "production-linesheet",
     viewModel: {
-        type: "linesheet"
+        type: "production-linesheet"
     },
 
     cls: 'linesheet-preview',
@@ -33,7 +34,7 @@
     //border: true,
 
     style: {
-        //borderTop: '1px solid #cfcfcf'
+        borderTop: '1px solid #cfcfcf'
     },
 
     config: {
@@ -45,7 +46,8 @@
 
     listeners: {
         render: {
-            //fn: 'onRender'
+            fn: 'onLineSheetRender',
+            scope: this.controller
         },
         itemclickremove: 'onItemClickRemove',
         itemclickrefresh: 'onItemClickRefresh',
@@ -126,14 +128,15 @@
                     },
                     items: [{
                         plain: true,
-                        header: false,
-                        height: 36,
+                        header: false,                        
+                        height: 48,                        
                         style: {
+                            //paddingTop: '20px',
                             borderTop: '1px solid #cfcfcf'
                         },
 
                         bind: {
-                            html: '<div style="font-size: 1.6em; font-weight:400; padding-top: 10px; text-align: center;">{title}</div>'
+                            html: '<div style="font-size: 2.0em; font-weight:400; padding: 20px 0 30px 0; text-align: center;">{title}</div>'
                         }
                     },{
                         xtype: "style-view",
@@ -141,6 +144,9 @@
                         //cls: '',
                         //region: 'center',
                         //collapsible: false,
+                        style: {
+                            borderBottom: '1px solid #cfcfcf'
+                        },
                         loadingHeight: 100,
                         flex: 1,
                         selectionModel: {
@@ -189,8 +195,10 @@
             }]
         });
 
-        me.dockedItems = [me.createToolbar(), me.buildBottomBar()];
+        me.dockedItems = [me.buildToolbar(), me.buildTopBar()];
         me.contextmenu = me.buildContextMenu();
+
+        me.bbar = me.buildBottomBar();
 
         me.callParent(arguments);
     },
@@ -199,23 +207,27 @@
      * Create the top toolbar
      * @private
      * @returns {Ext.toolbar.Toolbar}
-     */
-    createToolbar: function(){
+     **/
+    buildToolbar: function(){
         var me = this,
             config = {},
             items = [];
 
         config.xtype = 'toolbar';
         config.dock = 'top';
+        overflowHandler = 'menu';
 
         items.push(
             me.actClose,
             me.actRefresh,
-            me.actRemove, '-',
+            me.actRemove, 
+            me.actPrint,
+            //'-',
+            '->',
             {
                 xtype: "combo",
                 name: 'templates',
-                reference: 'cboSubCat',
+                reference: 'cboTemplate',
                 //width: 100,
                 valueField: 'value',
                 displayField: 'label',
@@ -250,77 +262,11 @@
                         }, c, {
                             buffer: 10
                         });
-                    },
-                    triggersearch: 'onTriggerSearchClicked',
-                    triggerclear: 'onTriggerClearClicked'
+                    }
+                    //triggersearch: 'onTriggerSearchClicked',
+                    //triggerclear: 'onTriggerClearClicked'
                 }
-            },
-            {
-                xtype: "tbtext",
-                border: false,
-                hidden: true,
-                text: "Sort by:  ",
-                reorderable: false
-            },{
-                xtype: "toolbar",
-                border: false,
-                hidden: true,
-                padding: 0,
-                margin: 0,                
-                plugins: {
-                    boxreorderer: {
-                        listeners: {
-                            drop: this.updateStoreSorters,
-                            scope: this
-                        }
-                    }
-                },                
-                defaults: {
-                    listeners: {
-                        changeDirection: this.updateStoreSorters,
-                        scope: this
-                    }
-                },
-                items: [{
-                    xtype: "multisortbutton",
-                    text: "Style",
-                    //ui: "default",
-                    ui: 'bootstrap-btn-default',
-                    hidden: false,
-                    direction: 'ASC',
-                    dataIndex: "style"
-                },
-                {
-                    xtype: "multisortbutton",
-                    text: "Division",
-                    //ui: "default",
-                    ui: 'bootstrap-btn-default',
-                    name: "division",
-                    hidden: false,
-                    dataIndex: "division"
-                },
-                {
-                    xtype: "multisortbutton",
-                    text: "Category",
-                    //ui: "default",
-                    ui: 'bootstrap-btn-default',
-                    name: "category",
-                    hidden: false,
-                    dataIndex: "category"
-                },
-                {
-                    xtype: "multisortbutton",
-                    text: "Season",
-                    //ui: "default",
-                    ui: 'bootstrap-btn-default',
-                    name: "season",
-                    hidden: false,
-                    dataIndex: "season"
-                }]
-            },
-            '->',
-            me.actPrint,
-            '-',
+            },                                                
             {
                 xtype: 'toggleslidefield',
                 fieldLabel: 'Cost',
@@ -328,7 +274,9 @@
                 labelPad: 10,
                 labelWidth: 40,
                 width: 110
-            },{
+            },
+            //'-',            
+            {
                 xtype: 'combobox',
                 fieldLabel: 'Styles',
                 labelAlign: 'right',
@@ -353,6 +301,149 @@
         config.items = items;
         return config;
     },    
+
+    buildTopBar: function() {
+        return {                                         
+            xtype: 'toolbar',
+            dock: 'top',
+            border: '1px solid #cfcfcf',
+            
+            items: [{
+                xtype: "tbtext",
+                name: 'count',
+                border: false,
+                //hidden: false,
+                bind: {
+                    text: 'Total Styles: {count:number("0,000")}',
+                },                
+                reorderable: false
+            },            
+            {
+                xtype: "tbtext",
+                name: 'onhand',
+                border: false,
+                //hidden: false,
+                bind: {
+                    text: 'Total On Hand: {onhand:number("0,000")}',
+                },
+                reorderable: false
+            },
+            '->',                                  
+            {                                                                
+                xtype: "tagfield",
+                reference: 'tagCategory',
+                width: '50%',
+                maxWidth: 600,
+                valueField: 'value',
+                displayField: 'label',
+                fieldLabel: 'Filter By',
+                emptyText: 'Categories',
+                //forceSelection: true,
+                //matchFieldWidth: false,
+                labelWidth: 63,
+                labelPad: 1,
+                filterPickList: true,
+                //autoLoadOnValue: true,
+                enableKeyEvents: true,
+                minChar: 1,
+                queryMode: 'local',
+                grow: false,
+                bind: {
+                    store: '{stylecategories}'
+                },
+                plugins: [{
+                    ptype: "cleartrigger"
+                }],
+                listeners: {
+                    change: function(c, rec){
+                        c.fireEvent('triggersearch', c, c.getValue());
+                    },
+                    render: function(c){
+                        c.on('specialkey', function(f, e){
+                            if (e.getKey() == e.ENTER) {
+                                c.fireEvent('triggersearch', c, c.getValue());
+                            }
+                        }, c, {
+                            buffer: 10
+                        });
+                    },
+                    triggersearch: 'onTriggerSearchClicked',
+                    triggerclear: 'onTriggerClearClicked'
+                }
+            },
+            {
+                xtype: "tbtext",
+                border: false,
+                //hidden: false,
+                text: "Sort by:  ",
+                reorderable: false
+            },  
+            {
+                xtype: "toolbar",
+                border: false,
+                //hidden: false,
+                padding: 0,
+                margin: 0,                
+                plugins: {
+                    boxreorderer: {
+                        listeners: {
+                            drop: this.updateStoreSorters,
+                            scope: this
+                        }
+                    }
+                },        
+
+                defaults: {
+                    listeners: {
+                        changeDirection: this.updateStoreSorters,
+                        scope: this
+                    }
+                },
+
+                items: [{
+                    xtype: "multisortbutton",
+                    text: "Seq",                    
+                    dataIndex: "seq",                    
+                    //ui: 'bootstrap-btn-default',
+                    cls: "simple-btn"
+                    //iconCls: 'x-fas fa-arrow-up'
+                    //direction: 'ASC'                    
+                },{
+                    xtype: "multisortbutton",
+                    text: "Style",                    
+                    dataIndex: "style",                    
+                    //ui: 'bootstrap-btn-default',
+                    cls: "simple-btn"
+                    //iconCls: 'x-fas fa-arrow-up'
+                    //direction: 'ASC'                    
+                },
+                {
+                    xtype: "multisortbutton",
+                    //name: "category",
+                    text: "Category",                    
+                    dataIndex: "category",
+                    //ui: 'bootstrap-btn-default',
+                    cls: "simple-btn"                                  
+                },
+                {
+                    xtype: "multisortbutton",
+                    //name: "division",
+                    text: "Brand",                    
+                    dataIndex: "division",
+                    //ui: 'bootstrap-btn-default',
+                    cls: "simple-btn"                                   
+                },
+                {
+                    xtype: "multisortbutton",
+                    //name: "season",
+                    text: "Season",                    
+                    dataIndex: "season",
+                    //ui: 'bootstrap-btn-default',
+                    cls: "simple-btn"                    
+                }]
+            }]
+        };        
+    },
 
     buildBottomBar: function(){
         var b = Ext.widget("combo", {
@@ -402,6 +493,8 @@
             items: ["-", b, "Per Page"]
         };
     },
+
+    
     
     buildContextMenu: function(){
         return Ext.create('Ext.menu.Menu', {
@@ -448,26 +541,32 @@
 
     getSorters: function(){
 
-        var h=[],
-            g=this.getDockedItems('toolbar[dock="top"]')[0];
-        if(g && g.items.length>0){
-            var e=g.query("toolbar multisortbutton[hidden=false]");
-            Ext.Array.each(e, function(a){
-                h.push({
-                    property: a.getDataIndex(),
-                    direction: a.getDirection()
+        var sorters = [],
+            topbar = this.getDockedItems('toolbar[dock="top"]')[1];
+
+        if(topbar && topbar.items.length > 0) {
+            var buttons = topbar.query("multisortbutton");
+
+            Ext.Array.each(buttons, function(button){
+                sorters.push({
+                    property: button.getDataIndex(),
+                    direction: button.getDirection()
                 });
             });
         }
-        return h;
+        
+        return sorters;
     },
 
     updateStoreSorters: function(){
-        var c = this.getSorters();
+        var sorters, view;
 
-        if(c.length > 0){
-            //console.log(c)
-            this.down('style-view').getStore().sort(c);
-        }
+        if(true){
+            sorters = this.getSorters();
+            view = this.down('style-view');
+
+            console.log('sorters', sorters);
+            view.store.sort(sorters);
+        }        
     }
 });

@@ -32,6 +32,7 @@ Ext.define('August.model.pick.Detail', {
         { name: 'unit15', type: 'number' },
         { name: 'totalUnit', type: 'int' },
         { name: 'price', type: 'number' },
+        { name: 'extPrice', type: 'number', persist: false },
         { name: 'status', type: 'string' },
         { name: 'sono', type: 'int' },        
         { name: 'bun1', type: 'int' },
@@ -70,6 +71,8 @@ Ext.define('August.model.pick.Detail', {
         { name: 'size13', type: 'string', persist: false },
         { name: 'size14', type: 'string', persist: false },
         { name: 'size15', type: 'string', persist: false },
+        { name: 'binlocation', type: 'string', persist: false },
+        { name: 'binlocation2', type: 'string', persist: false },
         {       
             name: 'pickno',       
             type: 'int',            
@@ -110,16 +113,7 @@ Ext.define('August.model.pick.Detail', {
 
         writer: {
             type: 'json',
-            // save nested (associated) data...
-            allDataOptions: {
-                persist: false,
-                associated: true
-            },
-            partialDataOptions: {
-                changes: false,
-                critical: true,
-                associated: true
-            },
+            // save nested (associated) data...            
             //clientIdProperty: 'clientId',
             writeAllFields: false,
             allowSingle: false // set false to send a single record in array

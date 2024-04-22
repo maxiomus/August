@@ -24,11 +24,11 @@
 
 .blue-box {
   //background-color: #ffffff;
-  border: 3px solid #157fcc;
+  border: 3px solid $base-color;
   border-radius: 5px;
   //box-shadow: 2px 2px 2px #bbb;
   padding: 10px;
 
-  color: #157fcc;
+  color: $base-color;
   font-weight: bold;
 }

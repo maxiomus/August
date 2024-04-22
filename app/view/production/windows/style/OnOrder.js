@@ -61,6 +61,7 @@ Ext.define('August.view.production.windows.style.OnOrder',{
             items: [{
                 xtype: 'grid',
                 reference: 'style-onorder-grid',                               
+                cls: 'style-onorder-grid',
                 columnLines: true,
 
                 bind: {
@@ -104,11 +105,12 @@ Ext.define('August.view.production.windows.style.OnOrder',{
                     //deferInitialRefresh: true,
                     deferEmptyText: true,
                     //emptyText: '<h1 style="margin: 20px">No matching results</h1>',
-                    getRowClass: function(a, g, f, h){
-                        //return "custom-row-style";
+                    getRowClass: function(rec, rdx, rparams, store){
+                        //return "custom-row-style";                        
                     },
             
                     listeners: {
+                        /*
                         render: function(view){
                             //var view = grid.getView();
                             view.tip = Ext.create('Ext.tip.ToolTip', {
@@ -145,6 +147,7 @@ Ext.define('August.view.production.windows.style.OnOrder',{
                                 }
                             });
                         }
+                        */
                     }
                 },
 

@@ -1,6 +1,18 @@
 {  
-  "stores": {        
-    "closureTypes": [
+  "stores": {     
+    "fgSheets": [
+      {"label": "Product", "value": "FGP"},
+      {"label": "Color", "value": "FGC"}
+    ],
+
+    "bkCategories": [
+      {"label": "Tops & Sweaters", "value": "BKT"},
+      {"label": "Coat Jackets & Vests", "value": "BKC"},
+      {"label": "Dresses Jumpsuits & Rompers", "value": "BKD"},
+      {"label": "Bottoms", "value": "BKB"}
+    ],
+
+    "bkClosureTypes": [
       {"label": "Back elastic waistband", "value": "Back elastic waistband"},
       {"label": "Buckle closure", "value": "Buckle closure"},
       {"label": "Button closure", "value": "Button closure"},
@@ -38,7 +50,7 @@
 
 
     ],   
-    "coatTypes": [
+    "bkCoatTypes": [
       {"label": "Active", "value": "Active"},
       {"label": "Anorak", "value": "Anorak"},
       {"label": "Blazer", "value": "Blazer"},
@@ -70,7 +82,7 @@
 
 
     ],    
-    "jacketTypes": [
+    "bkJacketTypes": [
       {"label": "Active", "value": "Active"},
       {"label": "Blazer", "value": "Blazer"},
       {"label": "Bomber", "value": "Bomber"},
@@ -83,7 +95,7 @@
 
   
     ],
-    "materials": [
+    "bkMaterials": [
       {"label": "100%CombedCotton", "value": "100%CombedCotton"},
       {"label": "100%Cotton", "value": "100%Cotton"},
       {"label": "100%PimaCotton", "value": "100%PimaCotton"},
@@ -403,7 +415,7 @@
   
     ],
     
-    "sleeveTypes": [
+    "bkSleeveTypes": [
       {"label": "Elbow sleeve", "value": "Elbow sleeve"},
       {"label": "Long sleeve", "value": "Long sleeve"},
       {"label": "Short sleeve", "value": "Short sleeve"},
@@ -412,7 +424,7 @@
       {"label": "Three-quarter sleeve", "value": "Three-quarter sleeve"}
     ],
 
-    "specialTypes" : [
+    "bkSpecialTypes" : [
       {"label": "Big & Tall", "value": "Big & Tall"},
       {"label": "Husky", "value": "Husky"},
       {"label": "Maternity", "value": "Maternity"},
@@ -421,7 +433,7 @@
       {"label": "Plus", "value": "Plus"}  
     ],
 
-    "dressTypes" : [
+    "bkDressTypes" : [
       {"label": "A-line", "value": "A-line"},
       {"label": "Bodycon", "value": "Bodycon"},
       {"label": "Cocktail", "value": "Cocktail"},
@@ -449,7 +461,7 @@
       {"label": "Jumper", "value": "Jumper"}
     ],
 
-    "legStyles" : [
+    "bkLegStyles" : [
       {"label": "Bootcut leg", "value": "Bootcut leg"},
       {"label": "Flared leg", "value": "Flared leg"},
       {"label": "Skinny leg", "value": "Skinny leg"},
@@ -458,7 +470,7 @@
       {"label": "Wide leg", "value": "Wide leg"}
     ],
 
-    "pantsFits" : [
+    "bkPantsFits" : [
       {"label": "Bootcut", "value": "Bootcut"},
       {"label": "Boyfriend/Girlfriend", "value": "Boyfriend/Girlfriend"},
       {"label": "Classic fit", "value": "Classic fit"},
@@ -477,7 +489,7 @@
       {"label": "Wide Leg/Trouser", "value": "Wide Leg/Trouser"}
     ],
 
-    "pantsTypes" : [
+    "bkPantsTypes" : [
       {"label": "Active and Yoga Pants", "value": "Active and Yoga Pants"},
       {"label": "Athletic", "value": "Athletic"},
       {"label": "Capris and Culottes", "value": "Capris and Culottes"},
@@ -488,7 +500,7 @@
       {"label": "Trousers", "value": "Trousers"}
     ],
 
-    "waists" : [
+    "bkWaists" : [
       {"label": "High rise", "value": "High rise"},
       {"label": "Low rise", "value": "Low rise"},
       {"label": "Mid rise", "value": "Mid rise"},
@@ -496,7 +508,7 @@
       {"label": "Sits at waist", "value": "Sits at waist"}
     ],
 
-    "topTypes" : [
+    "bkTopTypes" : [
       {"label": "Blouses", "value": "Blouses"},
       {"label": "Bodysuit", "value": "Bodysuit"},
       {"label": "Button Down and Collared", "value": "Button Down and Collared"},
@@ -505,7 +517,390 @@
       {"label": "Tanks and Camisoles", "value": "Tanks and Camisoles"},
       {"label": "T-Shirts", "value": "T-Shirts"},
       {"label": "Tunics", "value": "Tunics"}
+    ],
+
+    "ageGroups": [
+      { "label": "Adult", "value": "Adult" },
+      { "label": "Teen", "value": "Teen" }
+    ],
+
+    "cares": [
+      { "label": "Machine washable", "value": "Machine washable" },
+      { "label": "Dry clean", "value": "Dry clean" },
+      { "label": "Hand wash", "value": "Hand wash" },
+      { "label": "Spot clean", "value": "Spot clean" },
+      { "label": "Wipe clean", "value": "Wipe clean" },
+      { "label": "Professionally clean", "value": "Professionally clean" }
+    ],
+
+    "productCategories": [
+      { "label": "Dresses", "value": "dresses" },
+      { "label": "Blazers", "value": "blazers" },
+      { "label": "Coats", "value": "coats" },
+      { "label": "Jackets", "value": "jackets" },
+      { "label": "Jeans", "value": "jeans" },
+      { "label": "Jumpsuits", "value": "jumpsuits" },
+      { "label": "Pants", "value": "pants" },
+      { "label": "Rompers", "value": "rompers" },
+      { "label": "Shorts", "value": "shorts" },
+      { "label": "Skirts", "value": "skirts" },
+      { "label": "Skorts", "value": "skorts" },
+      { "label": "Tops", "value": "tops" },
+      { "label": "Suit", "value": "suits" },
+      { "label": "Sweaters & Knits", "value": "sweaters & knits" }      
+    ],
+    
+    "categories": [
+      { "label": "Style #", "field": "style" },
+      { "label": "Color", "field": "color" },
+      { "label": "Description", "field": "descript" },
+      { "label": "Category", "field": "category" },
+      { "label": "Sub. Cat", "field": "subcategory" }      
+    ],    
+
+    "closureTypes": [
+      { "label": "1 Button", "value": "1 Button" },
+      { "label": "2 Button", "value": "2 Button" },
+      { "label": "3 Button", "value": "3 Button" },
+      { "label": "Hook & Eye", "value": "Hook & Eye" },
+      { "label": "Open Front", "value": "Open Front" },
+      { "label": "Zipper", "value": "Zipper" }      
+    ],
+
+    "lengths": [
+      { "label": "Cropped", "value": "Cropped" },
+      { "label": "High Low", "value": "High Low" },
+      { "label": "Knee Length", "value": "Knee Length" },
+      { "label": "Mid Length", "value": "Mid Length" },
+      { "label": "Long", "value": "Long" },
+      { "label": "Midi", "value": "Midi" },
+      { "label": "Short", "value": "Short" }
+    ],
+
+    "fitTypes": [      
+      { "label": "Bootcut", "value": "Bootcut" },
+      { "label": "Boyfriend", "value": "Boyfriend" },
+      { "label": "Capris & Cropped", "value": "Capris & Cropped" },
+      { "label": "Curvy", "value": "Curvy" },
+      { "label": "Flare", "value": "Flare" },
+      { "label": "High Waisted", "value": "High Waisted" },
+      { "label": "Jeggings", "value": "Jeggings" },
+      { "label": "Mom Jeans", "value": "Mom Jeans" },
+      { "label": "Overalls", "value": "Overalls" },      
+      { "label": "Skinny", "value": "Skinny" },
+      { "label": "Straight", "value": "Straight" }      
+    ],
+
+    "legals": [
+      { "label": "WARNING: CHOKING HAZARD — Small parts", "value": "WARNING: CHOKING HAZARD—Contains small parts. Not suitable for children under 3 years." },
+      { "label": "WARNING: CHOKING HAZARD — Under 8 years", "value": "WARNING: CHOKING HAZARD—Children under 8 years can choke or suffocate on uninflated or broken balloons. Adult supervision required. Keep uninflated balloons from children. Discard broken balloons at once." },
+      { "label": "WARNING: CHOKING HAZARD — Small ball.", "value": "WARNING: CHOKING HAZARD—This toy is or contains a small ball. Not for children under 3 years." },
+      { "label": "WARNING: CHOKING HAZARD — A marble.", "value": "WARNING: CHOKING HAZARD—This toy is a marble. Not for children under 3 years." },
+      { "label": "WARNING: CHOKING HAZARD — Contains a marble.", "value": "WARNING: CHOKING HAZARD—Toy contains a marble. Not for children under 3 years" },
+      { "label": "WARNING: Do not use", "value": "WARNING: Do not use any power adapter, charger or cords other than those included with your product. Using incompatible, counterfeit or non-certified accessories can cause fire or accidents. Contact the manufacturer for replacements." },      
+      { "label": "WARNING: Not flame resistant", "value": "WARNING: Not flame resistant. Wear snug-fitting to help keep children safe." },
+      { "label": "WARNING: Always burn candle", "value": "WARNING: Always burn candle within sight and place candle away from curtains or other flammable materials. Position on a flat heat-resistant surface." },
+      { "label": "WARNING: Keep candle away", "value": "WARNING: Keep candle away from children and pets" },
+      { "label": "NOTE: Contains a lithium battery", "value": "NOTE: This product contains a lithium battery and will be delivered by Standard Ground Shipping and is not eligible for Premium or Overnight Shipping" },
+      { "label": "NOTE: Certified Kosher dairy", "value": "NOTE: This product is certified Kosher dairy" },
+      { "label": "NOTE: Contains dairy", "value": "NOTE: This product contains dairy, gluten or nut ingredients" }      
+    ],
+
+    "warrantys": [
+      { "label": "Y", "value": "Y" },
+      { "label": "N", "value": "N" }
+    ],
+
+    "coos": [
+      { "label": "Imported", "value": "Imported" },
+      { "label": "Made in US", "value": "Made in US" }
+    ],
+
+    "legStyles": [
+      { "label": "Cropped", "value": "Cropped" },
+      { "label": "Flare", "value": "Flare" },
+      { "label": "Skinny", "value": "Skinny" },
+      { "label": "Straight", "value": "Straight" },
+      { "label": "Wide Leg", "value": "Wide Leg" }      
+    ],
+
+    "necklines": [
+      { "label": "Boat Neck", "value": "Boat Neck" },
+      { "label": "Collared", "value": "Collared" },
+      { "label": "Cowl Neck", "value": "Cowl Neck" },
+      { "label": "Crew Neck", "value": "Crew Neck" },      
+      { "label": "Halter", "value": "Halter" },
+      { "label": "Mock Neck", "value": "Mock Neck" },
+      { "label": "Off the Shoulder", "value": "Off the Shoulder" },
+      { "label": "One Shoulder", "value": "One Shoulder" },
+      { "label": "Scoop Neck", "value": "Scoop Neck" },
+      { "label": "Square", "value": "Square" },
+      { "label": "Strapless", "value": "Strapless" },
+      { "label": "Sweetheart", "value": "Sweetheart" },
+      { "label": "Turtleneck", "value": "Turtleneck" },
+      { "label": "V-Neck", "value": "V-Neck" }      
+    ],  
+
+    "sleeveLengths": [
+      { "label": "3/4 Sleeve", "value": "3/4 Sleeve" },
+      { "label": "Long Sleeve", "value": "Long Sleeve" },
+      { "label": "Short Sleeve", "value": "Short Sleeve" },
+      { "label": "Sleeveless", "value": "Sleeveless" }
+    ],
+
+    "specialSizes": [
+      { "label": "Maternity", "value": "Maternity" },
+      { "label": "Juniors", "value": "Juniors" },
+      { "label": "Petites", "value": "Petites" },
+      { "label": "Plus Sizes", "value": "Plus Sizes" },
+      { "label": "Regular", "value": "Regular" }
+    ],
+
+    "taxCodes": [
+      { "label": "General Clothing", "value": "General Clothing" },
+      { "label": "Swimwear", "value": "Swimwear" },
+      { "label": "Nursing Bras", "value": "Nursing Bras" },
+      { "label": "General Footwear", "value": "General Footwear (incl laces)" },
+      { "label": "Shoe Insoles", "value": "Shoe Insoles" },
+      { "label": "Shoeshine-Cleaning", "value": "Shoeshine-Cleaning" }            
+    ],
+
+    "waistFits": [
+      { "label": "High Rise", "value": "High Rise" },
+      { "label": "Low Rise", "value": "Low Rise" },
+      { "label": "Mid Rise", "value": "Mid Rise" }      
+    ],
+    
+    "washTypes": [      
+      { "label": "Black", "value": "Black" },
+      { "label": "Colored", "value": "Colored" },
+      { "label": "Dark Rinse", "value": "Dark Rinse" },
+      { "label": "Grey", "value": "Grey" },
+      { "label": "Light Rinse", "value": "Light Rinse" },
+      { "label": "Medium Rinse", "value": "Medium Rinse" },
+      { "label": "White", "value": "White" }      
+    ],
+
+    "patterns": [
+      { "label": "Animal Print", "value": "Animal Print" },
+      { "label": "Cable Knit", "value": "Cable Knit" },
+      { "label": "Camo", "value": "Camo" },
+      { "label": "Colorblock", "value": "Colorblock" },
+      { "label": "Cow Print", "value": "Cow Print" },
+      { "label": "Dots", "value": "Dots" },
+      { "label": "Fair Isle", "value": "Fair Isle" },
+      { "label": "Floral", "value": "Floral" },
+      { "label": "Geometric", "value": "Geometric" },
+      { "label": "Gingham", "value": "Gingham" },
+      { "label": "Houndstooth", "value": "Houndstooth" },
+      { "label": "Leopard Print", "value": "Leopard Print" },
+      { "label": "Logo", "value": "Logo" },
+      { "label": "Neon", "value": "Neon" },
+      { "label": "Neutrals", "value": "Neutrals" },
+      { "label": "Paisley", "value": "Paisley" },
+      { "label": "Plaid", "value": "Plaid" },
+      { "label": "Snake Print", "value": "Snake Print" },
+      { "label": "Solid", "value": "Solid" },
+      { "label": "Stripe", "value": "Stripe" },
+      { "label": "Tie Dye", "value": "Tie Dye" },
+      { "label": "Tropical", "value": "Tropical" }
+    ],
+
+    "occasions": [
+      { "label": "Active", "value": "Active" },
+      { "label": "Casual", "value": "Casual" },
+      { "label": "Fall", "value": "Fall" },
+      { "label": "Going Out", "value": "Going Out" },
+      { "label": "Holiday", "value": "Holiday" },
+      { "label": "New Year's Eve", "value": "New Year's Eve" },
+      { "label": "Party/Cocktail", "value": "Party/Cocktail" },
+      { "label": "Vacation", "value": "Vacation" },
+      { "label": "Wear to Work", "value": "Wear to Work" },
+      { "label": "Winter", "value": "Winter" }
+    ],
+
+    "fabrics": [
+      { "label": "Acrylic", "value": "Acrylic" },
+      { "label": "Cashmere", "value": "Cashmere" },
+      { "label": "Chiffon", "value": "Chiffon" },
+      { "label": "Corduroy", "value": "Corduroy" },
+      { "label": "Cotton", "value": "Cotton" },
+      { "label": "Crochet", "value": "Crochet" },
+      { "label": "Denim", "value": "Denim" },
+      { "label": "Eyelet", "value": "Eyelet" },
+      { "label": "Faux Fur", "value": "Faux Fur" },
+      { "label": "Faux Leather", "value": "Faux Leather" },
+      { "label": "Faux Shearling", "value": "Faux Shearling" },
+      { "label": "Flannel", "value": "Flannel" },
+      { "label": "Fleece", "value": "Fleece" },
+      { "label": "Knit", "value": "Knit" },
+      { "label": "Lace", "value": "Lace" },
+      { "label": "Leather", "value": "Leather" },
+      { "label": "Linen", "value": "Linen" },
+      { "label": "Linen & Linen Blend", "value": "Linen & Linen Blend" },
+      { "label": "Merino", "value": "Merino" },
+      { "label": "Nylon", "value": "Nylon" },
+      { "label": "Poly Blend", "value": "Poly Blend" },
+      { "label": "Polyester", "value": "Polyester" },
+      { "label": "Rayon", "value": "Rayon" },
+      { "label": "Satin", "value": "Satin" },
+      { "label": "Sequin", "value": "Sequin" },
+      { "label": "Sherpa", "value": "Sherpa" },
+      { "label": "Silk", "value": "Silk" },
+      { "label": "Suede", "value": "Suede" },
+      { "label": "Velour", "value": "Velour" },
+      { "label": "Velvet", "value": "Velvet" },
+      { "label": "Wool & Wool Blend", "value": "Wool & Wool Blend" }
+    ],
+    
+    "dressTypes": [
+      { "label": "A Line", "value": "A Line", "type": "dresses" },
+      { "label": "Embellished", "value": "Embellished", "type": "dresses" },
+      { "label": "Fit & Flare", "value": "Fit & Flare", "type": "dresses" },
+      { "label": "Floral", "value": "Floral", "type": "dresses" },
+      { "label": "Gown", "value": "Gown", "type": "dresses" },
+      { "label": "Jacket Dress", "value": "Jacket Dress", "type": "dresses" },
+      { "label": "Lace Dress", "value": "Lace Dress", "type": "dresses" },
+      { "label": "Maxi Dress", "value": "Maxi Dress", "type": "dresses" },
+      { "label": "Sequined", "value": "Sequined", "type": "dresses" },
+      { "label": "Sheath", "value": "Sheath", "type": "dresses" },
+      { "label": "Shift", "value": "Shift", "type": "dresses" },
+      { "label": "Sun Dress", "value": "Sun Dress", "type": "dresses" },
+      { "label": "Sweater Dress", "value": "Sweater Dress", "type": "dresses" },
+      { "label": "Two Piece Dress", "value": "Two Piece Dress", "type": "dresses" },
+      { "label": "Wrap Dress", "value": "Wrap Dress", "type": "dresses" }
+    ],
+
+    "blazerTypes": [
+      { "label": "Belted", "value": "Belted", "type": "blazers" },
+      { "label": "Boyfriend", "value": "Boyfriend", "type": "blazers" },
+      { "label": "Collarless", "value": "Collarless", "type": "blazers" },
+      { "label": "Cropped", "value": "Cropped", "type": "blazers" },
+      { "label": "Double Breasted", "value": "Double Breasted", "type": "blazers" },
+      { "label": "Open Front", "value": "Open Front", "type": "blazers" },
+      { "label": "Oversized", "value": "Oversized", "type": "blazers" },
+      { "label": "Single Button", "value": "Single Button", "type": "blazers" },
+      { "label": "Statement", "value": "Statement", "type": "blazers" }
+    ],
+
+    "coatTypes": [
+      { "label": "Active", "value": "Active", "type": "coats" },
+      { "label": "Anorak", "value": "Anorak", "type": "coats" },
+      { "label": "Blazer", "value": "Blazer", "type": "coats" },
+      { "label": "Bomber", "value": "Bomber", "type": "coats" },
+      { "label": "Denim", "value": "Denim", "type": "coats" },
+      { "label": "Down", "value": "Down", "type": "coats" },
+      { "label": "Down Alternative", "value": "Down Alternative", "type": "coats" },
+      { "label": "Fleece", "value": "Fleece", "type": "coats" },
+      { "label": "Hooded", "value": "Hooded", "type": "coats" },
+      { "label": "Leather", "value": "Leather", "type": "coats" },
+      { "label": "Motorcycle", "value": "Motorcycle", "type": "coats" },
+      { "label": "Peacoat", "value": "Peacoat", "type": "coats" },
+      { "label": "Puffer", "value": "Puffer", "type": "coats" },
+      { "label": "Quilted", "value": "Quilted", "type": "coats" },
+      { "label": "Raincoat", "value": "Raincoat", "type": "coats" },
+      { "label": "Shirt Jacket", "value": "Shirt Jacket", "type": "coats" },
+      { "label": "Trenchcoat", "value": "Trenchcoat", "type": "coats" },
+      { "label": "Utility", "value": "Utility", "type": "coats" },
+      { "label": "Vest", "value": "Vest", "type": "coats" },
+      { "label": "Wool & Wool Blend", "value": "Wool & Wool Blend", "type": "coats" },
+      { "label": "Wrap", "value": "Wrap", "type": "coats" }
+    ],
+
+    "pantsTypes": [
+      { "label": "Active", "value": "Active", "type": "pants" },
+      { "label": "Ankle", "value": "Ankle", "type": "pants" },
+      { "label": "Bootcut", "value": "Bootcut", "type": "pants" },
+      { "label": "Capris", "value": "Capris", "type": "pants" },
+      { "label": "Cargo", "value": "Cargo", "type": "pants" },
+      { "label": "Flare", "value": "Flare", "type": "pants" },
+      { "label": "High Waist", "value": "High Waist", "type": "pants" },
+      { "label": "Joggers", "value": "Joggers", "type": "pants" },
+      { "label": "Leggings", "value": "Leggings", "type": "pants" },
+      { "label": "Pull-on", "value": "Pull-on", "type": "pants" },
+      { "label": "Skinny", "value": "Skinny", "type": "pants" },
+      { "label": "Straight", "value": "Straight", "type": "pants" },
+      { "label": "Sweatpants", "value": "Sweatpants", "type": "pants" },
+      { "label": "Tummy Control", "value": "Tummy Control", "type": "pants" },
+      { "label": "Ugly Christmas", "value": "Ugly Christmas", "type": "pants" },
+      { "label": "Wide Leg", "value": "Wide Leg", "type": "pants" }
+    ],
+
+    "shortsTypes": [
+      { "label": "5-Pocket", "value": "5-Pocket", "type": "shorts" },
+      { "label": "Active", "value": "Active", "type": "shorts" },
+      { "label": "Bermuda", "value": "Bermuda", "type": "shorts" },
+      { "label": "Biker", "value": "Biker", "type": "shorts" },
+      { "label": "Cargo", "value": "Cargo", "type": "shorts" },
+      { "label": "Chino", "value": "Chino", "type": "shorts" },
+      { "label": "Denim", "value": "Denim", "type": "shorts" },
+      { "label": "High Waisted", "value": "High Waisted", "type": "shorts" },
+      { "label": "Pleated", "value": "Pleated", "type": "shorts" },
+      { "label": "Short Shorts", "value": "Short Shorts", "type": "shorts" },
+      { "label": "Skort", "value": "Skort", "type": "shorts" },
+      { "label": "Soft", "value": "Soft", "type": "shorts" },
+      { "label": "Tummy Control", "value": "Tummy Control", "type": "shorts" },
+      { "label": "Romper", "value": "Romper", "type": "shorts" }
+    ],
+
+    "skirtsTypes": [
+      { "label": "A Line", "value": "A Line", "type": "skirts" },
+      { "label": "Denim", "value": "Denim", "type": "skirts" },
+      { "label": "Maxi", "value": "Maxi", "type": "skirts" },
+      { "label": "Mini", "value": "Mini", "type": "skirts" },
+      { "label": "Pleated", "value": "Pleated", "type": "skirts" },
+      { "label": "Pencil", "value": "Pencil", "type": "skirts" },
+      { "label": "Skort", "value": "Skort", "type": "skirts" },
+      { "label": "Slit", "value": "Slit", "type": "skirts" }
+    ],
+
+    "topsTypes": [
+      { "label": "Active", "value": "Active", "type": "tops" },
+      { "label": "Bell Sleeve", "value": "Bell Sleeve", "type": "tops" },
+      { "label": "Blouse", "value": "Blouse", "type": "tops" },
+      { "label": "Bodysuits", "value": "Bodysuits", "type": "tops" },
+      { "label": "Button Up Shirts", "value": "Button Up Shirts", "type": "tops" },
+      { "label": "Camisole", "value": "Camisole", "type": "tops" },
+      { "label": "Cold Shoulder", "value": "Cold Shoulder", "type": "tops" },
+      { "label": "Cropped", "value": "Cropped", "type": "tops" },
+      { "label": "Embellished", "value": "Embellished", "type": "tops" },
+      { "label": "Graphic Tee", "value": "Graphic Tee", "type": "tops" },
+      { "label": "Kimono", "value": "Kimono", "type": "tops" },
+      { "label": "Peasant", "value": "Peasant", "type": "tops" },
+      { "label": "Peplum", "value": "Peplum", "type": "tops" },
+      { "label": "Polo", "value": "Polo", "type": "tops" },
+      { "label": "Poncho", "value": "Poncho", "type": "tops" },
+      { "label": "Tank Tops", "value": "Tank Tops", "type": "tops" },
+      { "label": "Tie Front", "value": "Tie Front", "type": "tops" },
+      { "label": "T-Shirt", "value": "T-Shirt", "type": "tops" },
+      { "label": "Tunic", "value": "Tunic", "type": "tops" },
+      { "label": "Ugly Christmas", "value": "Ugly Christmas", "type": "tops" },
+      { "label": "Ugly Hanukkah", "value": "Ugly Hanukkah", "type": "tops" },
+      { "label": "Wrap", "value": "Wrap", "type": "tops" }
+    ],
+
+    "sweatersTypes": [
+      { "label": "Cardigan", "value": "Cardigan", "type": "sweaters" },
+      { "label": "Cashmere", "value": "Cashmere", "type": "sweaters" },
+      { "label": "Cold Shoulder", "value": "Cold Shoulder", "type": "sweaters" },
+      { "label": "Cropped", "value": "Cropped", "type": "sweaters" },
+      { "label": "Duster", "value": "Duster", "type": "sweaters" },
+      { "label": "Full Zip", "value": "Full Zip", "type": "sweaters" },
+      { "label": "Graphic", "value": "Graphic", "type": "sweaters" },
+      { "label": "Hoodie", "value": "Hoodie", "type": "sweaters" },
+      { "label": "Maternity", "value": "Maternity", "type": "sweaters" },
+      { "label": "Oversized", "value": "Oversized", "type": "sweaters" },
+      { "label": "Poncho", "value": "Poncho", "type": "sweaters" },
+      { "label": "Pullover", "value": "Pullover", "type": "sweaters" },
+      { "label": "Quarter-Zip", "value": "Quarter-Zip", "type": "sweaters" },
+      { "label": "Sweater Coat", "value": "Sweater Coat", "type": "sweaters" },
+      { "label": "Sweater Dress", "value": "Sweater Dress", "type": "sweaters" },
+      { "label": "Tunic", "value": "Tunic", "type": "sweaters" },
+      { "label": "Ugly Christmas", "value": "Ugly Christmas", "type": "sweaters" },
+      { "label": "Ugly Hanukkah", "value": "Ugly Hanukkah", "type": "sweaters" },
+      { "label": "Wrap", "value": "Wrap", "type": "sweaters" }
     ]
   },
+
   "success": true
 }

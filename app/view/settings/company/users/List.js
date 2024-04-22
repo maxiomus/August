@@ -33,7 +33,7 @@ Ext.define('August.view.settings.company.users.List', {
 
     columns: [
         {
-            text: 'User Name', dataIndex: 'FullName', width: 140, locked: false,
+            text: 'User Name', dataIndex: 'name', width: 140, locked: false,
             /*editor: {
                 xtype: 'textfield',
                 allowBlank: true
@@ -49,7 +49,7 @@ Ext.define('August.view.settings.company.users.List', {
             }
         },
         {
-            text: 'ID', dataIndex: 'UserName', width: 140,
+            text: 'ID', dataIndex: 'nvltUser', width: 140,
             summaryType: 'count',
             /*editor: {
                 xtype: 'textfield',
@@ -74,7 +74,7 @@ Ext.define('August.view.settings.company.users.List', {
         },*/
         {
             text: 'Email',
-            dataIndex: 'Email',
+            dataIndex: 'email',
             width: 240,
             /*editor: {
                 xtype: 'textfield',
@@ -97,20 +97,30 @@ Ext.define('August.view.settings.company.users.List', {
             }
         },*/
         {
-            text: 'Department',
-            dataIndex: 'Department',
-            width: 240
+            text: 'User Group',
+            dataIndex: 'user_group',
+            width: 240,
+            renderer: function(value, meta, record) {
+                return value;
+            }
         },
         {
-            text: 'Online',
-            dataIndex: 'IsOnline', width: 120,
+            text: 'User Type',
+            dataIndex: 'user_type', width: 120,
+            renderer: function(value, meta, record) {
+                return value;
+            }
+        },
+        {
+            text: 'Division',
+            dataIndex: 'division', width: 120,
             renderer: function(value, meta, record) {
                 return value;
             }
         },
         {
             text: 'Active',
-            dataIndex: 'IsApproved', width: 120,
+            dataIndex: 'active', width: 120,
             renderer: function(value, meta, record) {
                 if(!value){
                     meta.tdAttr = 'bgcolor="#ffe2e2"';
@@ -121,18 +131,38 @@ Ext.define('August.view.settings.company.users.List', {
         },
         {
             text: 'Lock Out',
-            dataIndex: 'IsLockedOut', width: 120,
+            dataIndex: 'is_lock', width: 120,
             renderer: function(value, meta, record) {
                 return value;
             }
         },
+        {
+            text: 'Lock Count',
+            dataIndex: 'lock_count', width: 120,
+            renderer: function(value, meta, record) {
+                return value;
+            }
+        },
+        {
+            xtype: 'datecolumn', text: 'Last Activity',
+            dataIndex: 'latest_try_login_date',
+            format: 'm-d-Y'
+        },
+        {
+            text: 'Description',
+            dataIndex: 'descript', width: 120,
+            renderer: function(value, meta, record) {
+                return value;
+            }
+        },
+        
         /*{
             text: 'AD User',
             dataIndex: 'IsADUser', width: 120,
             renderer: function(value, meta, record) {
                 return August.view.settings.users.List.renderTip(value, meta);
             }
-        },*/
+        },
         {
             xtype: 'datecolumn', text: 'Last Activity',
             dataIndex: 'LastActivityDate',
@@ -147,7 +177,7 @@ Ext.define('August.view.settings.company.users.List', {
             xtype: 'datecolumn', text: 'Create On',
             dataIndex: 'CreateDate',
             format: 'm-d-Y'
-            /*
+            
             renderer: function(value, meta, record) {
                 if (value != undefined) {
                     var d = new Date(value);
@@ -162,8 +192,9 @@ Ext.define('August.view.settings.company.users.List', {
                     return fvalue;
                 }
             }
-            */
+            
         },
+        */
         {
             xtype: 'actioncolumn',
             text: '<i class="x-fa fa-cog fa-lg blue-txt"></i>',
@@ -224,7 +255,7 @@ Ext.define('August.view.settings.company.users.List', {
             fn: "onItemContextMenu"
         },
         itemdblclick: 'onActEdit',
-
+        cellclick: 'onGridCellClick',
         actnew: 'onActNew',
         actedit: 'onActEdit',
         actrefresh: 'onActRefresh',

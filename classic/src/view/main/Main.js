@@ -44,7 +44,7 @@ Ext.define('August.view.main.Main', {
                 reference: "augustLogo",
                 cls: "august-logo",
                 //html: '<div class="main-logo"><img src="resources/images/August-logo.png" height="26px">August</div>',
-                html: '<div class="main-logo"><i class="fab fa-buysellads"></i>ugust 2.7</div>',                
+                html: '<div class="main-logo"><i class="fab fa-buysellads"></i>ugust</div>',                
                 width: 64
             },{
                 margin: "0 0 0 8",
@@ -92,7 +92,7 @@ Ext.define('August.view.main.Main', {
                 region: 'west',
                 reference: "navigationTreeList",
                 itemId: "navigationTreeList",
-                ui: "navigation",
+                ui: "nav",
                 store: "NavigationTree",
                 width: 64,
                 expandedWidth: 280, // When Micro mode first, set width
@@ -107,11 +107,11 @@ Ext.define('August.view.main.Main', {
             },{
                 xtype: "container",
                 region: "center",
-                flex:1,
+                flex: 1,
                 reference: "mainCardPanel",
                 itemId: "contentPanel",
                 //deferredRender: true,
-                layout:{
+                layout: {
                     type: "card",
                     anchor: "100%"
                 }

@@ -31,7 +31,7 @@ Ext.define('August.view.dashboard.WeatherModel', {
             //autoLoad: true,
             proxy: {
                 type: 'jsonp',
-                url: 'http://api.openweathermap.org/data/2.5/group?units=imperial&appid=0ed3c4c0ed7a4a22b182e748757ffd11',
+                url: 'https://api.openweathermap.org/data/2.5/group?units=imperial&appid=0ed3c4c0ed7a4a22b182e748757ffd11',
                 //noCache: true,
                 pageParam: '',
                 startParam: '',

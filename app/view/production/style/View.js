@@ -57,7 +57,10 @@ Ext.define("August.view.production.style.View", {
                 '<div class="thumb">',
                     //'<tpl if="this.notNull(mp)">',
                     '<tpl if="this.notNull(style)">',
-                        '<img class="x-unselectable" src="http://209.37.126.195:9090/StyleImages/200xImages/{style}_{color:this.formatColor}_front.jpg" />',
+                        '<img class="x-unselectable" src="https://endlessrose.net:9443/StyleImages/200xImages/{style}_{color:this.formatColor}_front.jpg"' +
+                            'onerror=\"this.onerror=null;this.src=\'https://endlessrose.net:9443/StyleImages/{style}_front.jpg\';" ' + 
+                            //'onload=\"console.log(this);\" ' +
+                        ' />',                                                                        
                     '</tpl>',
                 '</div>',
                 /*
@@ -71,13 +74,13 @@ Ext.define("August.view.production.style.View", {
                     '<span style="clear: both;">Style #: {style}</span>',
                     '<span style="clear: both;">Color: {color}</span>',
                     '<span style="clear: both;">Category: {category:ellipsis(35)}</span>',
-                    '<span style="clear: both;">Brand: {division}</span>',
-                    '<span style="clear: both;">Season: {season}</span>',
+                    '<span style="clear: both;">Season: {season}</span>',                    
                     //'<span style="float: left;width:50%;">Category: {category}</span><span style="width:50%;">Sub Category: {subcategory}</span>',
                     //'<span style="float: left;width:50%;">Division: {division}</span><span style="width:50%;"> Season: {season}</span>',
-                    '<span style="float: left;width:50%;">Size: {sizeCat}</span><span style="width:50%;"> COO: {coo}</span>',
-                    '<span style="float: left;width:50%;">Price 5: {price5:this.formatCost}</span><span style="width:50%;"> MSRP: {msrp:this.formatCost}</span>',
-                    '<div style="clear: both;height:4px;"> </div>',                    
+                    '<span style="float: left;width:50%;">Brand: {division}</span><span style="width:50%;">COO: {coo}</span>',
+                    '<span style="float: left;width:50%;">Size: {sizeCat}</span><span style="width:50%;">On Hand: {ohs:number("0,000")}</span>',
+                    '<span style="float: left;width:50%;">Price 5: {price5:this.formatCost}</span><span style="width:50%;">MSRP: {msrp:this.formatCost}</span>',
+                    '<div style="clear: both;height:4px;"></div>',                    
                     //'<div style="font-size:11px;padding:4px;">Size: {memo:this.formatMemo}</div>',
                 '</div>',
             '</div>',

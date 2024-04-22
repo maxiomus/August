@@ -117,7 +117,7 @@ Ext.define('August.view.settings.product.ColorMappingController', {
         if(field && field.getFilesQueue().length > 0){
 
             field.send({
-                url: '/WebApp/api/Files/Product/Import',
+                url: '/WebApp/api/Files/ColorMap/Import',
                 success: function(response, opts){                                        
 
                     store.rejectChanges();  

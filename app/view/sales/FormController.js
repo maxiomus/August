@@ -18,6 +18,7 @@ Ext.define('August.view.sales.OrderFormController', {
         var me = this;
         vm = me.getViewModel(),
         me.mv = August.app.getMainView();        
+
         //console.log('init', vm.linkData.theOrder);
         //console.log('init', this.getReferences());
     },
@@ -53,18 +54,18 @@ Ext.define('August.view.sales.OrderFormController', {
             store = grid.getStore(),
             rowEdit = grid.getPlugin("soGridRowEdit");        
 
-        rowEdit.cancelEdit();
-
-        console.log('onAddItemClick', store);
+        rowEdit.cancelEdit();        
 
         store.insert(0, {            
             line: store.getTotalCount() + 1,
-            status: 'Open',
+            status: 'Open',            
             warehouse: form.down('combo[name="warehouse"]').getValue(),
             salesrep1: form.down('combo[name="salesrep1"]').getValue(),
-            salesrep2: form.down('combo[name="salesrep2"]').getValue()            
-        });
-                
+            salesrep2: form.down('combo[name="salesrep2"]').getValue(),
+            userName: August.loggedInUser.userId,
+            userTime: new Date()
+        });                        
+
         var override = grid.getPlugin('soRowExpander');                             
         if(override.isCollapsed(0) == true) {
             override.toggleRow(0, store.getAt(0));
@@ -83,15 +84,18 @@ Ext.define('August.view.sales.OrderFormController', {
 
         var nd = d.copy(null, session);
         //console.log('onCopyStyleClick - before', d);
-        nd.set('line', store.getCount());
+        nd.set('line', store.getCount() + 1);
         nd.set('status', 'Open');
         nd.set('userName', August.loggedInUser.userId);
         nd.set('userTime', new Date());
 
-        grid.getStore().add(nd);
+        grid.getStore().insert(0, nd);
 
-        var override = grid.getPlugin('soRowExpander');                             
-        override.expandAll(); 
+        var override = grid.getPlugin('soRowExpander');         
+        if(override.isCollapsed(0) == true) {
+            override.toggleRow(0, store.getAt(0));
+        } 
+
         /*
          d.powms().each(function (m) {
          nd.powms().add(m.copy(null, session));
@@ -148,7 +152,7 @@ Ext.define('August.view.sales.OrderFormController', {
     onRowEditing: function(editor, context, e) {
         
         var rec = context["record"];
-        console.log('onRowEditing', rec);
+        //console.log('onRowEditing', rec);
         rec.set('totalUnit', rec.get('unit1') + rec.get('unit2') + rec.get('unit3') + rec.get('unit4') + rec.get('unit5') + rec.get('unit6') + 
             rec.get('unit7') + rec.get('unit8') + rec.get('unit9') + rec.get('unit10') + rec.get('unit11') + rec.get('unit12') + rec.get('unit13')); 
         rec.set('extPrice', rec.data.totalUnit * rec.data.price);        
@@ -179,15 +183,16 @@ Ext.define('August.view.sales.OrderFormController', {
             grid = form.lookupReference('so-grid'),
             selection = grid.getSelection()[0];
             rowEdit = grid.getPlugin("soGridRowEdit"),            
-            color = combo.next('combo[name="color"]'),
-            price = combo.next('numberfield[name="price"]'),
-            season = combo.next('combo[name="season"]'),
-            cancelDate = combo.next('datefield[name="cancelDate"]');            
+            cboColor = combo.next('combo[name="color"]'),
+            price = combo.ownerCt.down('numberfield[name="price"]'),
+            season = combo.ownerCt.down('combo[name="season"]'),
+            cancelDate = combo.ownerCt.down('datefield[name="cancelDate"]');            
         
+        /*
         if((combo.getValue() != selection.get('style')) && !Ext.isEmpty(combo.getValue()) && !Ext.isEmpty(color.getValue())) {
             
             Ext.Ajax.request({
-                url : '/WebApp/api/Products/SO',
+                url : '/WebApp/api/Products/SI',
                 method : 'GET',
                 headers: {
                     'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
@@ -248,7 +253,24 @@ Ext.define('August.view.sales.OrderFormController', {
                 },
                 scope : this
             });
-        }        
+        }
+        */
+        
+        var store = cboColor.getStore();
+        store.clearFilter();
+
+        if(combo.getValue() != selection.get('style') && !Ext.isEmpty(combo.getValue())){
+
+            store.filter([{
+                property: 'style',
+                value: combo.getValue().toUpperCase(),
+                operator: '='
+            }]);
+
+            //cboColor.select(store.first());
+        }
+
+        //selection.set('descript', rec.get('descript'));
                 
     },
 
@@ -259,14 +281,14 @@ Ext.define('August.view.sales.OrderFormController', {
             selection = grid.getSelection()[0];
             rowEdit = grid.getPlugin("soGridRowEdit"),            
             style = combo.previousSibling('combo[name="style"]'),
-            price = combo.next('numberfield[name="price"]'),
-            season = combo.next('combo[name="season"]'),
-            cancelDate = combo.next('datefield[name="cancelDate"]');          
+            price = combo.ownerCt.down('numberfield[name="price"]'),
+            season = combo.ownerCt.down('combo[name="season"]'),
+            cancelDate = combo.ownerCt.down('datefield[name="cancelDate"]');          
         
-        if((combo.getValue() != selection.get('color')) && !Ext.isEmpty(style.getValue()) && !Ext.isEmpty(combo.getValue())) {
+        if(!Ext.isEmpty(style.getValue()) && !Ext.isEmpty(combo.getValue())) {
                         
             Ext.Ajax.request({
-                url : '/WebApp/api/Products/SO',
+                url : '/WebApp/api/Products/SI',
                 method : 'GET',
                 headers: {
                     'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
@@ -535,7 +557,26 @@ Ext.define('August.view.sales.OrderFormController', {
     },
 
     onPrintClick: function() {
+        var me = this,
+            vm = me.getViewModel(),
+            rec = vm.get('theOrder');
+            
+        me.showWindow(rec, 'sales-windows-printso', function(type){
 
+            var win = me.win,
+                wvm = win.getViewModel();
+                                      
+            /*            
+            wvm.getStore('shopifytemplates').on('datachanged', function(store){
+                btnTemplate.setDisabled(store.getCount() == 0);
+                
+                console.log('templates - store datachanged', store.first());
+            });
+            */
+            //win.on('templateclick', me.onSaveWebPublish, me);                        
+
+            //btnSave.setDisabled(template.getStore().getCount() == 0);                                                       
+        });
     },
 
     onSaveItemClick: function(b){
@@ -590,13 +631,14 @@ Ext.define('August.view.sales.OrderFormController', {
             vm = me.getViewModel(),
             rec = vm.get('theOrder'),
             session = vm.getSession(),
-            changes = session.getChanges();
+            changes = session.getChanges(),
+            batch = session.getSaveBatch();
+
+        console.log('Sales Form Save', session, changes, batch);
 
         if(view.isValid()){
-
-            var batch = session.getSaveBatch();
-            //changes = session.getChanges();
-            //console.log(changes, batch);
+            
+            //changes = session.getChanges();            
             //var changes = me.getView().getSession().getChanges();
             
             if(changes != null && changes["sales.Order"] != undefined){

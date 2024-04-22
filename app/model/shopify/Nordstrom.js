@@ -14,7 +14,9 @@ Ext.define('August.model.shopify.Nordstrom', {
         { name: 'NRFColorCode', type: 'string' },
         { name: 'ShortColorDescEnglish', type: 'string' },
         { name: 'NRFSizeCode', type: 'string' },
-        { name: 'ShortSizeDescEnglish', type: 'string' }
+        { name: 'ShortSizeDescEnglish', type: 'string' },
+        { name: 'Category', type: 'string' },
+        { name: 'MSRP', type: 'number' }
     ],
 
     //identifier: 'negative',

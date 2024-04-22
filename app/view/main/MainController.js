@@ -110,6 +110,12 @@ Ext.define('August.view.main.MainController', {
                         }
                     }
 
+                    if(tab.isXType("pim-form")){
+                        if(vm.get('theProductDetail').id > 0) {
+                            route[2] = vm.get('theProductDetail').id;
+                        }
+                    }
+
                     if(tab.isXType("purchase-orderForm")){
                         if(vm.get('thePO') != null){
                             route[2] = vm.get('thePO').id;
@@ -162,7 +168,7 @@ Ext.define('August.view.main.MainController', {
             nav = refs.navigationTreeList,
             wrap = refs.mainContainerWrap,
             collapsing = !nav.getMicro(),
-            newWidth = collapsing ? 64 : 250;
+            newWidth = collapsing ? 64 : 280;
 
         if(Ext.isIE9m||!Ext.os.is.Desktop){
             Ext.suspendLayouts();
@@ -178,6 +184,7 @@ Ext.define('August.view.main.MainController', {
                 nav.setMicro(false);
             }
 
+            nav.canMeasure = false;
             // Start this layout first since it does not require a layout
             refs.augustLogo.animate({
                 dynamic: true,
@@ -198,6 +205,7 @@ Ext.define('August.view.main.MainController', {
                     afterlayoutanimation:function(){
                         nav.setMicro(true);
                         nav.el.removeCls('nav-tree-animating');
+                        nav.canMeasure = true;
                     },
                     single:true
                 });

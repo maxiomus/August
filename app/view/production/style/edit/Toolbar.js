@@ -28,6 +28,17 @@ Ext.define('August.view.production.style.edit.Toolbar', {
             scope: me
         });
 
+        me.refresh = Ext.create('Ext.Action', {
+            text: 'Refresh',
+            //glyph: 43,
+            iconCls: 'x-fa fa-cog',
+            tooltip: 'Refresh',
+            handler: function(item){
+                me.fireEvent("actrefresh", me, item);
+            },
+            scope: me
+        });
+
         me.togglep = Ext.create('Ext.Action', {
             iconCls: 'x-fa fa-toggle-off',
             ui: 'bootstrap-btn-default',
@@ -41,16 +52,13 @@ Ext.define('August.view.production.style.edit.Toolbar', {
             scope: me
         });
 
-        me.items = me.buildItems();
+        me.items = [
+            me.removeall,
+            me.refresh,
+            { xtype: 'tbfill'},
+            me.togglep
+        ];
 
         me.callParent(arguments);
-    },
-
-    buildItems: function(){
-        return [
-            this.removeall,
-            { xtype: 'tbfill'},
-            this.togglep
-        ];
     }
 });

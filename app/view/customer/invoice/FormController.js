@@ -13,6 +13,26 @@ Ext.define('August.view.customer.invoice.FormController', {
         'Ext.ux.grid.plugin.AllRowExpander'
         //'August.view.payment.ReceiveWindow'
     ],
+    
+    calculateSum: function(store, rec) {
+        var misc = 0,
+            subTotal = 0,
+            total = 0;
+
+        //console.log('calculateSum', store);
+        store.each(function(r){
+            subTotal = subTotal + r.get('extPrice');
+        });
+
+        rec.set('subtotal', subTotal);
+
+        //misc = subTotal * -0.18;
+        //rec.set('misc', misc);
+
+        total = subTotal + rec.get('discount') + rec.get('misc') + rec.get('freight');
+        rec.set('total', total);        
+
+    },
 
     init: function(){
         var vm = this.getViewModel();
@@ -22,8 +42,32 @@ Ext.define('August.view.customer.invoice.FormController', {
 
     initViewModel: function(vm) {
 
-        var rec = vm.linkData.theOrder;
-        console.log('initViewModel', vm.linkData);
+        var me = this,
+            form = me.getView(),
+            grid = form.down('inv-grid'),
+            rec = vm.linkData.theInvoice;
+
+        var binding = vm.bind('{theInvoice}', function(rec){            
+
+            var store = rec.INVDs();
+            store.on('update', function(s, rs, i){
+                //console.log('update', s, rs);
+                
+                me.calculateSum(store, rec);
+                console.log('update', rec);                
+            });            
+
+        });
+
+        console.log('initViewModel', rec);
+
+    },
+
+    onRender: function(form) {
+        var grid = form.lookupReference("inv-grid"),
+            store = grid.getStore();
+
+        console.log('FormController', grid, store);
     },
 
     onItemSelect: function(sm, rec){
@@ -110,14 +154,32 @@ Ext.define('August.view.customer.invoice.FormController', {
     onDeleteItemClick: function(btn){
         var me = this,
             form = me.getView(),
+            vm = me.getViewModel(),
+            rec = vm.get('theInvoice'),
             grid = form.lookupReference('inv-grid'),
             store = grid.getStore(),
             selection = grid.getSelection()[0];
 
         //store.remove(grid.getSelection()[0]);
-        selection.drop();
+        //selection.drop();
         grid.getSelectionModel().deselectAll();
 
+        Ext.Msg.show({
+            title:'Warning!',
+            message: 'Are you sure you want to delete this?',
+            buttons: Ext.Msg.OKCANCEL,
+            icon: Ext.Msg.QUESTION,
+            fn: function(btn) {
+                if (btn === 'ok') {
+                    //grid.getStore().remove(rec);                    
+                    //me.calculateOnRemove(rec);                    
+                    selection.drop();                                        
+                    me.calculateSum(store, rec);                
+
+                    grid.getSelectionModel().deselectAll();
+                }
+            }
+        });
     },    
 
     onItemContextMenu: function(h, j, k, g, l){
@@ -133,11 +195,18 @@ Ext.define('August.view.customer.invoice.FormController', {
     
     onRowEditing: function(editor, context, e) {
         
-        var rec = context["record"];
+        var grid = context["grid"],
+            store = grid.getStore(),
+            rec = context["record"];
+            
         console.log('onRowEditing', rec);
+
         rec.set('totalUnit', rec.get('unit1') + rec.get('unit2') + rec.get('unit3') + rec.get('unit4') + rec.get('unit5') + rec.get('unit6') + 
             rec.get('unit7') + rec.get('unit8') + rec.get('unit9') + rec.get('unit10') + rec.get('unit11') + rec.get('unit12') + rec.get('unit13')); 
-        rec.set('extPrice', rec.data.totalUnit * rec.data.price);        
+
+        rec.set('extPrice', rec.data.totalUnit * rec.data.price);   
+        
+        //this.calculateSum(store);
     },
 
     onSelectionChanged: function(sm, selected, e) {
@@ -173,7 +242,7 @@ Ext.define('August.view.customer.invoice.FormController', {
         if((combo.getValue() != selection.get('style')) && !Ext.isEmpty(combo.getValue()) && !Ext.isEmpty(color.getValue())) {
             
             Ext.Ajax.request({
-                url : '/WebApp/api/Products/SO',
+                url : '/WebApp/api/Products/SI',
                 method : 'GET',
                 headers: {
                     'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
@@ -252,7 +321,7 @@ Ext.define('August.view.customer.invoice.FormController', {
         if((combo.getValue() != selection.get('color')) && !Ext.isEmpty(style.getValue()) && !Ext.isEmpty(combo.getValue())) {
                         
             Ext.Ajax.request({
-                url : '/WebApp/api/Products/SO',
+                url : '/WebApp/api/Products/SI',
                 method : 'GET',
                 headers: {
                     'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
@@ -395,6 +464,29 @@ Ext.define('August.view.customer.invoice.FormController', {
         storeCb.setValue('');
         combo.getStore().load();        
     },
+
+    onOpenPrintViewClick: function(b, e){
+        var me = this,
+            vm = me.getViewModel(),
+            rec = vm.get('thePO');
+            
+        me.showWindow(rec, 'invoice-windows-printinvoice', function(type){
+
+            var win = me.win,
+                wvm = win.getViewModel();
+                                      
+            /*            
+            wvm.getStore('shopifytemplates').on('datachanged', function(store){
+                btnTemplate.setDisabled(store.getCount() == 0);
+                
+                console.log('templates - store datachanged', store.first());
+            });
+            */
+            //win.on('templateclick', me.onSaveWebPublish, me);                        
+
+            //btnSave.setDisabled(template.getStore().getCount() == 0);                                                       
+        });
+    },  
 
     showWindow: function(comp, record){
         var me = this,

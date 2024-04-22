@@ -94,7 +94,7 @@
             var me = this,
             store = me.store;
             //proxy = store.getProxy();
-
+            
             // We're going to use filtering
             //store.SetRemoteFilter(true);
             store.remoteFilter = true;
@@ -146,6 +146,8 @@
                 type: 'list',
                 value: value
             });
+
+            //console.log('searchtextlist', me.store);
 
             me.store.getFilters().add(me.activeFilter);
             me.getTrigger('clear').show();

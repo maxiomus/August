@@ -89,44 +89,70 @@ Ext.define('August.view.shopify.windows.PhotoUpdate',{
                     xtype: 'textfield',
                     fieldLabel: 'Location',
                     bind: {
-                        value: '{source}'
+                        value: 'https://jirho.com/web-images/{source}'
                     }
-                },{
+                },                
+                {
                     xtype: 'grid',
                     anchor: '100% 85%',                    
                     bind: {
                         store: '{options}'
                     },
                     columns: [
-                        /*{ header: 'Product', dataIndex: 'handle', flex: 2 },*/
-                        { header: 'Variant Color', dataIndex: 'color', flex: 1 },
-                        { header: '# of Photos', dataIndex: 'qty' },
+                        /*
+                        { header: 'Variant Color', dataIndex: 'color', width: 200 },
+                        { header: 'Uploaded Photos #', dataIndex: 'uploaded', flex: 1 },
                         { 
-                            header: 'Total #', dataIndex: 'total',
-                            editor: {
-                                completeOnEnter: false,
+                            header: 'Adding Photos #', dataIndex: 'addition', flex: 1,
+                            editor: {                                
                                 field: {
-                                    xtype: 'numberfield',
-                                    allowBlank: false
+                                    xtype: 'tagfield',
+                                    name: 'extnum',                                    
+                                    hideTrigger: false,
+                                    valueField: 'name',
+                                    displayField: 'name',
+                                    bind: {
+                                        store: '{extensions}'
+                                    },
+                                    queryMode: 'local',
+                                    //forceSelection: false,
+                                    //selectOnFocus: true,
+                                    //pageSize: 50,                                                                      
+                                    filterPickList: true,                                    
+                                    matchFieldWidth: true,
+                                    plugins: [{
+                                        ptype: "cleartrigger"
+                                    }]                                
+                                }
+                            }                            
+                        }
+                        */
+                        { header: 'Src', dataIndex: 'src', flex: 1 },
+                        { header: 'Position', dataIndex: 'position', width: 80,
+                            editor: {                                
+                                field: {
+                                    xtype: 'textfield'
                                 }
                             }
-                        }
+                        },
+                        { header: 'Alt', dataIndex: 'alt', width: 200 }
                     ],
                     plugins: {
                         cellediting: {
                             clicksToEdit: 1
                         }
                     }
-                }],
+                }                
+                ],
 
                 buttons: [{
-                    action: 'update',
-                    text: 'Update',
+                    action: 'upload',
+                    text: 'Upload',
                     formBind: true,
                     //glyph: 86,
                     iconCls: 'x-fa fa-save',
                     handler: function(btn){
-                        me.fireEvent('updateclick', btn, me);
+                        me.fireEvent('uploadclick', btn, me);
                     }
                 },{
                     action: 'close',

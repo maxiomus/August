@@ -25,7 +25,7 @@ Ext.define('August.view.sales.pick.Ticket',{
         actnew: 'onActionNew',
         actedit: 'onActionEdit',
         actdelete: 'onActionDelete',
-        actrefresh: 'onActionRefresh',
+        actrefresh: 'onActionRefresh',        
         clearall: 'onClearFilters',
         gridafterrender: 'onAfterGridRender',
         gridrowdblclick: 'onActionEdit',
@@ -158,6 +158,12 @@ Ext.define('August.view.sales.pick.Ticket',{
                 action: "printlabel",
                 //handler: 'onOpenLabeltagClick',
                 scope: this.controller
+            },{
+                text: 'Invoice',
+                iconCls: 'x-fa fa-dollar-sign',
+                action: 'createinvoice',
+                handler: 'onCreateInvoiceClick',
+                scope: this.controller
             }];
 
         me.contextmenu = Ext.create("Ext.menu.Menu", {
@@ -180,6 +186,13 @@ Ext.define('August.view.sales.pick.Ticket',{
         f.insert(14,
             [{
                 xtype: 'button',
+                iconCls: 'x-fa fa-file-export',
+                text: 'Update',
+                action: 'update',
+                handler: 'onOpenUpdateClick',
+                scope: me.controller
+            },{
+                xtype: 'button',
                 iconCls: 'x-fa fa-external-link-alt',
                 text: 'Export',
                 handler: function(b){
@@ -193,7 +206,7 @@ Ext.define('August.view.sales.pick.Ticket',{
         );
 
         this.relayEvents(j, ["itemcontextmenu", "afterrender", "rowdblclick"], 'grid');
-        this.relayEvents(f, ["actnew", 'actedit', "actrefresh", 'actdelete', "actcomplete", "actactive", "clearall"]);
+        this.relayEvents(f, ["actnew", 'actedit', "actrefresh", 'actdelete', "actactive", "clearall"]);
     },
 
     buildGridColumns: function(){
@@ -252,6 +265,16 @@ Ext.define('August.view.sales.pick.Ticket',{
         {
             text: "Customer",
             dataIndex: "customer",
+            width: 140,
+            hidden: false,
+            filter: {type: "string"},
+            renderer: function(i, h, a){
+                return i;
+            }
+        },
+        {
+            text: "SO Type",
+            dataIndex: "sotype",
             width: 140,
             hidden: false,
             filter: {type: "string"},
@@ -374,17 +397,7 @@ Ext.define('August.view.sales.pick.Ticket',{
             dataIndex: "socxldate",
             filter: {type: "date"},
             format: 'Y-m-d'
-        },
-        {
-            text: "SO Type",
-            dataIndex: "sotype",
-            width: 140,
-            hidden: false,
-            filter: {type: "string"},
-            renderer: function(i, h, a){
-                return i;
-            }
-        },
+        },        
         {
             text: "Terms",
             dataIndex: "terms",

@@ -154,7 +154,7 @@ Ext.define('August.view.purchase.Order',{
         f.actEdit.setHidden(false);
         //f.actEdit.setDisabled(true);
 
-        var mnuItems = [f.actEdit, f.actDelete, f.actRefresh,f.actPrint];
+        var mnuItems = [f.actEdit, f.actDelete, f.actRefresh, f.actPrint];
 
         me.contextmenu = Ext.create("Ext.menu.Menu", {
             items: mnuItems
@@ -283,7 +283,9 @@ Ext.define('August.view.purchase.Order',{
             dataIndex: "orderDate",
             format: 'Y-m-d',
             filter: {
-                type: "date"
+                type: "date",
+                format: 'Y-m-d',
+                dateFormat: 'C'
             }
         },
         {
@@ -292,7 +294,9 @@ Ext.define('August.view.purchase.Order',{
             dataIndex: "etatDate",
             format: 'Y-m-d',
             filter: {
-                type: "date"
+                type: "date",
+                format: 'Y-m-d',
+                dateFormat: 'C'
             }
         },
         {
@@ -301,7 +305,9 @@ Ext.define('August.view.purchase.Order',{
             dataIndex: "cancelDate",
             format: 'Y-m-d',
             filter: {
-                type: "date"
+                type: "date",
+                format: 'Y-m-d',
+                dateFormat: 'C'
             }
         },
         {
@@ -310,7 +316,9 @@ Ext.define('August.view.purchase.Order',{
             dataIndex: "startDate",
             format: 'Y-m-d',
             filter: {
-                type: "date"
+                type: "date",
+                format: 'Y-m-d',
+                dateFormat: 'C'
             }
         },
         {
@@ -478,8 +486,12 @@ Ext.define('August.view.purchase.Order',{
             text: "Create Date",
             width: 150,
             dataIndex: "createDate",
-            filter: {type: "date"},
-            format: 'Y-m-d H:i a'
+            format: 'Y-m-d H:i a',
+            filter: {
+                type: "date",
+                format: 'Y-m-d',
+                dateFormat: 'C'
+            }            
         },
         {
             text: "Update User",
@@ -498,8 +510,12 @@ Ext.define('August.view.purchase.Order',{
             text: "Update Time",
             width: 150,
             dataIndex: "updateDate",
-            filter: {type: "date"},
-            format: 'Y-m-d H:i a'
+            format: 'Y-m-d H:i a',
+            filter: {
+                type: "date",
+                format: 'Y-m-d',
+                dateFormat: 'C'
+            } 
         }];
     },
 

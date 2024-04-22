@@ -24,15 +24,35 @@ Ext.define('August.view.shopify.OrderController', {
         var me = this,            
             topbar = me.getView().down("toolbar"),
             combo = topbar.down("combo[name=stores]");
-
         
         store.getProxy().setHeaders({
             'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
         });
 
         Ext.apply(store.getProxy().extraParams, {            
-            store: combo.getValue()
+            store: combo.getValue().toUpperCase()
         });
+    },
+
+    onStoreLoad: function(store, recs, success, opt){
+        var me = this,
+            vm = me.getViewModel(),
+            //store = vm.getStore('shopifyorders'),
+            bbar = me.getView().down("toolbar[dock=bottom]"),
+            nextBtn = bbar.down("button[name=next]"),
+            prevBtn = bbar.down("button[name=prev]"); 
+            
+        var linkInfo = opt.getResponse().responseJson.pageInfo;
+        
+        //vm.set('shopifyLink', null);
+        vm.set('shopifyLink', linkInfo);
+        //store.getProxy().setExtraParams({}); 
+
+        //console.log('Shopify Product load', success, opt.getResponse());
+
+        nextBtn.setDisabled(linkInfo == null || linkInfo.hasNextPage == false);   
+        prevBtn.setDisabled(linkInfo == null || linkInfo.hasPreviousPage == false);          
+        
     },
 
     onStoreChange: function(combo, nValue, oValue) {
@@ -48,12 +68,16 @@ Ext.define('August.view.shopify.OrderController', {
 
         store.load({
             callback: function(recs, op, success){
-                var linkInfo = op.getResponse().responseJson.LinkHeader;
+                //console.log(op.getResponse());
                 
-                nextBtn.setDisabled(linkInfo == null || linkInfo.NextLink == null);   
-                prevBtn.setDisabled(linkInfo == null || linkInfo.PreviousLink == null);  
+                //var linkInfo = op.getResponse().responseJson.LinkHeader;
+                var linkInfo = op.getResponse().responseJson.pageInfo;
+                
+                nextBtn.setDisabled(linkInfo == null || linkInfo.hasNextPage == false);   
+                prevBtn.setDisabled(linkInfo == null || linkInfo.hasPreviousPage == false);  
 
                 vm.set('shopifyLink', linkInfo);
+                
             }
         });
     },    
@@ -78,8 +102,9 @@ Ext.define('August.view.shopify.OrderController', {
             target: me.getView()
         });                        
         
+        //console.log('SO', rec, rec.get('id'));
         Ext.Ajax.request({
-            url: '/WebApp/api/SalesOrders/' + combo.getValue(), 
+            url: '/shopify-php/api/shopify_n41so.php', 
             method: 'POST',        
             //useDefaultXhrHeader: false,
             //cors: true,
@@ -91,6 +116,8 @@ Ext.define('August.view.shopify.OrderController', {
 
             params: {
                 //store: comboSelected.get('name')
+                id: rec.get('id').replace('gid://shopify/Order/', ''),
+                store: combo.getValue()
             }
                                   
         }).then(function(response){
@@ -258,11 +285,12 @@ Ext.define('August.view.shopify.OrderController', {
 
         store.load({
             callback: function(recs, op, success){
-                var linkInfo = op.getResponse().responseJson.LinkHeader;
-                console.log(bbar, nextBtn, linkInfo);
+                //var linkInfo = op.getResponse().responseJson.LinkHeader;
+                var linkInfo = op.getResponse().responseJson.pageInfo;
+                console.log(nextBtn, op.getResponse());
                 
-                nextBtn.setDisabled(linkInfo == null || linkInfo.NextLink == null);   
-                prevBtn.setDisabled(linkInfo == null || linkInfo.PreviousLink == null);  
+                nextBtn.setDisabled(linkInfo == null || linkInfo.hasNextPage == false);   
+                prevBtn.setDisabled(linkInfo == null || linkInfo.hasPreviousPage == false);  
                 vm.set('shopifyLink', linkInfo);
             }
         });
@@ -333,7 +361,9 @@ Ext.define('August.view.shopify.OrderController', {
         k[0] = "shopify-order";
         //k[1] = q.value == 0 ? "default" : q.value == 1 ? "medium" : "tiles";
         k[1] = "default";
-        k[2] = rec.get("id");
+
+        var id = rec.get("id");
+        k[2] = id.replace('gid://shopify/Order/', '');
 
         //console.log('grid - onSelect', rec);
 
@@ -354,13 +384,15 @@ Ext.define('August.view.shopify.OrderController', {
             grid = mv.lookupReference('shopify-order-grid'),
             sm = h.getSelectionModel();
 
+        var note = grid.getSelection()[0].get('note');
+
         l.stopEvent();                
 
         if(!sm.isSelected(g)){
             sm.select(g);
         }
                                 
-        me.view.contextmenu.items.items[3].setDisabled(grid.getSelection()[0].get('note').indexOf("N41 SO#") != -1);
+        me.view.contextmenu.items.items[3].setDisabled(note != null && note.indexOf("N41 SO#") != -1);
 
         me.view.contextmenu.showAt(l.getXY());
     }

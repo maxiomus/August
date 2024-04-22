@@ -115,8 +115,7 @@ Ext.define('August.model.sales.SalesOrderItem', {
         { name: 'closed_date', type: 'date', dateFormat: 'C' },
         { name: 'closed_user', type: 'string' },
         { name: 'pp_approval', type: 'string' },
-        { name: 'top_approval', type: 'string' },
-        { name: 'rowguid', type: 'string' },
+        { name: 'top_approval', type: 'string' }        
         /*   
         {
             //

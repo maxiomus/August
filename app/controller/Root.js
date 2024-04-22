@@ -365,7 +365,7 @@
             multiview = view.lookupReference('multiview');
 
         if(multiview != null){
-            var grid = multiview.lookupReference('grid'),
+            var grid = multiview.lookupReference('styleGrid'),
                 topbar = multiview.lookupReference('topbar'),
                 category = topbar.lookupReference('filterSelection'),
                 search = topbar.lookupReference('searchtext');
@@ -484,7 +484,7 @@
 
             if (id) {
                 var grid = ctn.getLayout().getActiveItem(),
-                    fieldname = store.first().getIdProperty(),
+                    fieldname = store.getAt(0).getIdProperty(),
                     record = store.findRecord(fieldname, id.toString(), 0, false, false, true);
 
                 var setting = Ext.getStore('Settings'),
@@ -500,6 +500,8 @@
                     }
 
                     var sm = grid.getSelectionModel();
+
+                    console.log('viewmode', grid, sm);
 
                     Ext.defer(function () {
                         if (viewmode != 'default') {
@@ -595,7 +597,7 @@
             prefix = node + '-',
             xf = Ext.util.Format;
         
-        console.log('onRouteTab',store);
+        console.log('onRouteTab', store, fieldname);
         switch(node) {
             case 'dal':
                 var title = rec.data.Title;
@@ -851,31 +853,36 @@
                 rec = store.findRecord(fieldname, id.toString(), 0, false, false, true);
                 
                 innerTab = {
+                    xtype: 'production-linesheet',                    
+                    reference: prefix + rec.get(fieldname),
                     inTab: true,
                     node: node,
-                    xtype: 'linesheet',
-                    reference: prefix + rec.get(fieldname),
                     //title: rec.data.title,
+                    //iconCls: 'x-fas fa-sort-up',
                     bind: {
                         title: '{title}'
                     },
                     closable: true,
                     viewModel: {
-                        type: 'linesheet',
+                        type: 'production-linesheet',
                         data: {
-                            title: rec.data.linetitle + ' - ' + Ext.Date.format(new Date(), 'F, Y')
+                            theLineSheet: rec,
+                            title: rec.data.linetitle //+ ' - ' + Ext.Date.format(new Date(), 'F, Y')
                         },
                         links: {
+                            /*
                             theLineSheet: {
                                 type: 'style.LineSheet',
                                 id: rec.data.lineseq
                             }
+                            */
                         }
                     }
                 };
                 break;
         }
 
+        console.log('line', prefix, rec, fieldname);
         item = view.lookupReference(prefix + rec.get(fieldname));
 
         if (!item) {
@@ -922,6 +929,10 @@
                 title += ' Style';
                 alias = 'style-edit-form';
                 break;
+            case 'productdetail':
+                title += ' Product Details';
+                alias = 'pim-form';
+                break;
             case 'customer-invoice':
                 title += ' Invoice';
                 alias = 'invoice-form';
@@ -949,7 +960,7 @@
                 reference: alias,
                 //opMode: op,
                 closable: true,
-                //isEdit: isEdit,
+                //isEdit: isEdit,                
                 viewModel: {
                     type: alias,
                     data: {
@@ -965,7 +976,7 @@
         var fvm = form.getViewModel();
         fvm.set('title', title);
 
-        form.on('activate', function(p){
+        form.on('activate', function(p) {
             if(form.isEdit){
                 p.setLoading(true);
             }
@@ -1007,8 +1018,8 @@
                 this.processSales(fvm, node, op, id);
                 break;
             case 'pick-ticket':                
-            this.processPickTickets(fvm, node, op, id);
-            break;
+                this.processPickTickets(fvm, node, op, id);
+                break;
             case 'product':
                 var tabs = form.lookupReference('editproducttabs'),
                     photos = form.lookupReference('photos'),
@@ -1022,6 +1033,12 @@
             case 'sample':
                 this.processProducts(fvm, node, op, id);
                 break;     
+            case 'productdetail':
+                var tabs = form.lookupReference('pimFormTab'),
+                    photos = form.lookupReference('product-photos');
+
+                this.processProductDetails(fvm, node, op, id);
+                break; 
             case 'customer-invoice':                
                 this.processInvoices(fvm, node, op, id);
                 break;
@@ -1124,18 +1141,29 @@
 
         var vendors = vm.getStore('vendors');
         var shiptos = vm.getStore('shiptos');
+        
         binding = vm.bind('{thePO}', function(rec){                                                
-            
-            var store = vm.get('thePO').purchaseorderitems();
+            var grid = vm.getView().lookupReference('po-grid'),
+            store = rec.purchaseorderitems();
                 
-            store.setRemoteFilter(false);
+            //store.setRemoteFilter(false);
 
             vendors.load();
             shiptos.load();
 
+            store.on({
+                load: function(s){
+                    
+                    var override = grid.getPlugin('poRowExpander'); 
+                    override.expandAll();
+                    
+                    grid.getScrollable().scrollTo(0, 0);
+                }
+            });
+
             vm.getView().setLoading(false);
             binding.destroy();
-        });
+        });        
 
         if(binding){
             vm.getView().setLoading(false);
@@ -1168,7 +1196,7 @@
             });                                    
         }
         else {
-            if(vm.get('theOrder') != null){
+            if(cRec != null){
                 vm.set('theOrder', null);
             }
 
@@ -1186,31 +1214,43 @@
         //var customers = vm.getStore('customers');
         //var stores = vm.getStore('stores');
 
-        binding = vm.bind('{theOrder}', function(rec){
+        binding = vm.bind('{theOrder}', function(rec) {
                         
             var grid = vm.getView().lookupReference('so-grid'),
-                store = vm.get('theOrder').salesorderitems();
-                
-            store.setRemoteFilter(false);
+                store = rec.salesorderitems();                         
             
+            // Purpose??
+            //store.setRemoteFilter(false);                        
+
             if(grid){
                 var columns = grid.getColumns();
                 Ext.each(columns, function(col, idx){                        
                 
                     if(idx > 5 && idx < 17) {
-                        index = idx - 5;  
-                        col.setText('');             
+                        //index = idx - 5;  
+                        //col.setText('');             
                     }                        
                 });
-            }
+            }                        
 
+            store.on({
+                load: function(s){
+                    
+                    var override = grid.getPlugin('soRowExpander'); 
+                    override.expandAll();
+                    
+                    grid.getScrollable().scrollTo(0, 0);
+                }
+            });
+
+            //console.log('binding - inside', grid.getView().getNodes());
             vm.getView().setLoading(false);
-            binding.destroy();
+            binding.destroy();             
         });
 
         if(binding){
             vm.getView().setLoading(false);
-        }
+        }                
     },
 
     _processSales: function(vm, node, op, id){
@@ -1424,7 +1464,7 @@
             //console.log('after clear', session.data, session.data["style.Product"])
         }
 
-        //console.log('processProducts', vm);            
+        console.log('processProducts', vm);            
 
         var binding = null;
 
@@ -1552,7 +1592,7 @@
                             create: {
                                 //style: powd.data.style,
                                 //color: powd.data.color,
-                                type: 'Style',
+                                //type: 'Style',
                                 rawMatType: 'Style',
                                 descript: powd.data.bodyref + ' ' + powd.data.bodydesc,
                                 division: rec.data.division,
@@ -1633,7 +1673,7 @@
             vm.linkTo('theProduct', {
                 type: 'style.Product',
                 create: {
-                    type: 'Style',
+                    //type: 'Style',
                     rawMatType: 'Style',
                     division: 'MISSY',
                     status: 'ACTIVE',
@@ -1649,6 +1689,7 @@
         }
 
         binding = vm.bind('{theProduct}', function(rec){
+            console.log('style binding', rec);
             if(id > 0){
 
                 var invStore = vm.getStore('inventories'),
@@ -1779,12 +1820,121 @@
             } 
 
             vm.getView().setLoading(false);
+
             binding.destroy();
         });
 
         if(binding){
             vm.getView().setLoading(false);
         }
+    },
+
+    processProductDetails: function(vm, node, op, id){
+        var session = vm.getSession();                    
+
+        if(!Ext.isEmpty(session.data['pim.ProductDetail']) && !session.data['pim.ProductDetail'].hasOwnProperty(id)){
+            //console.log('before clear', session.data['style.Product'].hasOwnProperty(id), id, session.data['style.Product'].hasOwnProperty(id) != id);
+            session.data['pim.ProductDetail'] = null;            
+            session.data['pim.ProductDetailPhoto'] = null;            
+        }
+        
+        var binding = null;
+
+        August.model.pim.ProductDetail.getProxy().setHeaders({
+            'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+        });
+                
+        if(id){                     
+
+            if(op == 'edit') {                                                
+                
+                vm.linkTo('theProductDetail', {
+                    type: 'pim.ProductDetail',
+                    id: parseInt(id,10)
+                });
+                                
+            }                            
+        }
+        else {           
+
+            if(vm.get('theProductDetail') != null){
+                vm.set('theProductDetail', null);
+            }
+
+            //var selected = vm.getParent().get('selectedStyle');            
+            
+            vm.linkTo('theProductDetail', {
+                type: 'pim.ProductDetail',
+                create: {
+                    ageGroup: 'Adult',                
+                    taxCode: 'General Clothing',
+                    warranty: 'N',
+                    origin: 'Imported',
+                    createUser: August.loggedInUser.userId
+                }
+            });
+                                
+        }                          
+        
+        binding = vm.bind('{theProductDetail}', function(rec){            
+            var form = vm.getView(),
+                pvm = vm.getParent(),
+                tab = form.lookupReference('pimFormTab'),
+                pStore = vm.get('theProductDetail').photosInProductDetails();                            
+            
+            /*
+            if(Ext.isEmpty(id)){                
+                //combo = tab.down('combo[name="warehouse"]');                                
+                rec.set('styleId', selected.get('id'));
+                rec.set('style', selected.get('style'));
+                rec.set('color', selected.get('color'));
+                rec.set('description', selected.get('descript'));
+                rec.set('categoryCode', selected.get('category').toLowerCase());
+                rec.set('materialCode', selected.get('cimemo'));
+                rec.set('dimensions', selected.get('user6'));
+                rec.set('ageGroup', 'Adult');
+                rec.set('msrp', selected.get('sgtRetailPrice'));
+                rec.set('taxCode', 'General Clothing');
+                rec.set('warranty', 'N');
+                rec.set('origin', 'Imported');
+                rec.set('createUser', August.loggedInUser.userId );
+            }             
+            */ 
+            
+            //var sorters = pStore.getSorters();
+            //sorters.add('position');
+            pStore.on('datachanged', function(s){
+                //console.log(vm.getSession().getChanges());
+                
+            });
+
+            /*
+            var taxCombo = tab.down('combo[name="taxCode"]'),
+                originCombo = tab.down('combo[name="origin"]'),
+                warrantyCombo = tab.down('combo[name="warranty"]');            
+            */
+            
+            vm.getStore('fileStore').on('add', function(store, records, index){
+
+                records.forEach(function(prec) {   
+                    prec.set('position', index+1);
+                    prec.set('style', rec.get('style').trim());
+                    prec.set('color', rec.get('color').trim());                                                                                
+                });
+            });
+                        
+            vm.getStore('fileStore').on('datachanged', function(store){
+                //btnSave.setDisabled(store.getCount() == 0);
+            });
+            
+            vm.getView().setLoading(false);
+            binding.destroy();
+        });
+        
+        if(binding){
+            vm.getView().setLoading(false);
+        }
+        
     },
 
     processInvoices: function(vm, node, op, id){
@@ -1799,7 +1949,7 @@
 
         var binding = null;
         
-        August.model.sales.Order.getProxy().setHeaders({
+        August.model.invoice.Header.getProxy().setHeaders({
             'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
         });
 
@@ -1839,7 +1989,7 @@
                 
                     if(idx > 4 && idx < 16) {
                         index = idx - 4;  
-                        col.setText('');             
+                        //col.setText('');             
                     }                        
                 });
             }
@@ -2105,18 +2255,30 @@
 
         binding = vm.bind('{thePickTicket}', function(rec){
             
-            var grid = vm.getView().lookupReference('pickGrid');
+            var grid = vm.getView().lookupReference('pick-grid'),
+                store = rec.PickDs();
+
             if(grid){
                 var columns = grid.getColumns();
                 Ext.each(columns, function(col, idx){                        
                 
                     if(idx > 4 && idx < 16) {
-                        index = idx - 4;  
-                        col.setText('');             
+                        //index = idx - 4;  
+                        //col.setText('');             
                     }                        
                 });
             }
             
+            store.on({
+                load: function(s){
+                    
+                    var override = grid.getPlugin('pickRowExpander'); 
+                    override.expandAll();
+                    
+                    grid.getScrollable().scrollTo(0, 0);
+                }
+            });
+
             vm.getView().setLoading(false);
             binding.destroy();
         });

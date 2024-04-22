@@ -188,6 +188,18 @@ Ext.define('Ext.app.route.Base', {
                         }
                     }
                     break;
+                case 'pim-form':
+                    route[1] = tab.opMode;
+
+                    if(tvm.get('theProductDetail').id > 0) {
+                        route[2] = tvm.get('theProductDetail').id;
+                    }
+                    else {
+                        if(tab.opMode == 'import'){
+                            
+                        }
+                    }
+                    break;
                 case 'pi-form':
                     route[1] = tab.opMode;
                     if(tvm.get('thePhysical').id > 0) {

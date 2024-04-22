@@ -98,7 +98,7 @@ Ext.define('August.view.customer.payment.windows.InvoicesController', {
     },
 
     onTriggerClear: function(combo){
-        console.log(combo.getSelection());
+        //console.log(combo.getSelection());
         var me = this,
             vm = me.getViewModel(),
             toolbar = me.getView().down('toolbar[name="filter"]'),

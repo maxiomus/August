@@ -19,7 +19,7 @@ Ext.define('August.view.purchase.OrderFormController', {
         vm = me.getViewModel(),
         me.mv = August.app.getMainView();
         //console.log('init', vm.linkData.thePO);
-        console.log('init', this.getReferences());
+        //console.log('init', this.getReferences());
     },
 
     initViewModel: function(vm) {
@@ -59,8 +59,11 @@ Ext.define('August.view.purchase.OrderFormController', {
             etadate: form.down('datefield[name="etaDate"]').getValue()          
         });
 
-        var override = grid.getPlugin('poRowExpander');                             
-        override.expandAll(); 
+        var override = grid.getPlugin('poRowExpander');             
+        if(override.isCollapsed(0) == true) {
+            override.toggleRow(0, store.getAt(0));
+        }                        
+        //override.expandAll(); 
 
         rowEdit.startEdit(0, 0);
     },
@@ -171,9 +174,25 @@ Ext.define('August.view.purchase.OrderFormController', {
         var me = this,
             form = me.getView(), 
             grid = form.lookupReference('po-grid'),
+            cboColor = combo.next('combo[name="color"]'),
             selection = grid.getSelection()[0];                              
                 
-        selection.set('descript', rec.get('descript'));
+        /*
+        var store = cboColor.getStore();
+        store.clearFilter();
+    
+        if(combo.getValue() != selection.get('style') && !Ext.isEmpty(combo.getValue())){
+
+            store.filter([{
+                property: 'style',
+                value: combo.getValue().toUpperCase(),
+                operator: '='
+            }]);
+
+            //cboColor.select(store.first());
+        }
+        */
+        
     },
 
     onColorComboSelected: function(combo, rec, e){
@@ -183,9 +202,78 @@ Ext.define('August.view.purchase.OrderFormController', {
             selection = grid.getSelection()[0];
             rowEdit = grid.getPlugin("poGridRowEdit"),            
             style = combo.previousSibling('combo[name="style"]'),
-            price = combo.next('numberfield[name="price"]'),
+            price = combo.ownerCt.down('numberfield[name="price"]'),
             //season = combo.next('combo[name="season"]'),
-            etaDate = combo.next('datefield[name="etaDate"]');          
+            etaDate = combo.ownerCt.down('datefield[name="etaDate"]');        
+        
+            
+        if(!Ext.isEmpty(style.getValue()) && !Ext.isEmpty(combo.getValue())) {
+                    
+            Ext.Ajax.request({
+                url : '/WebApp/api/Products/SI',
+                method : 'GET',
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                params : {
+                    style: style.getValue(),
+                    color: combo.getValue()
+                    //page: 1,
+                    //start: 0,
+                    //limit: 100                    
+                },
+                //disableCaching : true,
+                success : function(response, options) {                    
+    
+                    var results = JSON.parse(response.responseText);                                                                    
+
+                    Ext.Array.each(results.data, function(rec,idx,self) {
+                        selection.set('style', rec["style"]);
+                        selection.set('color', rec["color"]);
+                        selection.set('descript', rec["descript"]);
+                        selection.set('price', rec["price"]);     
+                        selection.set('style_price', rec["price5"]);                                          
+                        selection.set('bundle', rec["bundle"]);
+                        selection.set('season', rec["season"]);    
+                        selection.set('cancelDate', Ext.Date.getLastDateOfMonth(new Date()));                                            
+                        selection.set('salesrep1', rec["salesrep1"]);
+                        selection.set('salesrep2', rec["salesrep2"]);                                                
+                        selection.set('sizeCat', rec["sizeCat"]);                              
+                        selection.set('Size1', rec["Size1"]);
+                        selection.set('Size2', rec["Size2"]);
+                        selection.set('Size3', rec["Size3"]);
+                        selection.set('Size4', rec["Size4"]);
+                        selection.set('Size5', rec["Size5"]);
+                        selection.set('Size6', rec["Size6"]);
+                        selection.set('Size7', rec["Size7"]);
+                        selection.set('Size8', rec["Size8"]);
+                        selection.set('Size9', rec["Size9"]);
+                        selection.set('Size10', rec["Size10"]);
+                        selection.set('Size11', rec["Size11"]);
+                        selection.set('Size12', rec["Size12"]);
+                        selection.set('Size13', rec["Size13"]);
+                        selection.set('Size14', rec["Size14"]);
+                        selection.set('Size15', rec["Size15"]);                                                         
+                    
+                        //rowEdit.cancelEdit();
+                        //rowEdit.startEdit(selection, 0);                                               
+                        price.setValue(rec["price"]);
+                        //season.setValue(rec["season"]);    
+                        //cancelDate.setValue(rec["cancelDate"]);                    
+                    });
+                                                            
+                },
+                failure : function(response, options) {
+                    //var result = JSON.parse(response.responseText);
+                    console.log('failed!', response, options);           
+                    var msg = 'Style ' + response.statusText;
+                    Ext.Msg.alert('Error!', msg);           
+                },
+                scope : this
+            });
+        } 
+
+        //selection.set('descript', rec.get('descript'));
                  
     },    
 
@@ -282,7 +370,7 @@ Ext.define('August.view.purchase.OrderFormController', {
         }
     },
 
-    onPrintClick: function(b, e){
+    onOpenPrintViewClick: function(b, e){
         var me = this,
             vm = me.getViewModel(),
             rec = vm.get('thePO');

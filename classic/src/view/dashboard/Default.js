@@ -73,7 +73,7 @@ Ext.define('August.view.dashboard.Default',{
 
                     tpl: [
                         '{today:date("l, F j, Y")}',
-                        '<div style="background-color: #157fcc; color: #ffffff;"><i class="x-fa fa-clock-o white-txt"></i> {today:date("g:i a")}</div>'
+                        '<div style="background-color: #724289; color: #ffffff;"><i class="x-fa fa-clock-o white-txt"></i> {today:date("g:i a")}</div>'
                     ],
 
                     bind: {
@@ -94,7 +94,7 @@ Ext.define('August.view.dashboard.Default',{
                             '<tpl for="weather">',
                                 '<tpl if="xindex === 1">',
                                 '<div class="thumb">',
-                                    '<img src="http://openweathermap.org/img/w/{icon}.png" alt="{description}">',
+                                    '<img src="https://openweathermap.org/img/w/{icon}.png" alt="{description}">',
                                 '</div>',
                                 '</tpl>',
                             '</tpl>',

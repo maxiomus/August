@@ -1,6 +1,7 @@
 [
   {"label": "Style #", "field": "style"},
   {"label": "SO #", "field": "orderno"},
+  {"label": "Line #", "field": "lineseq"},
   {"label": "Category", "field": "category"},
   {"label": "Season", "field": "season"},
   {"label": "Division", "field": "division"}

@@ -9,21 +9,23 @@ Ext.define('August.view.shopify.OrderModel', {
 
     stores: {
         shopifyorders: {
-            model: 'shopify.Order',
+            //model: 'shopify.Order',
+            model: 'shopify.OrderGQ',
 
             storeId: 'shopifyorders',
             autoLoad: false,
 
             session: true,
-            //remoteFilter: true,
-            //remoteSort: true,            
+            remoteFilter: true,
+            remoteSort: true,            
 
             //leadingBufferZone: 300,
             pageSize: 100,
 
             proxy: {
                 type: 'rest',
-                url: '/WebApp/api/ShopifyOrders',                
+                //url: '/WebApp/api/ShopifyOrders',                
+                url: '/shopify-php/api/shopify_orders.php',
                 noCache: false,
 
                 pageParam: '',
@@ -36,7 +38,8 @@ Ext.define('August.view.shopify.OrderModel', {
                 
                 reader: {
                     type: 'json',
-                    rootProperty: 'Items'
+                    //rootProperty: 'Items'
+                    rootProperty: 'edges'
                     //messageProperty: 'LinkHeader'
                     //totalProperty: 'total',
                     //successProperty: 'success'
@@ -47,7 +50,13 @@ Ext.define('August.view.shopify.OrderModel', {
                 beforeload: {
                     fn: 'onBeforeStoreLoad',
                     scope: this.controller
+                },
+
+                load: {
+                    fn: 'onStoreLoad',
+                    scope: this.controller
                 }
+
             }
         },
         

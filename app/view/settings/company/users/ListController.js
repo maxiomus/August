@@ -20,6 +20,28 @@ Ext.define('August.view.settings.company.users.ListController', {
 
     },
 
+    /**
+     *
+     * @param ct Ext.grid.header.Container
+     * @param column Ext.grid.column.Column
+     * @param e Ext.event.Event
+     * @param t HTMLElement
+     */
+    onGridCellClick: function(view, td, cIdx, rec, tr, rIdx, e){
+        
+        var me = this,
+            grid = me.getView(),
+            column = grid.getColumns()[cIdx],
+            topbar = grid.down('toolbar'),
+            search = topbar.down('searchgrid');
+
+        search.paramName = column.dataIndex;
+        
+        column.focus();
+        
+        console.log(grid.getHeaderContainer(), grid.getColumns()[cIdx].focus(), column.dataIndex)
+    },
+
     onItemContextMenu: function(view, rec, item, index, event){
         event.stopEvent();
         //console.log(rec);

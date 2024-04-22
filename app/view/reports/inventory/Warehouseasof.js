@@ -7,6 +7,8 @@ Ext.define('August.view.reports.inventory.Warehouseasof',{
         'August.view.reports.inventory.WarehouseasofModel'
     ],
 
+    alias: 'widget.inventory-warehouseasof',
+
     controller: 'inventory-warehouseasof',
     viewModel: {
         type: 'inventory-warehouseasof'

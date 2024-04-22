@@ -6,15 +6,15 @@ Ext.define('August.model.shopify.ProductVariant', {
     ],
 
     fields: [
-        { name: "id", type: 'int' },
+        { name: 'id', type: 'int' },        
         { 
-            name: "product_id", 
+            name: 'product_id', 
             reference: {
                 type: 'shopify.Product',
-                role: 'product',
+                role: 'product',                
                 inverse: 'variants'
             },
-            type: 'int'
+            type: 'int'     
         },
         { name: "title", type: 'string' },
         { name: "price", type: 'number' },
@@ -51,7 +51,7 @@ Ext.define('August.model.shopify.ProductVariant', {
     },
 
     proxy: {
-        type: 'memory',        
+        type: 'rest',        
 
         pageParam: '',
         startParam: '',

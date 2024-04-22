@@ -6,7 +6,7 @@ Ext.define('Ext.ux.button.MultiSortButton', {
     xtype: 'multisortbutton',
 
     config: {
-        direction: "DESC",
+        direction: "ASC",
         dataIndex: undefined
     },
 

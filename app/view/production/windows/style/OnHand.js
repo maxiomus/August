@@ -61,7 +61,7 @@ Ext.define('August.view.production.windows.style.OnHand',{
             items: [{
                 xtype: 'grid',
                 reference: 'style-onhand-grid',                               
-
+                cls: 'style-onhand-grid',
                 columnLines: true,
 
                 bind: {
@@ -102,8 +102,11 @@ Ext.define('August.view.production.windows.style.OnHand',{
                                 
                     deferEmptyText: true,
                     //emptyText: '<h1 style="margin: 20px">No matching results</h1>',
-                    getRowClass: function(a, g, f, h){
+                    getRowClass: function(rec, rdx, rparams, store){
                         //return "custom-row-style";
+                        if(rec.get('ohs') != 0){
+                            return 'grid-row-color';
+                        }
                     },
             
                     listeners: {

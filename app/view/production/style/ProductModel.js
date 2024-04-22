@@ -33,11 +33,14 @@ Ext.define('August.view.production.style.ProductModel', {
                 }
             },
 
-            listeners: {
-                beforeload: function(s){                    
-                    s.getProxy().setHeaders({
-                        'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
-                    })
+            listeners: {   
+                beforeload: {
+                    fn: 'onBeforeStoreLoad',
+                    scope: this.controller
+                },                             
+                load: {
+                    fn: 'onStoreLoad',
+                    scope: this.controller
                 }
             }
         },        
@@ -121,8 +124,41 @@ Ext.define('August.view.production.style.ProductModel', {
                     type: 'json'
                 }
             }            
-        }
+        },
         
+        photos: {
+            model: 'style.ProductPhoto',
+
+            storeId: 'productphotos',
+            autoLoad: false,
+            session: true,            
+
+            remoteFilter: true,
+
+            proxy: {
+                type: 'rest',
+                url: '/WebApp/api/ProductPhotos',                
+
+                startParam: '',
+                limitParam: '',
+                pageParam: '',
+
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                    //totalProperty: 'total',
+                    //successProperty: 'success'
+                }
+            },
+
+            listeners: {
+                beforeload: function(s){                    
+                    s.getProxy().setHeaders({
+                        'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                    })
+                }
+            }
+        }
         /*
         bodies: {
             fields: ['id', 'text'],

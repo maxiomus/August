@@ -11,14 +11,33 @@ Ext.define('August.view.shopify.windows.PhotoUpdateModel', {
 
     stores: {
         options: {
-            fields: ['color', 'qty', 'total'],
+            fields: ['color', 'uploaded', 'addition'],
             autoLoad: true,
             
             listeners: {
                 //beforeload: 'onBeforeLoad',
                 //load: 'onLoad'
             }
-        }        
+        },
+        
+        extensions: {
+            fields: ['name', 'value'],
+            autoLoad: true,
+            
+            proxy: {
+                type: 'ajax',
+                url: 'resources/data/shopify/imageExtensions.json', 
+
+                pageParam: '',
+                startParam: '',
+                limitParam: '',
+
+                reader: {
+                    type: 'json',
+                    rootProperty: 'data'
+                }
+            }
+        }
     }
 
 });

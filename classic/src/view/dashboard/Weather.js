@@ -63,7 +63,7 @@ Ext.define('August.view.dashboard.Weather',{
                         '<tpl for="weather">',
                             '<tpl if="xindex === 1">',
                             '<div class="thumb">',
-                                '<img src="http://openweathermap.org/img/w/{icon}.png" alt="{description}">',
+                                '<img src="https://openweathermap.org/img/w/{icon}.png" alt="{description}">',
                             '</div>',
                             '</tpl>',
                         '</tpl>',

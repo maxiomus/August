@@ -5,13 +5,5 @@ Ext.define('August.view.purchase.windows.PrintPOModel', {
 
     requires: [
         //'August.model.style.LineSheet'        
-    ],
-
-    data: {
-        
-    },
-
-    stores: {
-        
-    }
+    ]
 });

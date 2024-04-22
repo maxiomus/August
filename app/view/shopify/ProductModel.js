@@ -4,33 +4,38 @@ Ext.define('August.view.shopify.ProductModel', {
     alias: 'viewmodel.shopify-product',
 
     requires: [
-        'August.data.proxy.SimpleRest'
+        //'August.data.proxy.SimpleRest'
+        //'Ext.data.BufferedStore'
     ],
 
     data: {
-        shopifyLink: null
+        shopifyLink: null,
+        selection: null
     },
 
     stores: {
         shopifyproducts: {
-            model: 'shopify.Product',
-
+            //model: 'shopify.Product',
+            model: 'shopify.ProductGQ',
+            
             storeId: 'shopifyproducts',            
             autoLoad: false,
 
             session: true,
-            //remoteFilter: true,
-            //remoteSort: true,            
+            remoteFilter: true,
+            remoteSort: true,            
 
             //type: 'buffered',
-            //leadingBufferZone: 300,
-            pageSize: 100,
+            //leadingBufferZone: 100,
+            pageSize: 50,
 
             proxy: {
                 type: 'rest',
-                url: '/WebApp/api/ShopifyProducts',                
+                //url: '/WebApp/api/ShopifyProducts',                
+                url: '/shopify-php/api/shopify_products.php',
                 noCache: false,
 
+                //timeout: 900000,                
                 pageParam: '',
                 startParam: '',
                 //limitParam: '',
@@ -41,7 +46,8 @@ Ext.define('August.view.shopify.ProductModel', {
                 
                 reader: {
                     type: 'json',
-                    rootProperty: 'Items'
+                    //rootProperty: 'Items'
+                    rootProperty: 'edges',
                     //messageProperty: 'LinkHeader'
                     //totalProperty: 'total',
                     //successProperty: 'success'
@@ -52,10 +58,75 @@ Ext.define('August.view.shopify.ProductModel', {
                 beforeload: {
                     fn: 'onBeforeStoreLoad',
                     scope: this.controller
+                },
+                load: {
+                    fn: 'onStoreLoad',
+                    scope: this.controller
                 }
             }
         },
-        
+        /*
+        shopifyproducts: {
+            //model: 'shopify.Product',
+            model: 'shopify.ProductVariantGQ',
+            
+            storeId: 'shopifyproductvariants',            
+            autoLoad: false,
+
+            session: true,
+            remoteFilter: true,
+            remoteSort: true,            
+
+            //type: 'buffered',
+            //leadingBufferZone: 100,
+            pageSize: 50,
+
+            proxy: {
+                type: 'rest',
+                //url: '/WebApp/api/ShopifyProducts',                
+                url: '/shopify-php/api/shopify_product_variants.php',
+                noCache: false,
+
+                //timeout: 900000,                
+                pageParam: '',
+                startParam: '',
+                //limitParam: '',
+                
+                headers: {
+                    'Authorization' : 'Bearer ' + localStorage.getItem('access_token')
+                },
+                
+                reader: {
+                    type: 'json',
+                    //rootProperty: 'Items'
+                    rootProperty: 'edges',
+                    //messageProperty: 'LinkHeader'
+                    //totalProperty: 'total',
+                    //successProperty: 'success'
+                }                    
+            },
+            
+            listeners: {
+                beforeload: {
+                    fn: 'onBeforeVariantStoreLoad',
+                    scope: this.controller
+                }
+            }
+        },
+        */
+        shopifyProductsPaging: {
+            model: 'shopify.Product',
+            proxy: {
+                type: 'memory',
+                enablePaging: true,
+                reader: {
+                    rootProperty: 'data',
+                    totalProperty: 'total'
+                }
+            },
+            pageSize: 500
+        },
+
         shopifyStores: {
             fields: ['label', 'value', 'name', 'imageSrc'],
             autoLoad: true,
@@ -83,6 +154,10 @@ Ext.define('August.view.shopify.ProductModel', {
                     });
                 }
             }
+        },
+
+        imageStore: {
+            model: 'August.model.shopify.ProductImage'
         },
 
         storeImageSources: {

@@ -210,25 +210,28 @@ Ext.define('Ext.ux.form.field.UploadFile', {
 
         for(var i=0;i<this.filesQueue.length;i++) {
             this.formData.append(this.name + '-' + (i+1), this.filesQueue[i]);     
-            console.log(this.name);       
+            //console.log(this.name);       
         }
 
         this.xhr.open(method, url, true);
 
         this.xhr.addEventListener('loadstart', function (e) {
             Ext.Msg.show({
+                title: 'Please wait',
                 msg: waitMsg,
                 progressText: 'Saving...',
                 width: 400,
-                wait: true,
+                progress: true
+                /*               
                 waitConfig: {
                     interval: 200
                 }
+                */
             });
         }, false);
 
         this.xhr.addEventListener('loadend', function (evt) {
-            Ext.Msg.hide();
+            //Ext.Msg.hide();
             /*
             if (evt.target.status === 200) {
                 var obj = Ext.decode(evt.target.responseText);

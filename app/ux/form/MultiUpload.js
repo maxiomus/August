@@ -1,5 +1,5 @@
 
-Ext.define("Ext.ux.form.MultiUpload",{
+Ext.define("Ext.ux.form.MultiUpload", {
     extend: "Ext.form.Panel",
 
     alias: 'widget.multiupload',
@@ -143,7 +143,7 @@ Ext.define("Ext.ux.form.MultiUpload",{
                 xtype: 'grid',
                 //flex: 5,
                 region: 'center',
-                reference: 'components',
+                //reference: 'components',
                 columns: me.columns,
                 bind: {
                     store: '{fileStore}'
@@ -172,9 +172,9 @@ Ext.define("Ext.ux.form.MultiUpload",{
                     emptyText: 'Drop Files Here',
                     plugins: [{
                         ddGroup: 'file-group',
-                        ptype: 'gridviewdragdrop'
+                        ptype: 'gridviewdragdrop',
                         //enableDrop: true,
-                        //dragText: 'Drag and drop to reorganize',
+                        dragText: 'Drag and drop to reorganize',
 
                     }],
                     prepareData: function(data, idx, record){
@@ -189,10 +189,9 @@ Ext.define("Ext.ux.form.MultiUpload",{
                         },
                         drop: function(node, data, overModel, dropPosition, eOpts){
                             this.getStore().each(function(rec,idx){
-                                var fname = rec.data.F_NAME.split(".").shift();
-                                rec.set('RORDER', idx+1);
-                                rec.set('F_NAME', fname.slice(0, fname.length - 1)+(idx+1)+rec.data.F_EXT);
-                                rec.set('F_MFLAG', idx > 1 ? null : (idx == 0 ? 'FRONT' : 'BACK'));
+                                //var fname = rec.data.F_NAME.split(".").shift();
+                                rec.set('position', idx+1);
+                                //rec.set('name', rec.get('name'));                                
                             })
                             //data.view.refresh();
                         }

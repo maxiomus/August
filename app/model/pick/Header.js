@@ -55,14 +55,12 @@ Ext.define('August.model.pick.Header', {
         { name: 'cit_app_code', type: 'string', persist: false },
         { name: 'cit_ref_no', type: 'string', persist: false },
         { name: 'printcount', type: 'int', persist: false },
-        { name: 'printdate', type: 'date', dateFormat: 'C', persist: false },
-        { name: 'memo', type: 'string', persist: false },
-        { name: 'housememo', type: 'string', persist: false },        
+        { name: 'printdate', type: 'date', dateFormat: 'C', persist: false },     
         { name: 'salesrep1', type: 'string', persist: false },
         { name: 'salesrep2', type: 'string', persist: false },
         { name: 'comrate1', type: 'number', persist: false },
         { name: 'comrate2', type: 'number', persist: false },
-        
+        { name: 'routingGuide', type: 'string', persist: false }        
     ],
 
     idProperty:  'pickno',
@@ -97,7 +95,7 @@ Ext.define('August.model.pick.Header', {
                 associated: true
             },
             partialDataOptions: {
-                changes: false,
+                changes: true,
                 critical: true,
                 associated: true
             },

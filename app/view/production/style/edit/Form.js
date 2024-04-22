@@ -2431,6 +2431,12 @@ Ext.define('August.view.production.style.edit.Form',{
                                 view.fileUpload.filesQueue.length = 0;
                                 view.getStore().removeAll();
                             },
+                            actrefresh: function(tb, btn){
+                                var detail = tb.nextSibling('container#photo-detail'),
+                                    view = detail.nextSibling('viewupload');
+
+                                view.getStore().load();
+                            },
                             acttoggle: function(tb, btn, pressed){
                                 var detail = tb.nextSibling('container#photo-detail');
 
@@ -2537,7 +2543,7 @@ Ext.define('August.view.production.style.edit.Form',{
                                         iconCls: 'x-fa fa-check-square-o',
                                         handler: function(item, e){
                                             Ext.each(c.getSelection(), function(rec, idx, self){
-                                                rec.set('F_BFLAG', !rec.data.F_BFLAG);
+                                                //rec.set('F_BFLAG', !rec.data.F_BFLAG);
                                             });
 
                                         }
@@ -2546,7 +2552,7 @@ Ext.define('August.view.production.style.edit.Form',{
 
                             },
                             
-                            menuefreshclick: {
+                            menurefreshclick: {
                                 fn: 'onMenuRefreshClick',
                                 scope: this.controller
                             },
@@ -2561,6 +2567,10 @@ Ext.define('August.view.production.style.edit.Form',{
                                 scope: this.controller
                             },
 
+                            itemAdd: {
+
+                            },
+                            
                             itemdblclick: {
                                 fn: 'onPhotoItemDblClick',
                                 scope: this.controller
@@ -2774,7 +2784,7 @@ Ext.define('August.view.production.style.edit.Form',{
                                     }
                                 }]);
                             },
-                            menuefreshclick: {
+                            menurefreshclick: {
                                 fn: 'onMenuRefreshClick',
                                 scope: this.controller
                             },
@@ -2825,7 +2835,7 @@ Ext.define('August.view.production.style.edit.Form',{
                 }
             },{
                 xtype: 'dataview',
-                title: 'Photos',
+                //title: 'Photos',
                 region: 'east',
                 //plain: true,
                 collapsible: true,
@@ -2856,7 +2866,14 @@ Ext.define('August.view.production.style.edit.Form',{
                     store: '{theProduct.photosInProducts}'
                 },
 
-                tpl: this.photoTemplate()                
+                tpl: this.photoTemplate(),
+                
+                listeners: {
+                    refresh: {
+                        fn: 'onPhotoRefresh',
+                        controller: this.controller
+                    }
+                }
             }]
         });
 
@@ -2870,7 +2887,9 @@ Ext.define('August.view.production.style.edit.Form',{
             //'<a class="link" href="{linkUrl}">',
             '<span class="tag"></span>',
             '<div class="thumb">',
-                '<img src="{[this.getSrcPath(values, xcount)]}" width="180" height="270" title="name" alt="name" />',
+                '<img src="{[this.getSrcPath(values, xcount)]}" width="180" height="270" title="name" alt="name" ',
+                    'onerror="{[this.onError(values, xcount)]}" ',
+                '/>',
                 '<tpl if="this.isNotEmpty(name)">',
                     '<div class="side"></div>',
                 '</tpl>',
@@ -2884,25 +2903,19 @@ Ext.define('August.view.production.style.edit.Form',{
                 isNotEmpty: function(name){
                     return !Ext.isEmpty(name);
                 },
+                onError: function(a,b) {                                        
+                    return "this.onerror=null;this.src='https://endlessrose.net" + a.path + a.name + "?w=162&h=243&" + Math.random() + "'; "
+                },
                 getSrcPath: function(a,b){
                     console.log("photo template", a);                    
-                    var str = 'http://209.37.126.195';
+                    var str = 'https://endlessrose.net';
                     if(!Ext.isEmpty(a.name)) {                                            
                         str = str + a.path + '200xImages/' + a.name + '?w=180&h=270&' + Math.random();                        
                         //str = str + a.path + '200xImages/' + a.name + '?w=180&h=270'; 
                     }                    
                     if(a.pid <= 0 && a.path.includes("blob:")){
                         str = a.path;
-                    }
-
-                    /*
-                    if(a.path){
-                        str = a.path;
-                    }
-                    else {
-                        
-                    }
-                    */
+                    }                    
 
                     return str;
                     //return a.replace(/(\.[^.]+)$/, "_medium$1");
@@ -2919,7 +2932,9 @@ Ext.define('August.view.production.style.edit.Form',{
             //'<span class="tag"></span>',
             //'<div class="thumb">',
                 '<tpl if="this.isNotEmpty(path)">',
-                    '<img src="{[this.getSrcPath(values, xcount)]}" width="224px" title="{name}" alt="{name}" />',
+                    '<img class="stylePhotos" src="{[this.getSrcPath(values, xcount)]}" width="224px" title="{name}" alt="{name}" ',
+                        'onerror="{[this.onError(values, xcount)]}" ',
+                    '/>' ,
                 '</tpl>',
                 '<tpl if="this.isNotEmpty(tag)">',
                     '<div class="tag"></div>',
@@ -2931,12 +2946,18 @@ Ext.define('August.view.production.style.edit.Form',{
             '</tpl>',
             '<div class="x-clear"></div>',
             {
+                checkImg: function(a,b){
+                    return "";
+                },
                 isNotEmpty: function(s){
                     return !Ext.isEmpty(s);
                 },
+                onError: function(a,b) {                                        
+                    return "this.onerror=null;this.src='https://endlessrose.net" + a.path + a.name + "?w=162&h=243&" + Math.random() + "'; "
+                },
                 getSrcPath: function(a,b){
                     //var str = 'http://64.136.152.54';                    
-                    var str = 'http://209.37.126.195';
+                    var str = 'https://endlessrose.net';
                     
                     if(!Ext.isEmpty(a.name)) {                                            
                         str = str + a.path + '200xImages/' + a.name + '?w=162&h=243&' + Math.random();                        
